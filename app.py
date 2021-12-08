@@ -46,7 +46,7 @@ def handle_message(event):
 
     ###########debugging################
     if event.message.text == 'reboot':
-        state_dict['state'] == "start"
+        state_dict['state'] = "start"
         response = "rebooted"
     ###########debugging################
 
