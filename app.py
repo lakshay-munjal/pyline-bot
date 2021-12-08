@@ -78,6 +78,8 @@ def handle_message(event):
         else:
             # "Please select a valid option."
             response = "有効なオプションを選択してください。"
+    else:
+        response = "errrrr"
 
     # elif state_dict['state'] == 'selected_motion':
     #     if event.message.text == '1':
