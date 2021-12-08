@@ -47,6 +47,7 @@ def handle_message(event):
     ###########debugging################
     if event.message.text == 'reboot':
         state_dict['state'] == "start"
+        response = "rebooted"
     ###########debugging################
 
     elif state_dict['state'] == "start":
@@ -78,37 +79,37 @@ def handle_message(event):
             # "Please select a valid option."
             response = "有効なオプションを選択してください。"
 
-    # elif state_dict['state'] == 'selected_motion':
-    #     if event.message.text == '1':
-    #         # Please select one option. \ n 1. Stretch \ n 2. Self-weight exercise \ n 3. Item 1 \ n 4. Item 2 \ n 5. Item 3 \ n 6. Customize
-    #         response = "選択肢一つを選択してください。\n 1. ストレッチ \n 2. 自重運動  \n 3. アイテム１ \n 4. アイテム２ \n 5. アイテム３\n 6. カスタマイズ"
-    #         state_dict['state'] = 'selected_motion'
+    elif state_dict['state'] == 'selected_motion':
+        if event.message.text == '1':
+            # Please select one option. \ n 1. Stretch \ n 2. Self-weight exercise \ n 3. Item 1 \ n 4. Item 2 \ n 5. Item 3 \ n 6. Customize
+            response = "選択肢一つを選択してください。\n 1. ストレッチ \n 2. 自重運動  \n 3. アイテム１ \n 4. アイテム２ \n 5. アイテム３\n 6. カスタマイズ"
+            state_dict['state'] = 'selected_motion'
 
 
-    #     elif event.message.text == '2':
-    #         response = "still to be updated"
-    #         state_dict['state'] = 'selected_meal'
+        elif event.message.text == '2':
+            response = "still to be updated"
+            state_dict['state'] = 'selected_meal'
 
 
-    #     elif event.message.text == '3':
-    #         response = "still to be updated"
-    #         state_dict['state'] = 'selected_attitude'
+        elif event.message.text == '3':
+            response = "still to be updated"
+            state_dict['state'] = 'selected_attitude'
 
-    #     elif event.message.text == '4':
-    #         response = "still to be updated"
-    #         state_dict['state'] = 'selected_record'
+        elif event.message.text == '4':
+            response = "still to be updated"
+            state_dict['state'] = 'selected_record'
 
-    #     elif event.message.text == '5':
-    #         response = "still to be updated"
-    #         state_dict['state'] = 'selected_record'
+        elif event.message.text == '5':
+            response = "still to be updated"
+            state_dict['state'] = 'selected_record'
         
-    #     elif event.message.text == '6':
-    #         response = "still to be updated"
-    #         state_dict['state'] = 'selected_record'
+        elif event.message.text == '6':
+            response = "still to be updated"
+            state_dict['state'] = 'selected_record'
 
-    #     else:
-    #         # "Please select a valid option."
-    #         response = "有効なオプションを選択してください。"
+        else:
+            # "Please select a valid option."
+            response = "有効なオプションを選択してください。"
         
 
 
