@@ -25,42 +25,42 @@ handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
 #     RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi1")
 #     MessageAction(text = text)
 
-rich_menu_to_create = RichMenu(
-    size=RichMenuSize(width=2500, height=1686),
-    selected=True,
-    name="Nice richmenu",
-    chat_bar_text="RMenu",
-    areas=[RichMenuArea(
-        bounds=RichMenuBounds(x=0, y=0, width=1250, height=843),
-        action=RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi1")),
-        RichMenuArea(
-        bounds=RichMenuBounds(x=1250, y=0, width=1250, height=843),
-        action=RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi2")),
-        RichMenuArea(
-        bounds=RichMenuBounds(x=0, y=843, width=1250, height=843),
-        action=RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi3")),
-        RichMenuArea(
-        bounds=RichMenuBounds(x=1250, y=843, width=1250, height=843),
-        action=RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi4"))]
-)
-rich_menu_id = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
-back_menu_to_create = RichMenu(
-    size=RichMenuSize(width=2500, height=843),
-    selected=True,
-    name="Nice backmenu",
-    chat_bar_text="RMenu",
-    areas=[RichMenuArea(
-        bounds=RichMenuBounds(x=0, y=0, width=2500, height=843),
-        action=RichMenuSwitchAction(rich_menu_alias_id="rich_menu_alias", data="menswiBack"))]
-)
-back_menu_id = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
-with open("./resources/richmenu.jpg", 'rb') as f:
-    line_bot_api.set_rich_menu_image(rich_menu_id, "image/jpeg", f)
-with open("./resources/backmenu.jpg", 'rb') as g:
-    line_bot_api.set_rich_menu_image(back_menu_id, "image/jpeg", g)
-line_bot_api.create_rich_menu_alias(RichMenuAlias(rich_menu_alias_id= "rich_menu_alias", rich_menu_id= rich_menu_id))
-line_bot_api.create_rich_menu_alias(RichMenuAlias(rich_menu_alias_id= "back_menu_alias", rich_menu_id= back_menu_id))
-line_bot_api.set_default_rich_menu(rich_menu_id)
+# rich_menu_to_create = RichMenu(
+#     size=RichMenuSize(width=2500, height=1686),
+#     selected=True,
+#     name="Nice richmenu",
+#     chat_bar_text="RMenu",
+#     areas=[RichMenuArea(
+#         bounds=RichMenuBounds(x=0, y=0, width=1250, height=843),
+#         action=RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi1")),
+#         RichMenuArea(
+#         bounds=RichMenuBounds(x=1250, y=0, width=1250, height=843),
+#         action=RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi2")),
+#         RichMenuArea(
+#         bounds=RichMenuBounds(x=0, y=843, width=1250, height=843),
+#         action=RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi3")),
+#         RichMenuArea(
+#         bounds=RichMenuBounds(x=1250, y=843, width=1250, height=843),
+#         action=RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi4"))]
+# )
+# rich_menu_id = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
+# back_menu_to_create = RichMenu(
+#     size=RichMenuSize(width=2500, height=843),
+#     selected=True,
+#     name="Nice backmenu",
+#     chat_bar_text="RMenu",
+#     areas=[RichMenuArea(
+#         bounds=RichMenuBounds(x=0, y=0, width=2500, height=843),
+#         action=RichMenuSwitchAction(rich_menu_alias_id="rich_menu_alias", data="menswiBack"))]
+# )
+# back_menu_id = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
+# with open("./resources/richmenu.jpg", 'rb') as f:
+#     line_bot_api.set_rich_menu_image(rich_menu_id, "image/jpeg", f)
+# with open("./resources/backmenu.jpg", 'rb') as g:
+#     line_bot_api.set_rich_menu_image(back_menu_id, "image/jpeg", g)
+# line_bot_api.create_rich_menu_alias(RichMenuAlias(rich_menu_alias_id= "rich_menu_alias", rich_menu_id= rich_menu_id))
+# line_bot_api.create_rich_menu_alias(RichMenuAlias(rich_menu_alias_id= "back_menu_alias", rich_menu_id= back_menu_id))
+# line_bot_api.set_default_rich_menu(rich_menu_id)
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -83,12 +83,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     """ Here's all the messages will be handled and processed by the program """
-    if event.type == "follow":
-        line_bot_api.set_default_rich_menu(rich_menu_id)
-    # elif event.type == "postback":
-    #     if event.postback.data[:6]=="menswi":
-    #         MessageAction(text=event.postback.data[6:])
-    else: 
+    if event.type == "message": 
         resp = statehandle(event)
         print(event)
         line_bot_api.reply_message(
@@ -101,7 +96,7 @@ def statehandle(event):
     ###########debugging################
     if event.message.text == 'back':
         state_dict['state'] = "start"
-        print(line_bot_api.get_rich_menu_list())
+        # print(line_bot_api.get_rich_menu_list())
         response = "rebooted"
     ###########debugging################
 
