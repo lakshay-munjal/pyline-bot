@@ -64,6 +64,9 @@ handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
 # line_bot_api.set_default_rich_menu(rich_menu_id)
 
 print(line_bot_api.get_default_rich_menu())
+print("check "+len(line_bot_api.get_rich_menu_list()))
+
+
 @app.route("/callback", methods=['POST'])
 def callback():
     # Get X-Line-Signature header value
@@ -80,7 +83,6 @@ def callback():
         abort(400)
 
     return 'OK'
-
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
@@ -198,7 +200,6 @@ def statehandle(event):
     else:
         response = "errrrr"
     return response  
-
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
