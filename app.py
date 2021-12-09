@@ -11,7 +11,7 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
 from linebot.models.rich_menu import *
-from linebot.models.actions import MessageAction
+from linebot.models.actions import (MessageAction, RichMenuSwitchAction)
 
 state_dict = {}
 state_dict["state"] = "start"
@@ -21,40 +21,47 @@ app = Flask(__name__)
 line_bot_api = LineBotApi('lnoN3pNo/DUuie5L3OT9exNM+/WZzquIkqGIZdVFcOTHOAhdkNe8IXDilhrKQNrFLQViNJv0MVcZtIzaU7sFKoOkc9s657sq5xb64EtiVqbCoDPEwqt0xwZgkuFriqVOVKVQrP7sXhjR4dNQm5Gk1QdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
 
+# def richmenswitch(text, alias):
+#     RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi1")
+#     MessageAction(text = text)
+
 rich_menu_to_create = RichMenu(
     size=RichMenuSize(width=2500, height=1686),
     selected=True,
     name="Nice richmenu",
-    chat_bar_text="Menu",
+    chat_bar_text="RMenu",
     areas=[RichMenuArea(
         bounds=RichMenuBounds(x=0, y=0, width=1250, height=843),
-        action=MessageAction(text="1")),
+        action=RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi1")),
         RichMenuArea(
         bounds=RichMenuBounds(x=1250, y=0, width=1250, height=843),
-        action=MessageAction(text="2")),
+        action=RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi2")),
         RichMenuArea(
         bounds=RichMenuBounds(x=0, y=843, width=1250, height=843),
-        action=MessageAction(text="3")),
+        action=RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi3")),
         RichMenuArea(
         bounds=RichMenuBounds(x=1250, y=843, width=1250, height=843),
-        action=MessageAction(text="4"))]
+        action=RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi4"))]
 )
 rich_menu_id = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
 back_menu_to_create = RichMenu(
     size=RichMenuSize(width=2500, height=843),
     selected=True,
     name="Nice backmenu",
-    chat_bar_text="Menu",
+    chat_bar_text="RMenu",
     areas=[RichMenuArea(
         bounds=RichMenuBounds(x=0, y=0, width=2500, height=843),
-        action=MessageAction(text="back"))]
+        action=RichMenuSwitchAction(rich_menu_alias_id="rich_menu_alias", data="menswiBack"))]
 )
 back_menu_id = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
 with open("./resources/richmenu.jpg", 'rb') as f:
     line_bot_api.set_rich_menu_image(rich_menu_id, "image/jpeg", f)
 with open("./resources/backmenu.jpg", 'rb') as g:
     line_bot_api.set_rich_menu_image(back_menu_id, "image/jpeg", g)
+line_bot_api.create_rich_menu_alias(RichMenuAlias(rich_menu_alias_id= "rich_menu_alias", rich_menu_id= rich_menu_id))
+line_bot_api.create_rich_menu_alias(RichMenuAlias(rich_menu_alias_id= "back_menu_alias", rich_menu_id= back_menu_id))
 line_bot_api.set_default_rich_menu(rich_menu_id)
+
 @app.route("/callback", methods=['POST'])
 def callback():
     # Get X-Line-Signature header value
@@ -78,6 +85,9 @@ def handle_message(event):
     """ Here's all the messages will be handled and processed by the program """
     if event.type == "follow":
         line_bot_api.set_default_rich_menu(rich_menu_id)
+    elif event.type == "postback":
+        if event.postback.data[:6]=="menswi":
+            MessageAction(text=event.postback.data[6:])
     else: 
         resp = statehandle(event)
         print(event)
@@ -91,7 +101,6 @@ def statehandle(event):
     ###########debugging################
     if event.message.text == 'back':
         state_dict['state'] = "start"
-        line_bot_api.set_default_rich_menu(rich_menu_id)
         print(line_bot_api.get_rich_menu_list())
         response = "rebooted"
     ###########debugging################
@@ -106,21 +115,21 @@ def statehandle(event):
             # Please select one option. \ n 1. Stretch \ n 2. Self-weight exercise \ n 3. Item 1 \ n 4. Item 2 \ n 5. Item 3 \ n 6. Customize
             response = "選択肢一つを選択してください。\n 1. ストレッチ \n 2. 自重運動  \n 3. アイテム１ \n 4. アイテム２ \n 5. アイテム３\n 6. カスタマイズ"
             state_dict['state'] = 'selected_motion'
-            line_bot_api.set_default_rich_menu(back_menu_id)
+            # line_bot_api.set_default_rich_menu(back_menu_id)
 
         elif event.message.text == '2':
             response = "still to be updated"
             state_dict['state'] = 'selected_meal'
-            line_bot_api.set_default_rich_menu(back_menu_id)
+            # line_bot_api.set_default_rich_menu(back_menu_id)
 
         elif event.message.text == '3':
             response = "still to be updated"
             state_dict['state'] = 'selected_attitude'
-            line_bot_api.set_default_rich_menu(back_menu_id)
+            # line_bot_api.set_default_rich_menu(back_menu_id)
         elif event.message.text == '4':
             response = "still to be updated"
             state_dict['state'] = 'selected_record'
-            line_bot_api.set_default_rich_menu(back_menu_id)
+            # line_bot_api.set_default_rich_menu(back_menu_id)
         else:
             # "Please select a valid option."
             response = "有効なオプションを選択してください。"
