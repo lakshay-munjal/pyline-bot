@@ -63,10 +63,7 @@ handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
 # line_bot_api.create_rich_menu_alias(RichMenuAlias(rich_menu_alias_id= "back_menu_alias", rich_menu_id= back_menu_id))
 # line_bot_api.set_default_rich_menu(rich_menu_id)
 
-rich_menu_list = line_bot_api.get_rich_menu_list()
-for menu in rich_menu_list:
-    line_bot_api.delete_rich_menu(menu.richMenuId)
-
+line_bot_api.cancel_default_rich_menu()
 @app.route("/callback", methods=['POST'])
 def callback():
     # Get X-Line-Signature header value
