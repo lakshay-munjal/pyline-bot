@@ -63,8 +63,9 @@ handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
 # line_bot_api.create_rich_menu_alias(RichMenuAlias(rich_menu_alias_id= "back_menu_alias", rich_menu_id= back_menu_id))
 # line_bot_api.set_default_rich_menu(rich_menu_id)
 
-print("check "+str(len(line_bot_api.get_rich_menu_list(timeout = 2))))
-
+# print("check "+str(len(line_bot_api.get_rich_menu_list(timeout = 2))))
+print("check")
+print(line_bot_api.get_rich_menu_list())
 
 @app.route("/callback", methods=['POST'])
 def callback():
