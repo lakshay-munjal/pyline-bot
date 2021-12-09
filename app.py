@@ -65,7 +65,11 @@ handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
 
 # print("check "+str(len(line_bot_api.get_rich_menu_list(timeout = 2))))
 print("check")
-print(line_bot_api.get_rich_menu_list())
+menulist = line_bot_api.get_rich_menu_list()
+for menu in menulist:
+    print(menu["richMenuId"])
+    line_bot_api.delete_rich_menu(menu["richMenuId"])
+print(len(line_bot_api.get_rich_menu_list()))
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -204,3 +208,6 @@ def statehandle(event):
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
+
+
+
