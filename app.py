@@ -85,9 +85,9 @@ def handle_message(event):
     """ Here's all the messages will be handled and processed by the program """
     if event.type == "follow":
         line_bot_api.set_default_rich_menu(rich_menu_id)
-    elif event.type == "postback":
-        if event.postback.data[:6]=="menswi":
-            MessageAction(text=event.postback.data[6:])
+    # elif event.type == "postback":
+    #     if event.postback.data[:6]=="menswi":
+    #         MessageAction(text=event.postback.data[6:])
     else: 
         resp = statehandle(event)
         print(event)
