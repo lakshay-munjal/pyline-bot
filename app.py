@@ -67,8 +67,8 @@ handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
 print("check")
 menulist = line_bot_api.get_rich_menu_list()
 for menu in menulist:
-    print(menu["richMenuId"])
-    line_bot_api.delete_rich_menu(menu["richMenuId"])
+    print(menu.richMenuId)
+    line_bot_api.delete_rich_menu(menu.richMenuId)
 print(len(line_bot_api.get_rich_menu_list()))
 
 @app.route("/callback", methods=['POST'])
