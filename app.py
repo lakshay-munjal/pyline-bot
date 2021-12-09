@@ -10,6 +10,8 @@ from linebot.exceptions import (
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
+from linebot.models.rich_menu import *
+from linebot.models.actions import MessageAction
 
 state_dict = {}
 state_dict["state"] = "start"
@@ -19,6 +21,39 @@ app = Flask(__name__)
 line_bot_api = LineBotApi('lnoN3pNo/DUuie5L3OT9exNM+/WZzquIkqGIZdVFcOTHOAhdkNe8IXDilhrKQNrFLQViNJv0MVcZtIzaU7sFKoOkc9s657sq5xb64EtiVqbCoDPEwqt0xwZgkuFriqVOVKVQrP7sXhjR4dNQm5Gk1QdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
 
+rich_menu_to_create = RichMenu(
+    size=RichMenuSize(width=2500, height=844),
+    selected=False,
+    name="Nice richmenu",
+    chat_bar_text="Opt1",
+    areas=[RichMenuArea(
+        bounds=RichMenuBounds(x=0, y=422, width=1250, height=422),
+        action=MessageAction(text="o1")),
+        RichMenuArea(
+        bounds=RichMenuBounds(x=1250, y=422, width=1250, height=422),
+        action=MessageAction(text="p2")),
+        RichMenuArea(
+        bounds=RichMenuBounds(x=0, y=0, width=1250, height=422),
+        action=MessageAction(text="q3")),
+        RichMenuArea(
+        bounds=RichMenuBounds(x=1250, y=0, width=1250, height=422),
+        action=MessageAction(text="r4"))]
+)
+rich_menu_id = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
+back_menu_to_create = RichMenu(
+    size=RichMenuSize(width=2500, height=844),
+    selected=False,
+    name="Nice backmenu",
+    chat_bar_text="back",
+    areas=[RichMenuArea(
+        bounds=RichMenuBounds(x=0, y=422, width=2500, height=844),
+        action=MessageAction(text="back"))]
+)
+back_menu_id = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
+with open("./resources/richmenu.jpg", 'rb') as f:
+    line_bot_api.set_rich_menu_image(rich_menu_id, "image/jpeg", f)
+with open("./resources/backmenu.jpg", 'rb') as g:
+    line_bot_api.set_rich_menu_image(back_menu_id, "image/jpeg", g)
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -41,12 +76,22 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     """ Here's all the messages will be handled and processed by the program """
+    if event.type == "follow":
+        line_bot_api.set_default_rich_menu(rich_menu_id)
+    else: 
+        resp = statehandle(event)
+        print(event)
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=resp))
 
+def statehandle(event):
     response = ''
 
     ###########debugging################
-    if event.message.text == 'reboot':
+    if event.message.text == 'back':
         state_dict['state'] = "start"
+        line_bot_api.set_default_rich_menu(rich_menu_id)
         response = "rebooted"
     ###########debugging################
 
@@ -60,20 +105,21 @@ def handle_message(event):
             # Please select one option. \ n 1. Stretch \ n 2. Self-weight exercise \ n 3. Item 1 \ n 4. Item 2 \ n 5. Item 3 \ n 6. Customize
             response = "選択肢一つを選択してください。\n 1. ストレッチ \n 2. 自重運動  \n 3. アイテム１ \n 4. アイテム２ \n 5. アイテム３\n 6. カスタマイズ"
             state_dict['state'] = 'selected_motion'
+            line_bot_api.set_default_rich_menu(back_menu_id)
 
         elif event.message.text == '2':
             response = "still to be updated"
             state_dict['state'] = 'selected_meal'
-
+            line_bot_api.set_default_rich_menu(back_menu_id)
 
         elif event.message.text == '3':
             response = "still to be updated"
             state_dict['state'] = 'selected_attitude'
-
+            line_bot_api.set_default_rich_menu(back_menu_id)
         elif event.message.text == '4':
             response = "still to be updated"
             state_dict['state'] = 'selected_record'
-
+            line_bot_api.set_default_rich_menu(back_menu_id)
         else:
             # "Please select a valid option."
             response = "有効なオプションを選択してください。"
@@ -144,14 +190,7 @@ def handle_message(event):
 
     else:
         response = "errrrr"
-        
-
-
-
-    print(event)
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=response))
+    return response  
 
 
 if __name__ == "__main__":
