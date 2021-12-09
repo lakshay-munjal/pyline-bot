@@ -23,7 +23,7 @@ handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
 
 rich_menu_to_create = RichMenu(
     size=RichMenuSize(width=2500, height=1686),
-    selected=False,
+    selected=True,
     name="Nice richmenu",
     chat_bar_text="Menu",
     areas=[RichMenuArea(
@@ -42,7 +42,7 @@ rich_menu_to_create = RichMenu(
 rich_menu_id = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
 back_menu_to_create = RichMenu(
     size=RichMenuSize(width=2500, height=843),
-    selected=False,
+    selected=True,
     name="Nice backmenu",
     chat_bar_text="Menu",
     areas=[RichMenuArea(
@@ -54,7 +54,7 @@ with open("./resources/richmenu.jpg", 'rb') as f:
     line_bot_api.set_rich_menu_image(rich_menu_id, "image/jpeg", f)
 with open("./resources/backmenu.jpg", 'rb') as g:
     line_bot_api.set_rich_menu_image(back_menu_id, "image/jpeg", g)
-
+line_bot_api.set_default_rich_menu(rich_menu_id)
 @app.route("/callback", methods=['POST'])
 def callback():
     # Get X-Line-Signature header value
