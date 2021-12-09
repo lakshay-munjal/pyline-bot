@@ -25,7 +25,7 @@ rich_menu_to_create = RichMenu(
     size=RichMenuSize(width=2500, height=1686),
     selected=False,
     name="Nice richmenu",
-    chat_bar_text="Opt1",
+    chat_bar_text="Menu",
     areas=[RichMenuArea(
         bounds=RichMenuBounds(x=0, y=0, width=1250, height=843),
         action=MessageAction(text="1")),
@@ -44,7 +44,7 @@ back_menu_to_create = RichMenu(
     size=RichMenuSize(width=2500, height=843),
     selected=False,
     name="Nice backmenu",
-    chat_bar_text="back",
+    chat_bar_text="Menu",
     areas=[RichMenuArea(
         bounds=RichMenuBounds(x=0, y=0, width=2500, height=843),
         action=MessageAction(text="back"))]
