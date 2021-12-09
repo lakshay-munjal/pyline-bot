@@ -10,6 +10,7 @@ from linebot.exceptions import (
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
+from linebot.models import rich_menu
 from linebot.models.rich_menu import *
 from linebot.models.actions import (MessageAction, RichMenuSwitchAction)
 
@@ -61,6 +62,10 @@ handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
 # line_bot_api.create_rich_menu_alias(RichMenuAlias(rich_menu_alias_id= "rich_menu_alias", rich_menu_id= rich_menu_id))
 # line_bot_api.create_rich_menu_alias(RichMenuAlias(rich_menu_alias_id= "back_menu_alias", rich_menu_id= back_menu_id))
 # line_bot_api.set_default_rich_menu(rich_menu_id)
+
+rich_menu_list = line_bot_api.get_rich_menu_list()
+for menu in rich_menu_list:
+    line_bot_api.delete_rich_menu(menu.richMenuId)
 
 @app.route("/callback", methods=['POST'])
 def callback():
