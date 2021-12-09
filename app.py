@@ -22,31 +22,31 @@ line_bot_api = LineBotApi('lnoN3pNo/DUuie5L3OT9exNM+/WZzquIkqGIZdVFcOTHOAhdkNe8I
 handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
 
 rich_menu_to_create = RichMenu(
-    size=RichMenuSize(width=2500, height=844),
+    size=RichMenuSize(width=2500, height=1686),
     selected=False,
     name="Nice richmenu",
     chat_bar_text="Opt1",
     areas=[RichMenuArea(
-        bounds=RichMenuBounds(x=0, y=422, width=1250, height=422),
-        action=MessageAction(text="o1")),
+        bounds=RichMenuBounds(x=0, y=0, width=1250, height=843),
+        action=MessageAction(text="1")),
         RichMenuArea(
-        bounds=RichMenuBounds(x=1250, y=422, width=1250, height=422),
-        action=MessageAction(text="p2")),
+        bounds=RichMenuBounds(x=1250, y=0, width=1250, height=843),
+        action=MessageAction(text="2")),
         RichMenuArea(
-        bounds=RichMenuBounds(x=0, y=0, width=1250, height=422),
-        action=MessageAction(text="q3")),
+        bounds=RichMenuBounds(x=0, y=843, width=1250, height=843),
+        action=MessageAction(text="3")),
         RichMenuArea(
-        bounds=RichMenuBounds(x=1250, y=0, width=1250, height=422),
-        action=MessageAction(text="r4"))]
+        bounds=RichMenuBounds(x=1250, y=843, width=1250, height=843),
+        action=MessageAction(text="4"))]
 )
 rich_menu_id = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
 back_menu_to_create = RichMenu(
-    size=RichMenuSize(width=2500, height=844),
+    size=RichMenuSize(width=2500, height=843),
     selected=False,
     name="Nice backmenu",
     chat_bar_text="back",
     areas=[RichMenuArea(
-        bounds=RichMenuBounds(x=0, y=422, width=2500, height=844),
+        bounds=RichMenuBounds(x=0, y=0, width=2500, height=843),
         action=MessageAction(text="back"))]
 )
 back_menu_id = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
@@ -92,6 +92,7 @@ def statehandle(event):
     if event.message.text == 'back':
         state_dict['state'] = "start"
         line_bot_api.set_default_rich_menu(rich_menu_id)
+        print(line_bot_api.get_rich_menu_list())
         response = "rebooted"
     ###########debugging################
 
