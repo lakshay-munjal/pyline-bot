@@ -162,7 +162,42 @@ def statehandle(event):
         else:
             # "Please select a valid option."
             response = "有効なオプションを選択してください。"
-    
+    elif state_dict['state'] == 'selected_meal':
+        response = "Let's begin the questionaire:"
+        state_dict['state']='questionaire_ques_1'
+    elif state_dict['state'] == 'questionaire_ques_1':
+        response = "Question1"
+        state_dict['state']= 'questionaire_ques_2'
+    elif state_dict['state'] == 'questionaire_ques_2':
+        response = "Question2"
+        state_dict['state']= 'questionaire_ques_3'
+    elif state_dict['state'] == 'questionaire_ques_3':
+        response = "Question3"
+        state_dict['state']= 'questionaire_ques_4'
+    elif state_dict['state'] == 'questionaire_ques_4':
+        response = "Question4"
+        state_dict['state']= 'questionaire_ques_5'
+    elif state_dict['state'] == 'questionaire_ques_5':
+        response = "Question5"
+        state_dict['state']= 'questionaire_ques_6'
+    elif state_dict['state'] == 'questionaire_ques_6':
+        response = "Question6"
+        state_dict['state']= 'questionaire_ques_7'
+    elif state_dict['state'] == 'questionaire_ques_7':
+        response = "Question7"
+        state_dict['state']= 'questionaire_ques_8'
+    elif state_dict['state'] == 'questionaire_ques_8':
+        response = "Question8"
+        state_dict['state']= 'questionaire_ques_9'
+    elif state_dict['state'] == 'questionaire_ques_9':
+        response = "Question9"
+        state_dict['state']= 'questionaire_ques_10'
+    elif state_dict['state'] == 'questionaire_ques_10':
+        response = "Question10"
+        state_dict['state']= 'questionaire_done'
+    elif state_dict['state']== 'questionaire_done':
+        response= "Thank You for your responses."
+        state_dict['state']='start'
     elif state_dict['state'] == 'selected_motion_strech':
         if event.message.text == '1':
             # Please select one option. \ n 1. Dull \ n 2. Easy to get tired \ n 3. Swelling \ n 4. Shortness of breath \ n 5. Hot flashes \ n 6. Can't sleep
