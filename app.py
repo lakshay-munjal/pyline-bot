@@ -115,8 +115,8 @@ def statehandle(event):
             # line_bot_api.set_default_rich_menu(back_menu_id)
 
         elif event.message.text == '2':
-            response = "still to be updated"
-            state_dict['state'] = 'selected_meal'
+            response = "Let's begin the questionaire:\nQuestion1"
+            state_dict['state']= 'questionaire_ques_2'
             # line_bot_api.set_default_rich_menu(back_menu_id)
 
         elif event.message.text == '3':
@@ -162,12 +162,6 @@ def statehandle(event):
         else:
             # "Please select a valid option."
             response = "有効なオプションを選択してください。"
-    elif state_dict['state'] == 'selected_meal':
-        response = "Let's begin the questionaire:"
-        state_dict['state']='questionaire_ques_1'
-    elif state_dict['state'] == 'questionaire_ques_1':
-        response = "Question1"
-        state_dict['state']= 'questionaire_ques_2'
     elif state_dict['state'] == 'questionaire_ques_2':
         response = "Question2"
         state_dict['state']= 'questionaire_ques_3'
