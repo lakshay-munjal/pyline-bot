@@ -115,7 +115,7 @@ def statehandle(event):
             # line_bot_api.set_default_rich_menu(back_menu_id)
 
         elif event.message.text == '2':
-            response = "Let's begin the questionaire:\nQuestion1"
+            response = "アンケートを始めましょう： \n Q1) たくさん食べた後で後悔することがある \n選択肢一つを選択してください。\n 1. まったくその通りだ \n 2. どちらかというとそうだ  \n 3. ときどき思い当たることがある \n 4. そんなことはない"
             state_dict['state']= 'questionaire_ques_2'
             # line_bot_api.set_default_rich_menu(back_menu_id)
 
@@ -162,11 +162,12 @@ def statehandle(event):
         else:
             # "Please select a valid option."
             response = "有効なオプションを選択してください。"
+
     elif state_dict['state'] == 'questionaire_ques_2':
-        response = "Question2"
+        response = "Q2) お腹一杯食べないと満腹感を感じない \n選択肢一つを選択してください。\n 1. まったくその通りだ \n 2. どちらかというとそうだ  \n 3. ときどき思い当たることがある \n 4. そんなことはない"
         state_dict['state']= 'questionaire_ques_3'
     elif state_dict['state'] == 'questionaire_ques_3':
-        response = "Question3"
+        response = "Q3) 菓子パンやお菓子を食事にすることがある \n選択肢一つを選択してください。\n 1. まったくその通りだ \n 2. どちらかというとそうだ  \n 3. ときどき思い当たることがある \n 4. そんなことはない"
         state_dict['state']= 'questionaire_ques_4'
     elif state_dict['state'] == 'questionaire_ques_4':
         response = "Question4"
