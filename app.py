@@ -1,4 +1,5 @@
 import os
+import json
 from flask import Flask, request, abort
 
 from linebot import (
@@ -16,6 +17,8 @@ from linebot.models.actions import (MessageAction, RichMenuSwitchAction)
 
 state_dict = {}
 state_dict["state"] = "start"
+state_dict["cq"] = 1
+questionaire = {}
  
 app = Flask(__name__)
 
@@ -115,8 +118,10 @@ def statehandle(event):
             # line_bot_api.set_default_rich_menu(back_menu_id)
 
         elif event.message.text == '2':
-            response = "アンケートを始めましょう： \n Q1) たくさん食べた後で後悔することがある \n選択肢一つを選択してください。\n 1. まったくその通りだ \n 2. どちらかというとそうだ  \n 3. ときどき思い当たることがある \n 4. そんなことはない"
-            state_dict['state']= 'questionaire_ques_2'
+            with open('./resources/quesaire.json') as f:
+                questionaire = json.load(f)
+            response = questionaire['questions'][0]
+            state_dict['state']= 'questionaire'
             # line_bot_api.set_default_rich_menu(back_menu_id)
 
         elif event.message.text == '3':
@@ -163,30 +168,14 @@ def statehandle(event):
             # "Please select a valid option."
             response = "有効なオプションを選択してください。"
 
-    elif state_dict['state'] == 'questionaire_ques_2':
-        response = "Q2) お腹一杯食べないと満腹感を感じない \n選択肢一つを選択してください。\n 1. まったくその通りだ \n 2. どちらかというとそうだ  \n 3. ときどき思い当たることがある \n 4. そんなことはない"
-        state_dict['state']= 'questionaire_ques_3'
-    elif state_dict['state'] == 'questionaire_ques_3':
-        response = "Q3) 菓子パンやお菓子を食事にすることがある \n選択肢一つを選択してください。\n 1. まったくその通りだ \n 2. どちらかというとそうだ  \n 3. ときどき思い当たることがある \n 4. そんなことはない"
-        state_dict['state']= 'questionaire_ques_4'
-    elif state_dict['state'] == 'questionaire_ques_4':
-        response = "Question4"
-        state_dict['state']= 'questionaire_ques_5'
-    elif state_dict['state'] == 'questionaire_ques_5':
-        response = "Question5"
-        state_dict['state']= 'questionaire_ques_6'
-    elif state_dict['state'] == 'questionaire_ques_6':
-        response = "Question6"
-        state_dict['state']= 'questionaire_ques_7'
-    elif state_dict['state'] == 'questionaire_ques_7':
-        response = "Question7"
-        state_dict['state']= 'questionaire_ques_8'
-    elif state_dict['state'] == 'questionaire_ques_8':
-        response = "Question8"
-        state_dict['state']= 'questionaire_ques_9'
-    elif state_dict['state'] == 'questionaire_ques_9':
-        response = "Question9"
-        state_dict['state']= 'questionaire_ques_10'
+    elif state_dict['state'] == 'questionaire':
+        if state_dict['cq'] == questionaire['length']:
+            state_dict['cq']=1
+            response= "Thank You for your responses."
+            state_dict['state']='start'
+        else:
+            response = questionaire['questions'][state_dict['cq']]
+            state_dict['cq']+=1
     elif state_dict['state'] == 'questionaire_ques_10':
         response = "Question10"
         state_dict['state']= 'questionaire_done'
