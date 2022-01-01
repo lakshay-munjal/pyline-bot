@@ -118,9 +118,11 @@ def statehandle(event):
             # line_bot_api.set_default_rich_menu(back_menu_id)
 
         elif event.message.text == '2':
-            with open('./resources/quesaire.json') as f:
+
+            with open('./resources/quesaire.json', encoding='utf8') as f:
                 questionaire = json.load(f)
                 print(questionaire)
+            
             response = questionaire['questions'][0]
             state_dict['state']= 'questionaire'
             # line_bot_api.set_default_rich_menu(back_menu_id)
@@ -170,7 +172,7 @@ def statehandle(event):
             response = "有効なオプションを選択してください。"
 
     elif state_dict['state'] == 'questionaire':
-        if state_dict['cq'] == questionaire['length']:
+        if state_dict['cq'] >= questionaire['length']:
             state_dict['cq']=1
             response= "Thank You for your responses."
             state_dict['state']='start'
