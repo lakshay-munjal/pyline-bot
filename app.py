@@ -120,6 +120,7 @@ def statehandle(event):
         elif event.message.text == '2':
             with open('./resources/quesaire.json') as f:
                 questionaire = json.load(f)
+                print(questionaire)
             response = questionaire['questions'][0]
             state_dict['state']= 'questionaire'
             # line_bot_api.set_default_rich_menu(back_menu_id)
