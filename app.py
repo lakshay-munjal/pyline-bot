@@ -124,7 +124,7 @@ def statehandle(event):
                 questionaire = json.load(f)
                 print(questionaire)
             
-            response = questionaire['questions'][0]
+            response = questionaire['questions'][0]['question']
             state_dict['state']= 'questionaire'
             # line_bot_api.set_default_rich_menu(back_menu_id)
 
@@ -178,7 +178,7 @@ def statehandle(event):
             response= "Thank You for your responses."
             state_dict['state']='start'
         else:
-            response = questionaire['questions'][state_dict['cq']]
+            response = questionaire['questions'][state_dict['cq']]['question']
             state_dict['cq']+=1
     elif state_dict['state'] == 'questionaire_ques_10':
         response = "Question10"
