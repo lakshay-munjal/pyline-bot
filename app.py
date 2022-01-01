@@ -101,6 +101,7 @@ def statehandle(event):
     ###########debugging################
     if event.message.text.lower() == 'back' :
         state_dict['state'] = "start"
+        state_dict['cq'] = 1
         # print(line_bot_api.get_rich_menu_list())
         response = "rebooted"
     ###########debugging################
