@@ -101,7 +101,6 @@ def handle_message(event):
 
 def statehandle(event):
     print("nyc arse")
-    questionaire = {}
     response = ''
 
     ###########debugging################
