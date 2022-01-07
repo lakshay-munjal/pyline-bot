@@ -96,6 +96,8 @@ def handle_message(event):
             TextSendMessage(text=resp))
 
 def statehandle(event):
+    print("nyc arse")
+    questionaire = {}
     response = ''
 
     ###########debugging################
@@ -120,9 +122,10 @@ def statehandle(event):
 
         elif event.message.text == '2':
 
-            with open('./resources/quesaire.json', encoding='utf8') as f:
-                questionaire = json.load(f)
-                print(questionaire)
+            f =  open('./resources/quesaire.json', encoding='utf8')
+            questionaire = json.load(f)
+            print(questionaire)
+            os.close(f)
             
             response = questionaire['questions'][0]['question']
             state_dict['state']= 'questionaire'
