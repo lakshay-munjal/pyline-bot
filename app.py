@@ -19,6 +19,10 @@ state_dict = {}
 state_dict["state"] = "start"
 state_dict["cq"] = 1
 questionaire = {}
+
+f =  open('./resources/quesaire.json', encoding='utf8')
+questionaire = json.load(f)
+f.close()
  
 app = Flask(__name__)
 
@@ -122,8 +126,8 @@ def statehandle(event):
 
         elif event.message.text == '2':
 
-            f =  open('./resources/quesaire.json', encoding='utf8')
-            questionaire = json.load(f)
+            # f =  open('./resources/quesaire.json', encoding='utf8')
+            # questionaire = json.load(f)
             print(questionaire)
             os.close(f)
             
