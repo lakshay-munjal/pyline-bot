@@ -128,8 +128,8 @@ def statehandle(event):
 
             # f =  open('./resources/quesaire.json', encoding='utf8')
             # questionaire = json.load(f)
+            print("qqq")
             print(questionaire)
-            os.close(f)
             
             response = questionaire['questions'][0]['question']
             state_dict['state']= 'questionaire'
