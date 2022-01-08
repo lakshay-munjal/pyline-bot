@@ -182,7 +182,7 @@ def statehandle(event):
     elif state_dict['state'] == 'questionaire':
         if state_dict['cq'] >= len(questionaire['questions']):
             print(state_dict['cq'])
-            print(questionaire['length'])
+            
             state_dict['cq']=1
             response= "Thank You for your responses."
             state_dict['state']='start'
