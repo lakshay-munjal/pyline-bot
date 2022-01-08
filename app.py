@@ -19,7 +19,7 @@ state_dict = {}
 state_dict["state"] = "start"
 state_dict["cq"] = 1
 questionaire = {}
-options = " \n選択肢一つを選択してください。\n 1. まったくその通りだ \n 2. どちらかというとそうだ  \n 3. ときどき思い当たることがある \n 4. そんなことはない"
+options = "\n選択肢一つを選択してください。\n 1. まったくその通りだ \n 2. どちらかというとそうだ  \n 3. ときどき思い当たることがある \n 4. そんなことはない"
 
 f =  open('./resources/quesaire.json', encoding='utf8')
 questionaire = json.load(f)
