@@ -113,7 +113,7 @@ def statehandle(event):
 
     if state_dict['state'] == "start":
         # "Please select one option. \ n 1. Motion \ n 2. Meal \ n 3. Attitude \ n 4. Record"
-        response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+        response = "check選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         state_dict['state'] = "menu_select"
 
     elif state_dict['state'] == "menu_select":
