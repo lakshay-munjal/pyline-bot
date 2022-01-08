@@ -100,7 +100,7 @@ def handle_message(event):
             TextSendMessage(text=resp))
 
 def statehandle(event):
-    print("nyc arse")
+
     response = ''
 
     ###########debugging################
@@ -112,8 +112,9 @@ def statehandle(event):
     ###########debugging################
 
     if state_dict['state'] == "start":
+        print("nycbruh")
         # "Please select one option. \ n 1. Motion \ n 2. Meal \ n 3. Attitude \ n 4. Record"
-        response = "check選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+        response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         state_dict['state'] = "menu_select"
 
     elif state_dict['state'] == "menu_select":
@@ -179,7 +180,7 @@ def statehandle(event):
             response = "有効なオプションを選択してください。"
 
     elif state_dict['state'] == 'questionaire':
-        if state_dict['cq'] >= questionaire['length']:
+        if state_dict['cq'] >= len(questionaire['questions']):
             print(state_dict['cq'])
             print(questionaire['length'])
             state_dict['cq']=1
@@ -188,12 +189,6 @@ def statehandle(event):
         else:
             response = questionaire['questions'][state_dict['cq']]['question']
             state_dict['cq']+=1
-    elif state_dict['state'] == 'questionaire_ques_10':
-        response = "Question10"
-        state_dict['state']= 'questionaire_done'
-    elif state_dict['state']== 'questionaire_done':
-        response= "Thank You for your responses."
-        state_dict['state']='start'
     elif state_dict['state'] == 'selected_motion_strech':
         if event.message.text == '1':
             # Please select one option. \ n 1. Dull \ n 2. Easy to get tired \ n 3. Swelling \ n 4. Shortness of breath \ n 5. Hot flashes \ n 6. Can't sleep
