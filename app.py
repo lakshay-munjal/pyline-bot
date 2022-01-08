@@ -19,6 +19,7 @@ state_dict = {}
 state_dict["state"] = "start"
 state_dict["cq"] = 1
 questionaire = {}
+options = " \n選択肢一つを選択してください。\n 1. まったくその通りだ \n 2. どちらかというとそうだ  \n 3. ときどき思い当たることがある \n 4. そんなことはない"
 
 f =  open('./resources/quesaire.json', encoding='utf8')
 questionaire = json.load(f)
@@ -131,7 +132,7 @@ def statehandle(event):
             print("qqq")
             print(questionaire)
             
-            response = questionaire['questions'][0]['question']
+            response = "アンケートを始めましょう: \n Q1) " + questionaire['questions'][0]['question'] + options
             state_dict['state']= 'questionaire'
             # line_bot_api.set_default_rich_menu(back_menu_id)
 
@@ -187,7 +188,7 @@ def statehandle(event):
             response= "Thank You for your responses.\n選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
             state_dict['state']='menu_select'
         else:
-            response = questionaire['questions'][state_dict['cq']]['question']
+            response = "Q" + str(state_dict['cq']+1)+ ") "+ questionaire['questions'][state_dict['cq']]['question'] + options
             state_dict['cq']+=1
     elif state_dict['state'] == 'selected_motion_strech':
         if event.message.text == '1':
