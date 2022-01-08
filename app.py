@@ -187,7 +187,7 @@ def statehandle(event):
             state_dict['cq']=1
             line_bot_api.push_message(
                 event.source.user_id,
-                TextSendMessage(text="Thank You for your responses.\n"))            
+                TextSendMessage(text="Thank You for your responses."))            
             response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
             state_dict['state']='menu_select'
         else:
