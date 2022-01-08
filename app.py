@@ -184,8 +184,8 @@ def statehandle(event):
             print(state_dict['cq'])
             
             state_dict['cq']=1
-            response= "Thank You for your responses."
-            state_dict['state']='start'
+            response= "Thank You for your responses.\n選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+            state_dict['state']='menu_select'
         else:
             response = questionaire['questions'][state_dict['cq']]['question']
             state_dict['cq']+=1
