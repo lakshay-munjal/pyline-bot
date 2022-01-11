@@ -11,6 +11,8 @@ from linebot.exceptions import (
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage, FlexSendMessage
 )
+from linebot.models.flex_message import FlexContainer
+
 from linebot.models import rich_menu
 from linebot.models.rich_menu import *
 from linebot.models.actions import (MessageAction, RichMenuSwitchAction)
@@ -110,7 +112,7 @@ def handle_message(event):
 
         line_bot_api.reply_message(
             event.reply_token,
-            FlexSendMessage(contents=questionflex))
+            FlexSendMessage(contents=FlexContainer(questionflex)))
 
 def statehandle(event):
 
