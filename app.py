@@ -19,11 +19,17 @@ state_dict = {}
 state_dict["state"] = "start"
 state_dict["cq"] = 1
 questionaire = {}
+questionflex = {}
 options = "\n選択肢一つを選択してください。\n 1. まったくその通りだ \n 2. どちらかというとそうだ  \n 3. ときどき思い当たることがある \n 4. そんなことはない"
 
 f =  open('./resources/quesaire.json', encoding='utf8')
 questionaire = json.load(f)
 f.close()
+
+f =  open('./resources/question.json', encoding='utf8')
+questionflex = json.load(f)
+f.close()
+ 
  
 app = Flask(__name__)
 
@@ -104,192 +110,7 @@ def handle_message(event):
 
         line_bot_api.reply_message(
             event.reply_token,
-            FlexSendMessage(contents={
-  "type": "bubble",
-  "size": "kilo",
-  "body": {
-    "type": "box",
-    "layout": "vertical",
-    "contents": [
-      {
-        "type": "text",
-        "text": "質問",
-        "weight": "bold",
-        "size": "lg",
-        "align": "center"
-      },
-      {
-        "type": "text",
-        "text": "ついつい食べすぎてしまう。",
-        "wrap": true,
-        "align": "center",
-        "margin": "md"
-      },
-      {
-        "type": "separator",
-        "margin": "sm"
-      },
-      {
-        "type": "box",
-        "layout": "vertical",
-        "margin": "md",
-        "spacing": "sm",
-        "contents": [
-          {
-            "type": "box",
-            "layout": "horizontal",
-            "margin": "lg",
-            "contents": [
-              {
-                "type": "text",
-                "text": "・全くその通りだ",
-                "size": "md",
-                "align": "start",
-                "weight": "bold",
-                "flex": 5,
-                "gravity": "center",
-                "margin": "sm",
-                "wrap": true
-              },
-              {
-                "type": "text",
-                "text": "選択",
-                "size": "lg",
-                "color": "#111111",
-                "align": "center",
-                "flex": 2,
-                "offsetStart": "12px",
-                "weight": "bold",
-                "decoration": "underline",
-                "action": {
-                  "type": "message",
-                  "label": "action",
-                  "text": "1"
-                }
-              }
-            ]
-          },
-          {
-            "type": "box",
-            "layout": "horizontal",
-            "margin": "lg",
-            "contents": [
-              {
-                "type": "text",
-                "text": "・どちらかというとそうだ",
-                "size": "md",
-                "align": "start",
-                "weight": "bold",
-                "flex": 5,
-                "gravity": "center",
-                "margin": "sm",
-                "wrap": true
-              },
-              {
-                "type": "text",
-                "text": "選択",
-                "size": "lg",
-                "color": "#111111",
-                "align": "center",
-                "flex": 2,
-                "offsetStart": "12px",
-                "weight": "bold",
-                "decoration": "underline",
-                "action": {
-                  "type": "message",
-                  "label": "action",
-                  "text": "2"
-                }
-              }
-            ]
-          },
-          {
-            "type": "box",
-            "layout": "horizontal",
-            "margin": "lg",
-            "contents": [
-              {
-                "type": "text",
-                "text": "・ときどき思い当たる",
-                "size": "md",
-                "align": "start",
-                "weight": "bold",
-                "flex": 5,
-                "gravity": "center",
-                "margin": "sm",
-                "wrap": true
-              },
-              {
-                "type": "text",
-                "text": "選択",
-                "size": "lg",
-                "color": "#111111",
-                "align": "center",
-                "flex": 2,
-                "offsetStart": "12px",
-                "weight": "bold",
-                "decoration": "underline",
-                "action": {
-                  "type": "message",
-                  "label": "action",
-                  "text": "3"
-                }
-              }
-            ]
-          },
-          {
-            "type": "box",
-            "layout": "horizontal",
-            "margin": "lg",
-            "contents": [
-              {
-                "type": "text",
-                "text": "・そんなことはない",
-                "size": "md",
-                "align": "start",
-                "weight": "bold",
-                "flex": 5,
-                "gravity": "center",
-                "margin": "sm",
-                "wrap": true
-              },
-              {
-                "type": "text",
-                "text": "選択",
-                "size": "lg",
-                "color": "#111111",
-                "align": "center",
-                "flex": 2,
-                "offsetStart": "12px",
-                "weight": "bold",
-                "decoration": "underline",
-                "action": {
-                  "type": "message",
-                  "label": "action",
-                  "text": "4"
-                }
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "footer": {
-    "type": "box",
-    "layout": "vertical",
-    "contents": []
-  },
-  "styles": {
-    "body": {
-      "backgroundColor": "#F4F3F9"
-    },
-    "footer": {
-      "separator": true,
-      "backgroundColor": "#F4F3F9"
-    }
-  }
-}))
+            FlexSendMessage(contents=questionflex))
 
 def statehandle(event):
 
