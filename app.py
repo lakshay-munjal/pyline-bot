@@ -113,7 +113,7 @@ def handle_message(event):
 
         line_bot_api.reply_message(
             event.reply_token,
-            FlexSendMessage(contents=questionflex))
+            FlexSendMessage(contents=questionflex,alt_text="yo"))
 
 def statehandle(event):
 

@@ -1,63 +1,186 @@
 {
-  "type": "carousel",
-  "contents": [
-    {
-      "type": "bubble",
-      "body": {
-        "type": "box",
-        "layout": "horizontal",
-        "contents": [
-          {
-            "type": "text",
-            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-            "wrap": true
-          }
-        ]
+  "type": "bubble",
+  "size": "kilo",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "質問",
+        "weight": "bold",
+        "size": "lg",
+        "align": "center"
       },
-      "footer": {
+      {
+        "type": "text",
+        "text": "ついつい食べすぎてしまう。",
+        "wrap": true,
+        "align": "center",
+        "margin": "md"
+      },
+      {
+        "type": "separator",
+        "margin": "sm"
+      },
+      {
         "type": "box",
-        "layout": "horizontal",
+        "layout": "vertical",
+        "margin": "md",
+        "spacing": "sm",
         "contents": [
           {
-            "type": "button",
-            "style": "primary",
-            "action": {
-              "type": "uri",
-              "label": "Go",
-              "uri": "https://example.com"
-            }
+            "type": "box",
+            "layout": "horizontal",
+            "margin": "lg",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・全くその通りだ",
+                "size": "md",
+                "align": "start",
+                "weight": "bold",
+                "flex": 5,
+                "gravity": "center",
+                "margin": "sm",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "選択",
+                "size": "lg",
+                "color": "#111111",
+                "align": "center",
+                "flex": 2,
+                "offsetStart": "12px",
+                "weight": "bold",
+                "decoration": "underline",
+                "action": {
+                  "type": "message",
+                  "label": "action",
+                  "text": "1"
+                }
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "margin": "lg",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・どちらかというとそうだ",
+                "size": "md",
+                "align": "start",
+                "weight": "bold",
+                "flex": 5,
+                "gravity": "center",
+                "margin": "sm",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "選択",
+                "size": "lg",
+                "color": "#111111",
+                "align": "center",
+                "flex": 2,
+                "offsetStart": "12px",
+                "weight": "bold",
+                "decoration": "underline",
+                "action": {
+                  "type": "message",
+                  "label": "action",
+                  "text": "2"
+                }
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "margin": "lg",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・ときどき思い当たる",
+                "size": "md",
+                "align": "start",
+                "weight": "bold",
+                "flex": 5,
+                "gravity": "center",
+                "margin": "sm",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "選択",
+                "size": "lg",
+                "color": "#111111",
+                "align": "center",
+                "flex": 2,
+                "offsetStart": "12px",
+                "weight": "bold",
+                "decoration": "underline",
+                "action": {
+                  "type": "message",
+                  "label": "action",
+                  "text": "3"
+                }
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "margin": "lg",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・そんなことはない",
+                "size": "md",
+                "align": "start",
+                "weight": "bold",
+                "flex": 5,
+                "gravity": "center",
+                "margin": "sm",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "選択",
+                "size": "lg",
+                "color": "#111111",
+                "align": "center",
+                "flex": 2,
+                "offsetStart": "12px",
+                "weight": "bold",
+                "decoration": "underline",
+                "action": {
+                  "type": "message",
+                  "label": "action",
+                  "text": "4"
+                }
+              }
+            ]
           }
         ]
       }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": []
+  },
+  "styles": {
+    "body": {
+      "backgroundColor": "#F4F3F9"
     },
-    {
-      "type": "bubble",
-      "body": {
-        "type": "box",
-        "layout": "horizontal",
-        "contents": [
-          {
-            "type": "text",
-            "text": "Hello, World!",
-            "wrap": true
-          }
-        ]
-      },
-      "footer": {
-        "type": "box",
-        "layout": "horizontal",
-        "contents": [
-          {
-            "type": "button",
-            "style": "primary",
-            "action": {
-              "type": "uri",
-              "label": "Go",
-              "uri": "https://example.com"
-            }
-          }
-        ]
-      }
+    "footer": {
+      "separator": true,
+      "backgroundColor": "#F4F3F9"
     }
-  ]
+  }
 }
