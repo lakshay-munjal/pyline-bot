@@ -219,6 +219,7 @@ def statehandle(event):
                 event.source.user_id,
                 TextSendMessage(text="Thank You for your response."))            
             response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+            responsehist.clear()
             state_dict['state']='menu_select'
         # if event.message.text == '1':
         #     # Please select one option. \ n 1. Whole body \ n 2. Head / neck \ n 3. Shoulders / chest \ n 4. Waist / back \ n 5. Knees / feet \ n 6. Customize
