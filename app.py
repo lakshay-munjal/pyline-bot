@@ -17,6 +17,7 @@ from linebot.models.flex_message import BubbleContainer, FlexContainer
 from linebot.models import rich_menu
 from linebot.models.rich_menu import *
 from linebot.models.actions import (MessageAction, RichMenuSwitchAction)
+import copy
 
 state_dict = {}
 state_dict["state"] = "start"
@@ -82,6 +83,12 @@ handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
 
 # print("check "+str(len(line_bot_api.get_rich_menu_list(timeout = 2))))
 
+def questionnaireWrapper(ques):
+    # ques is a string
+    question = copy.deepcopy(questionflex)
+    question["body"]["contents"][1]["text"] = ques
+    return question
+
 @app.route("/callback", methods=['POST'])
 def callback():
     # Get X-Line-Signature header value
@@ -113,7 +120,7 @@ def handle_message(event):
 
         line_bot_api.reply_message(
             event.reply_token,
-            FlexSendMessage(contents=questionflex,alt_text="yo"))
+            FlexSendMessage(contents=resp,alt_text="yo"))
 
 def statehandle(event):
 
@@ -206,7 +213,8 @@ def statehandle(event):
             response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
             state_dict['state']='menu_select'
         else:
-            response = "Q" + str(state_dict['cq']+1)+ ") "+ questionaire['questions'][state_dict['cq']]['question'] + options
+            # response = "Q" + str(state_dict['cq']+1)+ ") "+ questionaire['questions'][state_dict['cq']]['question'] + options
+            response = questionnaireWrapper(questionaire['questions'][state_dict['cq']]['question'])
             state_dict['cq']+=1
     elif state_dict['state'] == 'selected_motion_strech':
         if event.message.text == '1':
