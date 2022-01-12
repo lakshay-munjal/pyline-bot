@@ -87,6 +87,10 @@ def questionnaireWrapper(ques):
     # ques is a string
     question = copy.deepcopy(questionflex)
     question["body"]["contents"][1]["text"] = ques
+
+    with open("sample.json", "w") as outfile:
+        json.dump(question, outfile)
+    
     return question
 
 @app.route("/callback", methods=['POST'])
