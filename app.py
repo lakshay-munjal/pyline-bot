@@ -34,7 +34,7 @@ f.close()
 f =  open('./resources/question.json', encoding='utf8')
 questionflex = json.load(f)
 f.close()
-f =  open('./resources/motionsopt.json', encoding='utf8')
+f =  open('./resources/motionopt.json', encoding='utf8')
 motionopt = json.load(f)
 f.close()
  
@@ -264,36 +264,36 @@ def statehandle(event):
         else:
             response = "Q" + str(state_dict['cq']+1)+ ") "+ questionaire['questions'][state_dict['cq']]['question'] + options
             state_dict['cq']+=1
-    elif state_dict['state'] == 'selected_motion_strech':
-        if event.message.text == '1':
-            # Please select one option. \ n 1. Dull \ n 2. Easy to get tired \ n 3. Swelling \ n 4. Shortness of breath \ n 5. Hot flashes \ n 6. Can't sleep
-            response = "選択肢一つを選択してください。\n 1. だるい \n 2. 疲れやすい  \n 3. むくみ \n 4. 息切れがする \n 5. のぼせ\n 6. 眠れない"
-            state_dict['state'] = 'selected_motion_strech_wholebody'
+    # elif state_dict['state'] == 'selected_motion_strech':
+    #     if event.message.text == '1':
+    #         # Please select one option. \ n 1. Dull \ n 2. Easy to get tired \ n 3. Swelling \ n 4. Shortness of breath \ n 5. Hot flashes \ n 6. Can't sleep
+    #         response = "選択肢一つを選択してください。\n 1. だるい \n 2. 疲れやすい  \n 3. むくみ \n 4. 息切れがする \n 5. のぼせ\n 6. 眠れない"
+    #         state_dict['state'] = 'selected_motion_strech_wholebody'
 
-        elif event.message.text == '2':
-            response = "still to be updated"
-            state_dict['state'] = 'selected_motion_strech_headneck'
+    #     elif event.message.text == '2':
+    #         response = "still to be updated"
+    #         state_dict['state'] = 'selected_motion_strech_headneck'
 
-        elif event.message.text == '3':
-            response = "still to be updated"
-            state_dict['state'] = 'selected_motion_strech_shoulderchest'
+    #     elif event.message.text == '3':
+    #         response = "still to be updated"
+    #         state_dict['state'] = 'selected_motion_strech_shoulderchest'
 
 
-        elif event.message.text == '4':
-            response = "still to be updated"
-            state_dict['state'] = 'selected_motion_strech_waistback'
+    #     elif event.message.text == '4':
+    #         response = "still to be updated"
+    #         state_dict['state'] = 'selected_motion_strech_waistback'
 
-        elif event.message.text == '5':
-            response = "still to be updated"
-            state_dict['state'] = 'selected_motion_strech_kneesfeet'
+    #     elif event.message.text == '5':
+    #         response = "still to be updated"
+    #         state_dict['state'] = 'selected_motion_strech_kneesfeet'
 
-        elif event.message.text == '6':
-            response = "still to be updated"
-            state_dict['state'] = 'selected_motion_strech_customize'
+    #     elif event.message.text == '6':
+    #         response = "still to be updated"
+    #         state_dict['state'] = 'selected_motion_strech_customize'
 
-        else:
-            # "Please select a valid option."
-            response = "有効なオプションを選択してください。"
+    #     else:
+    #         # "Please select a valid option."
+    #         response = "有効なオプションを選択してください。"
         
 
     else:
