@@ -1,0 +1,28 @@
+[
+    {
+        "label": "item1",
+        "subopt": [
+            {
+                "label": "option1.1",
+                "subtext": ["text1", "text2"]
+            },
+            {
+                "label": "option1.2",
+                "subtext": ["text1", "text2"]
+            }
+        ]
+    },
+    {
+        "label": "item2",
+        "subopt": [
+            {
+                "label": "option2.1",
+                "subtext": ["text1", "text2"]
+            },
+            {
+                "label": "option2.2",
+                "subtext": ["text1", "text2"]
+            }
+        ]
+    }
+]

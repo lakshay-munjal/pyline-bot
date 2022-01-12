@@ -23,6 +23,8 @@ state_dict["state"] = "start"
 state_dict["cq"] = 1
 questionaire = {}
 questionflex = {}
+motionopt = {}
+responsehist = {}
 options = "\n選択肢一つを選択してください。\n 1. まったくその通りだ \n 2. どちらかというとそうだ  \n 3. ときどき思い当たることがある \n 4. そんなことはない"
 
 f =  open('./resources/quesaire.json', encoding='utf8')
@@ -31,6 +33,9 @@ f.close()
 
 f =  open('./resources/question.json', encoding='utf8')
 questionflex = json.load(f)
+f.close()
+f =  open('./resources/motionsopt.json', encoding='utf8')
+motionopt = json.load(f)
 f.close()
  
  
@@ -136,7 +141,10 @@ def statehandle(event):
     elif state_dict['state'] == "menu_select":
         if event.message.text == '1':
             # Please select one option. \ n 1. Stretch \ n 2. Self-weight exercise \ n 3. Item 1 \ n 4. Item 2 \ n 5. Item 3 \ n 6. Customize
-            response = "選択肢一つを選択してください。\n 1. ストレッチ \n 2. 自重運動  \n 3. アイテム１ \n 4. アイテム２ \n 5. アイテム３\n 6. カスタマイズ"
+            # response = "選択肢一つを選択してください。\n 1. ストレッチ \n 2. 自重運動  \n 3. アイテム１ \n 4. アイテム２ \n 5. アイテム３\n 6. カスタマイズ"
+            response = "選択肢一つを選択してください。"
+            for item in motionopt:
+                response+= "\n"+item["label"]
             state_dict['state'] = 'selected_motion'
             # line_bot_api.set_default_rich_menu(back_menu_id)
 
@@ -164,36 +172,84 @@ def statehandle(event):
             response = "有効なオプションを選択してください。"
 
     elif state_dict['state'] == 'selected_motion':
-        if event.message.text == '1':
-            # Please select one option. \ n 1. Whole body \ n 2. Head / neck \ n 3. Shoulders / chest \ n 4. Waist / back \ n 5. Knees / feet \ n 6. Customize
-            response = "選択肢一つを選択してください。\n 1. 全身 \n 2. 頭・首  \n 3. 肩･胸 \n 4. 腰・背 \n 5. 膝・足\n 6. カスタマイズ"
-            state_dict['state'] = 'selected_motion_strech'
-
-
-        elif event.message.text == '2':
-            response = "still to be updated"
-            state_dict['state'] = 'selected_motion_self_weight'
-
-
-        elif event.message.text == '3':
-            response = "still to be updated"
-            state_dict['state'] = 'selected_motion_item1'
-
-        elif event.message.text == '4':
-            response = "still to be updated"
-            state_dict['state'] = 'selected_motion_item2'
-
-        elif event.message.text == '5':
-            response = "still to be updated"
-            state_dict['state'] = 'selected_motion_item3'
-        
-        elif event.message.text == '6':
-            response = "still to be updated"
-            state_dict['state'] = 'selected_motion_customize'
-
+        itemselected = int(event.message.text)
+        if itemselected > len(motionopt) or itemselected <= 0:
+            line_bot_api.push_message(
+                event.source.user_id,
+                TextSendMessage(text="Please select a valid response."))            
+            response = "選択肢一つを選択してください。"
+            for item in motionopt:
+                response+= "\n"+item["label"]
+            state_dict['state'] = 'selected_motion'
         else:
-            # "Please select a valid option."
-            response = "有効なオプションを選択してください。"
+            responsehist["selected_motion"]=itemselected
+            response = "選択肢一つを選択してください。"
+            for option in motionopt[itemselected]["subopt"]:
+                response+="\n"+option["label"]
+            state_dict['state'] = 'selected_motion_item'
+    elif state_dict['state'] == 'selected_motion_item':
+        optionselected = int(event.message.text)
+        if optionselected > len(motionopt[responsehist["selected_motion"]]["subopt"]) or optionselected <= 0:
+            line_bot_api.push_message(
+                event.source.user_id,
+                TextSendMessage(text="Please select a valid response."))            
+            response = "選択肢一つを選択してください。"
+            for option in motionopt[responsehist["selected_motion"]]["subopt"]:
+                response+="\n"+option["label"]
+            state_dict['state'] = 'selected_motion_item'
+        else:
+            responsehist["selected_motion_item"]=optionselected
+            response = "選択肢一つを選択してください。"
+            for elmnt in motionopt[responsehist["selected_motion"]]["subopt"][optionselected]["subtext"]:
+                response+="\n"+elmnt
+            state_dict['state'] = 'selected_motion_item_option'
+    elif state_dict['state'] == 'selected_motion_item_option':
+        elmntselected = int(event.message.text)
+        if elmntselected > len(motionopt[responsehist["selected_motion"]]["subopt"][responsehist["selected_motion_item"]]["subtext"]) or elmntselected <= 0:
+            line_bot_api.push_message(
+                event.source.user_id,
+                TextSendMessage(text="Please select a valid response."))            
+            response = "選択肢一つを選択してください。"
+            for elmnt in motionopt[responsehist["selected_motion"]]["subopt"][responsehist["selected_motion_item"]]["subtext"]:
+                response+="\n"+elmnt
+            state_dict['state'] = 'selected_motion_item_option'
+        else:
+            responsehist["selected_motion_item_option"]=elmntselected
+            line_bot_api.push_message(
+                event.source.user_id,
+                TextSendMessage(text="Thank You for your response."))            
+            response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+            state_dict['state']='menu_select'
+        # if event.message.text == '1':
+        #     # Please select one option. \ n 1. Whole body \ n 2. Head / neck \ n 3. Shoulders / chest \ n 4. Waist / back \ n 5. Knees / feet \ n 6. Customize
+        #     response = "選択肢一つを選択してください。\n 1. 全身 \n 2. 頭・首  \n 3. 肩･胸 \n 4. 腰・背 \n 5. 膝・足\n 6. カスタマイズ"
+        #     state_dict['state'] = 'selected_motion_strech'
+
+
+        # elif event.message.text == '2':
+        #     response = "still to be updated"
+        #     state_dict['state'] = 'selected_motion_self_weight'
+
+
+        # elif event.message.text == '3':
+        #     response = "still to be updated"
+        #     state_dict['state'] = 'selected_motion_item1'
+
+        # elif event.message.text == '4':
+        #     response = "still to be updated"
+        #     state_dict['state'] = 'selected_motion_item2'
+
+        # elif event.message.text == '5':
+        #     response = "still to be updated"
+        #     state_dict['state'] = 'selected_motion_item3'
+        
+        # elif event.message.text == '6':
+        #     response = "still to be updated"
+        #     state_dict['state'] = 'selected_motion_customize'
+
+        # else:
+        #     # "Please select a valid option."
+        #     response = "有効なオプションを選択してください。"
 
     elif state_dict['state'] == 'questionaire':
         if state_dict['cq'] >= len(questionaire['questions']):
