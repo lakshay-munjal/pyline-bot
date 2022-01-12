@@ -172,8 +172,8 @@ def statehandle(event):
             response = "有効なオプションを選択してください。"
 
     elif state_dict['state'] == 'selected_motion':
-        itemselected = int(event.message.text)
-        if itemselected > len(motionopt) or itemselected <= 0:
+        itemselected = int(event.message.text)-1
+        if itemselected >= len(motionopt) or itemselected < 0:
             line_bot_api.push_message(
                 event.source.user_id,
                 TextSendMessage(text="Please select a valid response."))            
@@ -188,8 +188,8 @@ def statehandle(event):
                 response+="\n"+option["label"]
             state_dict['state'] = 'selected_motion_item'
     elif state_dict['state'] == 'selected_motion_item':
-        optionselected = int(event.message.text)
-        if optionselected > len(motionopt[responsehist["selected_motion"]]["subopt"]) or optionselected <= 0:
+        optionselected = int(event.message.text)-1
+        if optionselected >= len(motionopt[responsehist["selected_motion"]]["subopt"]) or optionselected < 0:
             line_bot_api.push_message(
                 event.source.user_id,
                 TextSendMessage(text="Please select a valid response."))            
@@ -204,8 +204,8 @@ def statehandle(event):
                 response+="\n"+elmnt
             state_dict['state'] = 'selected_motion_item_option'
     elif state_dict['state'] == 'selected_motion_item_option':
-        elmntselected = int(event.message.text)
-        if elmntselected > len(motionopt[responsehist["selected_motion"]]["subopt"][responsehist["selected_motion_item"]]["subtext"]) or elmntselected <= 0:
+        elmntselected = int(event.message.text)-1
+        if elmntselected >= len(motionopt[responsehist["selected_motion"]]["subopt"][responsehist["selected_motion_item"]]["subtext"]) or elmntselected < 0:
             line_bot_api.push_message(
                 event.source.user_id,
                 TextSendMessage(text="Please select a valid response."))            
