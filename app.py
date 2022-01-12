@@ -110,15 +110,15 @@ def handle_message(event):
     if event.type == "message": 
         resp = statehandle(event)
         print(event)
-        # line_bot_api.reply_message(
-        #     event.reply_token,
-        #     TextSendMessage(text=resp))
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=resp))
 
         # debug
 
-        line_bot_api.reply_message(
-            event.reply_token,
-            FlexSendMessage(contents=questionflex,alt_text="yo"))
+        # line_bot_api.reply_message(
+        #     event.reply_token,
+        #     FlexSendMessage(contents=questionflex,alt_text="yo"))
 
 def statehandle(event):
 
