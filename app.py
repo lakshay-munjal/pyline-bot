@@ -1,5 +1,8 @@
+from asyncio.windows_events import NULL
+from http import client
 import os
 import json
+import requests
 from flask import Flask, request, abort
 
 from linebot import (
@@ -19,73 +22,33 @@ from linebot.models.rich_menu import *
 from linebot.models.actions import (MessageAction, RichMenuSwitchAction)
 
 state_dict = {}
-state_dict["state"] = "start"
-state_dict["cq"] = 1
+# state_dict["state"] = "start"
+# state_dict["cq"] = 1
 questionaire = {}
 questionflex = {}
 motionopt = {}
 responsehist = {}
 options = "\n選択肢一つを選択してください。\n 1. まったくその通りだ \n 2. どちらかというとそうだ  \n 3. ときどき思い当たることがある \n 4. そんなことはない"
 
-f =  open('./resources/quesaire.json', encoding='utf8')
-questionaire = json.load(f)
-f.close()
+# f =  open('./resources/quesaire.json', encoding='utf8')
+# questionaire = json.load(f)
+# f.close()
 
-f =  open('./resources/question.json', encoding='utf8')
-questionflex = json.load(f)
-f.close()
-f =  open('./resources/motionopt.json', encoding='utf8')
-motionopt = json.load(f)
-f.close()
- 
- 
+# f =  open('./resources/question.json', encoding='utf8')
+# questionflex = json.load(f)
+# f.close()
+# f =  open('./resources/motionopt.json', encoding='utf8')
+# motionopt = json.load(f)
+# f.close()
+
+bot_id = "lkMI2xb0HpBdCpeOZpvM"
+apiurl = 'http://localhost:3000/bot' 
+client = requests.session()
 app = Flask(__name__)
 
 line_bot_api = LineBotApi('lnoN3pNo/DUuie5L3OT9exNM+/WZzquIkqGIZdVFcOTHOAhdkNe8IXDilhrKQNrFLQViNJv0MVcZtIzaU7sFKoOkc9s657sq5xb64EtiVqbCoDPEwqt0xwZgkuFriqVOVKVQrP7sXhjR4dNQm5Gk1QdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
 
-# def richmenswitch(text, alias):
-#     RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi1")
-#     MessageAction(text = text)
-
-# rich_menu_to_create = RichMenu(
-#     size=RichMenuSize(width=2500, height=1686),
-#     selected=True,
-#     name="Nice richmenu",
-#     chat_bar_text="RMenu",
-#     areas=[RichMenuArea(
-#         bounds=RichMenuBounds(x=0, y=0, width=1250, height=843),
-#         action=RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi1")),
-#         RichMenuArea(
-#         bounds=RichMenuBounds(x=1250, y=0, width=1250, height=843),
-#         action=RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi2")),
-#         RichMenuArea(
-#         bounds=RichMenuBounds(x=0, y=843, width=1250, height=843),
-#         action=RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi3")),
-#         RichMenuArea(
-#         bounds=RichMenuBounds(x=1250, y=843, width=1250, height=843),
-#         action=RichMenuSwitchAction(rich_menu_alias_id="back_menu_alias", data="menswi4"))]
-# )
-# rich_menu_id = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
-# back_menu_to_create = RichMenu(
-#     size=RichMenuSize(width=2500, height=843),
-#     selected=True,
-#     name="Nice backmenu",
-#     chat_bar_text="RMenu",
-#     areas=[RichMenuArea(
-#         bounds=RichMenuBounds(x=0, y=0, width=2500, height=843),
-#         action=RichMenuSwitchAction(rich_menu_alias_id="rich_menu_alias", data="menswiBack"))]
-# )
-# back_menu_id = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
-# with open("./resources/richmenu.jpg", 'rb') as f:
-#     line_bot_api.set_rich_menu_image(rich_menu_id, "image/jpeg", f)
-# with open("./resources/backmenu.jpg", 'rb') as g:
-#     line_bot_api.set_rich_menu_image(back_menu_id, "image/jpeg", g)
-# line_bot_api.create_rich_menu_alias(RichMenuAlias(rich_menu_alias_id= "rich_menu_alias", rich_menu_id= rich_menu_id))
-# line_bot_api.create_rich_menu_alias(RichMenuAlias(rich_menu_alias_id= "back_menu_alias", rich_menu_id= back_menu_id))
-# line_bot_api.set_default_rich_menu(rich_menu_id)
-
-# print("check "+str(len(line_bot_api.get_rich_menu_list(timeout = 2))))
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -113,12 +76,37 @@ def handle_message(event):
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=resp))
+    if event.type == "follow": 
+        resp = followhandle(event)
+        print(event)
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=resp))
 
-        # debug
+def authheaders():
+    return {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        }
 
-        # line_bot_api.reply_message(
-        #     event.reply_token,
-        #     FlexSendMessage(contents=questionflex,alt_text="yo"))
+def followhandle(event):
+    if(event.source.type == "user"):
+        r = client.post(apiurl+'/followevent', data= {"userId": event.source.userId}, headers=authheaders())
+        print(r)
+        if(r.status_code == 200):
+            state_dict[event.source.userId]= {"state": "start", "cq":1}
+            return 'added'
+        else:
+            return 'error'
+    
+def apicall(event, url, postdata):
+    if(event.source.type == "user"):
+        r = client.post(apiurl+url, data= postdata, headers=authheaders())
+        print(r)
+        if(r.status_code == 200):
+            return r.json()
+        else:
+            return NULL
 
 def statehandle(event):
 
@@ -126,52 +114,54 @@ def statehandle(event):
 
     ###########debugging################
     if event.message.text.lower() == 'back' :
-        state_dict['state'] = "start"
-        state_dict['cq'] = 1
+        state_dict[event.source.userId]['state'] = "start"
+        state_dict[event.source.userId]['cq'] = 1
         # print(line_bot_api.get_rich_menu_list())
         response = "rebooted"
     ###########debugging################
 
-    if state_dict['state'] == "start":
+    if state_dict[event.source.userId]['state'] == "start":
         print("nycbruh")
         # "Please select one option. \ n 1. Motion \ n 2. Meal \ n 3. Attitude \ n 4. Record"
         response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
-        state_dict['state'] = "menu_select"
+        state_dict[event.source.userId]['state'] = "menu_select"
 
-    elif state_dict['state'] == "menu_select":
+    elif state_dict[event.source.userId]['state'] == "menu_select":
         if event.message.text == '1':
-            # Please select one option. \ n 1. Stretch \ n 2. Self-weight exercise \ n 3. Item 1 \ n 4. Item 2 \ n 5. Item 3 \ n 6. Customize
-            # response = "選択肢一つを選択してください。\n 1. ストレッチ \n 2. 自重運動  \n 3. アイテム１ \n 4. アイテム２ \n 5. アイテム３\n 6. カスタマイズ"
             response = "選択肢一つを選択してください。"
             for item in motionopt:
                 response+= "\n"+item["label"]
-            state_dict['state'] = 'selected_motion'
+            state_dict[event.source.userId]['state'] = 'selected_motion'
             # line_bot_api.set_default_rich_menu(back_menu_id)
 
         elif event.message.text == '2':
 
+            resp = apicall(event, '/questionaire', {"bot_id": bot_id})
             # f =  open('./resources/quesaire.json', encoding='utf8')
             # questionaire = json.load(f)
+            global questionaire
+            if(resp): questionaire = resp
+            else: response = "有効なオプションを選択してください。"
             print("qqq")
             print(questionaire)
             
-            response = "アンケートを始めましょう: \n Q1) " + questionaire['questions'][0]['question'] + options
-            state_dict['state']= 'questionaire'
+            response = "アンケートを始めましょう: \n Q1) " + questionaire['questionItems'][0]['questionText'] + options
+            state_dict[event.source.userId]['state']= 'questionaire'
             # line_bot_api.set_default_rich_menu(back_menu_id)
 
         elif event.message.text == '3':
             response = "still to be updated"
-            state_dict['state'] = 'selected_attitude'
+            state_dict[event.source.userId]['state'] = 'selected_attitude'
             # line_bot_api.set_default_rich_menu(back_menu_id)
         elif event.message.text == '4':
             response = "still to be updated"
-            state_dict['state'] = 'selected_record'
+            state_dict[event.source.userId]['state'] = 'selected_record'
             # line_bot_api.set_default_rich_menu(back_menu_id)
         else:
             # "Please select a valid option."
             response = "有効なオプションを選択してください。"
 
-    elif state_dict['state'] == 'selected_motion':
+    elif state_dict[event.source.userId]['state'] == 'selected_motion':
         itemselected = int(event.message.text)-1
         if itemselected >= len(motionopt) or itemselected < 0:
             line_bot_api.push_message(
@@ -180,14 +170,14 @@ def statehandle(event):
             response = "選択肢一つを選択してください。"
             for item in motionopt:
                 response+= "\n"+item["label"]
-            state_dict['state'] = 'selected_motion'
+            state_dict[event.source.userId]['state'] = 'selected_motion'
         else:
             responsehist["selected_motion"]=itemselected
             response = "選択肢一つを選択してください。"
             for option in motionopt[itemselected]["subopt"]:
                 response+="\n"+option["label"]
-            state_dict['state'] = 'selected_motion_item'
-    elif state_dict['state'] == 'selected_motion_item':
+            state_dict[event.source.userId]['state'] = 'selected_motion_item'
+    elif state_dict[event.source.userId]['state'] == 'selected_motion_item':
         optionselected = int(event.message.text)-1
         if optionselected >= len(motionopt[responsehist["selected_motion"]]["subopt"]) or optionselected < 0:
             line_bot_api.push_message(
@@ -196,14 +186,14 @@ def statehandle(event):
             response = "選択肢一つを選択してください。"
             for option in motionopt[responsehist["selected_motion"]]["subopt"]:
                 response+="\n"+option["label"]
-            state_dict['state'] = 'selected_motion_item'
+            state_dict[event.source.userId]['state'] = 'selected_motion_item'
         else:
             responsehist["selected_motion_item"]=optionselected
             response = "選択肢一つを選択してください。"
             for elmnt in motionopt[responsehist["selected_motion"]]["subopt"][optionselected]["subtext"]:
                 response+="\n"+elmnt
-            state_dict['state'] = 'selected_motion_item_option'
-    elif state_dict['state'] == 'selected_motion_item_option':
+            state_dict[event.source.userId]['state'] = 'selected_motion_item_option'
+    elif state_dict[event.source.userId]['state'] == 'selected_motion_item_option':
         elmntselected = int(event.message.text)-1
         if elmntselected >= len(motionopt[responsehist["selected_motion"]]["subopt"][responsehist["selected_motion_item"]]["subtext"]) or elmntselected < 0:
             line_bot_api.push_message(
@@ -212,7 +202,7 @@ def statehandle(event):
             response = "選択肢一つを選択してください。"
             for elmnt in motionopt[responsehist["selected_motion"]]["subopt"][responsehist["selected_motion_item"]]["subtext"]:
                 response+="\n"+elmnt
-            state_dict['state'] = 'selected_motion_item_option'
+            state_dict[event.source.userId]['state'] = 'selected_motion_item_option'
         else:
             responsehist["selected_motion_item_option"]=elmntselected
             line_bot_api.push_message(
@@ -220,83 +210,20 @@ def statehandle(event):
                 TextSendMessage(text="Thank You for your response."))            
             response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
             responsehist.clear()
-            state_dict['state']='menu_select'
-        # if event.message.text == '1':
-        #     # Please select one option. \ n 1. Whole body \ n 2. Head / neck \ n 3. Shoulders / chest \ n 4. Waist / back \ n 5. Knees / feet \ n 6. Customize
-        #     response = "選択肢一つを選択してください。\n 1. 全身 \n 2. 頭・首  \n 3. 肩･胸 \n 4. 腰・背 \n 5. 膝・足\n 6. カスタマイズ"
-        #     state_dict['state'] = 'selected_motion_strech'
-
-
-        # elif event.message.text == '2':
-        #     response = "still to be updated"
-        #     state_dict['state'] = 'selected_motion_self_weight'
-
-
-        # elif event.message.text == '3':
-        #     response = "still to be updated"
-        #     state_dict['state'] = 'selected_motion_item1'
-
-        # elif event.message.text == '4':
-        #     response = "still to be updated"
-        #     state_dict['state'] = 'selected_motion_item2'
-
-        # elif event.message.text == '5':
-        #     response = "still to be updated"
-        #     state_dict['state'] = 'selected_motion_item3'
-        
-        # elif event.message.text == '6':
-        #     response = "still to be updated"
-        #     state_dict['state'] = 'selected_motion_customize'
-
-        # else:
-        #     # "Please select a valid option."
-        #     response = "有効なオプションを選択してください。"
-
-    elif state_dict['state'] == 'questionaire':
-        if state_dict['cq'] >= len(questionaire['questions']):
-            print(state_dict['cq'])
+            state_dict[event.source.userId]['state']='menu_select'
+    elif state_dict[event.source.userId]['state'] == 'questionaire':
+        if state_dict[event.source.userId]['cq'] >= len(questionaire['questionItems']):
+            print(state_dict[event.source.userId]['cq'])
             
-            state_dict['cq']=1
+            state_dict[event.source.userId]['cq']=1
             line_bot_api.push_message(
                 event.source.user_id,
                 TextSendMessage(text="Thank You for your responses."))            
             response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
-            state_dict['state']='menu_select'
+            state_dict[event.source.userId]['state']='menu_select'
         else:
-            response = "Q" + str(state_dict['cq']+1)+ ") "+ questionaire['questions'][state_dict['cq']]['question'] + options
-            state_dict['cq']+=1
-    # elif state_dict['state'] == 'selected_motion_strech':
-    #     if event.message.text == '1':
-    #         # Please select one option. \ n 1. Dull \ n 2. Easy to get tired \ n 3. Swelling \ n 4. Shortness of breath \ n 5. Hot flashes \ n 6. Can't sleep
-    #         response = "選択肢一つを選択してください。\n 1. だるい \n 2. 疲れやすい  \n 3. むくみ \n 4. 息切れがする \n 5. のぼせ\n 6. 眠れない"
-    #         state_dict['state'] = 'selected_motion_strech_wholebody'
-
-    #     elif event.message.text == '2':
-    #         response = "still to be updated"
-    #         state_dict['state'] = 'selected_motion_strech_headneck'
-
-    #     elif event.message.text == '3':
-    #         response = "still to be updated"
-    #         state_dict['state'] = 'selected_motion_strech_shoulderchest'
-
-
-    #     elif event.message.text == '4':
-    #         response = "still to be updated"
-    #         state_dict['state'] = 'selected_motion_strech_waistback'
-
-    #     elif event.message.text == '5':
-    #         response = "still to be updated"
-    #         state_dict['state'] = 'selected_motion_strech_kneesfeet'
-
-    #     elif event.message.text == '6':
-    #         response = "still to be updated"
-    #         state_dict['state'] = 'selected_motion_strech_customize'
-
-    #     else:
-    #         # "Please select a valid option."
-    #         response = "有効なオプションを選択してください。"
-        
-
+            response = "Q" + str(state_dict[event.source.userId]['cq']+1)+ ") "+ questionaire['questionItems'][state_dict[event.source.userId]['cq']]['questionText'] + options
+            state_dict[event.source.userId]['cq']+=1    
     else:
         response = "errrrr"
     return response  
