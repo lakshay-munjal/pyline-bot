@@ -49,6 +49,30 @@ app = Flask(__name__)
 line_bot_api = LineBotApi('lnoN3pNo/DUuie5L3OT9exNM+/WZzquIkqGIZdVFcOTHOAhdkNe8IXDilhrKQNrFLQViNJv0MVcZtIzaU7sFKoOkc9s657sq5xb64EtiVqbCoDPEwqt0xwZgkuFriqVOVKVQrP7sXhjR4dNQm5Gk1QdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
 
+######################init for every user init dict - lakshay
+def apicall(event, url, postdata):
+    if(not event):
+        r = client.get(apiurl+url, headers=authheaders())
+        print(r)
+        if(r.status_code == 200):
+            return r.json()
+        else:
+            return NULL
+    if(event.source.type == "user"):
+        r = client.post(apiurl+url, data= postdata, headers=authheaders())
+        print(r)
+        if(r.status_code == 200):
+            return r.json()
+        else:
+            return NULL
+
+usrlist = apicall(NULL, '/userlist', {"bot_id": bot_id})
+if(usrlist): print("userlist returned")
+else: print("userlist wasn't returned")
+
+for usr in usrlist:
+    state_dict[usr]= {"state": "start", "cq":1}
+
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -99,15 +123,6 @@ def followhandle(event):
         else:
             return 'error'
     
-def apicall(event, url, postdata):
-    if(event.source.type == "user"):
-        r = client.post(apiurl+url, data= postdata, headers=authheaders())
-        print(r)
-        if(r.status_code == 200):
-            return r.json()
-        else:
-            return NULL
-
 def statehandle(event):
 
     response = ''
@@ -128,6 +143,20 @@ def statehandle(event):
 
     elif state_dict[event.source.userId]['state'] == "menu_select":
         if event.message.text == '1':
+
+            resp = apicall(event, '/motionopt', {"bot_id": bot_id})
+            # f =  open('./resources/quesaire.json', encoding='utf8')
+            # questionaire = json.load(f)
+            global motionopt
+            global responsehist
+            if(resp): 
+                motionopt = resp.motionopt
+                responsehist = resp.responsehist
+            else: return "api failed fuck you gaygan"
+            print("qqq3")
+            # print(questionaire)
+
+
             response = "選択肢一つを選択してください。"
             for item in motionopt:
                 response+= "\n"+item["label"]
@@ -141,7 +170,7 @@ def statehandle(event):
             # questionaire = json.load(f)
             global questionaire
             if(resp): questionaire = resp
-            else: response = "有効なオプションを選択してください。"
+            else: return "api failed fuck you gaygan"
             print("qqq")
             print(questionaire)
             
@@ -162,6 +191,19 @@ def statehandle(event):
             response = "有効なオプションを選択してください。"
 
     elif state_dict[event.source.userId]['state'] == 'selected_motion':
+
+        resp = apicall(event, '/motionopt', {"bot_id": bot_id})
+        # f =  open('./resources/quesaire.json', encoding='utf8')
+        # questionaire = json.load(f)
+        global motionopt
+        global responsehist
+        if(resp): 
+            motionopt = resp.motionopt
+            responsehist = resp.responsehist
+        else: return "api failed fuck you gaygan"
+        # print(questionaire)
+
+
         itemselected = int(event.message.text)-1
         if itemselected >= len(motionopt) or itemselected < 0:
             line_bot_api.push_message(
@@ -176,9 +218,24 @@ def statehandle(event):
             response = "選択肢一つを選択してください。"
             for option in motionopt[itemselected]["subopt"]:
                 response+="\n"+option["label"]
+            apicall(event, '/updatehistmotionopt', {"bot_id": bot_id})
             state_dict[event.source.userId]['state'] = 'selected_motion_item'
     elif state_dict[event.source.userId]['state'] == 'selected_motion_item':
         optionselected = int(event.message.text)-1
+
+        resp = apicall(event, '/motionopt', {"bot_id": bot_id})
+        # f =  open('./resources/quesaire.json', encoding='utf8')
+        # questionaire = json.load(f)
+        global motionopt
+        global responsehist
+        if(resp): 
+            motionopt = resp.motionopt
+            responsehist = resp.responsehist
+        else: return "api failed fuck you gaygan"
+        print("qqq5")
+        # print(questionaire)
+
+            
         if optionselected >= len(motionopt[responsehist["selected_motion"]]["subopt"]) or optionselected < 0:
             line_bot_api.push_message(
                 event.source.user_id,
@@ -192,9 +249,24 @@ def statehandle(event):
             response = "選択肢一つを選択してください。"
             for elmnt in motionopt[responsehist["selected_motion"]]["subopt"][optionselected]["subtext"]:
                 response+="\n"+elmnt
+            apicall(event, '/updatehistmotionopt', {"bot_id": bot_id})
             state_dict[event.source.userId]['state'] = 'selected_motion_item_option'
     elif state_dict[event.source.userId]['state'] == 'selected_motion_item_option':
         elmntselected = int(event.message.text)-1
+
+        resp = apicall(event, '/motionopt', {"bot_id": bot_id})
+        # f =  open('./resources/quesaire.json', encoding='utf8')
+        # questionaire = json.load(f)
+        global motionopt
+        global responsehist
+        if(resp): 
+            motionopt = resp.motionopt
+            responsehist = resp.responsehist
+        else: return "api failed fuck you gaygan"
+        print("qqq6")
+        # print(questionaire)
+
+            
         if elmntselected >= len(motionopt[responsehist["selected_motion"]]["subopt"][responsehist["selected_motion_item"]]["subtext"]) or elmntselected < 0:
             line_bot_api.push_message(
                 event.source.user_id,
@@ -205,13 +277,32 @@ def statehandle(event):
             state_dict[event.source.userId]['state'] = 'selected_motion_item_option'
         else:
             responsehist["selected_motion_item_option"]=elmntselected
+
+            #noob lakshay
+
+
             line_bot_api.push_message(
                 event.source.user_id,
                 TextSendMessage(text="Thank You for your response."))            
             response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
             responsehist.clear()
+            apicall(event, '/clearhistmotionopt', {"bot_id": bot_id})
             state_dict[event.source.userId]['state']='menu_select'
     elif state_dict[event.source.userId]['state'] == 'questionaire':
+
+        resp = apicall(event, '/questionaire', {"bot_id": bot_id})
+        # f =  open('./resources/quesaire.json', encoding='utf8')
+        # questionaire = json.load(f)
+        global questionaire
+        global responsehist
+        if(resp): 
+            questionaire = resp.questionaire
+            responsehist = resp.responsehist
+        else: return "api failed fuck you gaygan"
+        print("qqq2")
+        # print(questionaire)
+
+        responsehist["questionaire"][str(state_dict[event.source.userId]['cq'])] = event.message.text
         if state_dict[event.source.userId]['cq'] >= len(questionaire['questionItems']):
             print(state_dict[event.source.userId]['cq'])
             
@@ -220,10 +311,14 @@ def statehandle(event):
                 event.source.user_id,
                 TextSendMessage(text="Thank You for your responses."))            
             response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+            responsehist.clear()
+            apicall(event, '/clearhistques', {"bot_id": bot_id})
+
             state_dict[event.source.userId]['state']='menu_select'
         else:
             response = "Q" + str(state_dict[event.source.userId]['cq']+1)+ ") "+ questionaire['questionItems'][state_dict[event.source.userId]['cq']]['questionText'] + options
             state_dict[event.source.userId]['cq']+=1    
+            apicall(event, '/updatehistques', {"bot_id": bot_id})
     else:
         response = "errrrr"
     return response  
