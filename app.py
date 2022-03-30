@@ -120,6 +120,7 @@ def callback():
 def handle_message(event):
     """ Here's all the messages will be handled and processed by the program """
     if event.type == "message": 
+        print(event)
         resp = statehandle(event)
         print(event)
         line_bot_api.reply_message(
