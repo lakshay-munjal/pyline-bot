@@ -138,6 +138,8 @@ def followhandle(event):
         r = client.post(apiurl+'/followevent', data= {"user_id": event.source.userId, "botId": bot_id}, headers=authheaders())
         print(r)
         if(r.status_code == 200):
+            print("ff")
+            print(event)
             state_dict[event.source.userId]= {"state": "start", "cq":1}
             return 'added'
         else:
@@ -156,7 +158,8 @@ def statehandle(event):
         # print(line_bot_api.get_rich_menu_list())
         response = "rebooted"
     ###########debugging################
-
+    print("state")
+    print(event)
     if state_dict[event.source.userId]['state'] == "start":
         print("nycbruh")
         # "Please select one option. \ n 1. Motion \ n 2. Meal \ n 3. Attitude \ n 4. Record"
