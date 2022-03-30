@@ -142,7 +142,9 @@ def followhandle(event):
             return 'error'
     
 def statehandle(event):
-
+    global questionaire
+    global motionopt
+    global responsehist
     response = ''
 
     ###########debugging################
@@ -165,8 +167,6 @@ def statehandle(event):
             resp = apicall(event, '/motionopt', {"user_id": event.source.userId, "bot_id": bot_id})
             # f =  open('./resources/quesaire.json', encoding='utf8')
             # questionaire = json.load(f)
-            global motionopt
-            global responsehist
             if(resp): 
                 motionopt = resp.motionopt
                 responsehist = resp.responsehist
@@ -186,7 +186,6 @@ def statehandle(event):
             resp = apicall(event, '/questionaire', {"user_id": event.source.userId, "bot_id": bot_id})
             # f =  open('./resources/quesaire.json', encoding='utf8')
             # questionaire = json.load(f)
-            global questionaire
             if(resp): questionaire = resp.questionaire
             else: return "api failed fuck you gaygan"
             print("qqq")
@@ -235,8 +234,6 @@ def statehandle(event):
         resp = apicall(event, '/motionopt', {"user_id": event.source.userId, "bot_id": bot_id})
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
-        global motionopt
-        global responsehist
         if(resp): 
             motionopt = resp.motionopt
             responsehist = resp.responsehist
@@ -266,8 +263,6 @@ def statehandle(event):
         resp = apicall(event, '/motionopt', {"user_id": event.source.userId, "bot_id": bot_id})
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
-        global motionopt
-        global responsehist
         if(resp): 
             motionopt = resp.motionopt.items
             responsehist = resp.responsehist
@@ -297,8 +292,6 @@ def statehandle(event):
         resp = apicall(event, '/motionopt', {"user_id": event.source.userId, "bot_id": bot_id})
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
-        global motionopt
-        global responsehist
         if(resp): 
             motionopt = resp.motionopt
             responsehist = resp.responsehist
@@ -333,8 +326,6 @@ def statehandle(event):
         resp = apicall(event, '/questionaire', {"bot_id": bot_id})
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
-        global questionaire
-        global responsehist
         if(resp): 
             questionaire = resp.questionaire
             responsehist = resp.responsehist
