@@ -65,7 +65,7 @@ def authheaders():
         }
 
 
-def apicall(event, url, postdata):
+def apicall(event, url, postdata, nores = False):
     postdata = json.dumps(postdata)
     if(not event):
         r = client.get(apiurl+url, headers=authheaders())
@@ -77,7 +77,7 @@ def apicall(event, url, postdata):
     else:
         r = client.post(apiurl+url, data= postdata, headers=authheaders())
         print(r)
-        if(r != None and r.status_code == 200):
+        if(r != None and not nores and r.status_code == 200):
             return r.json()
         else:
             return None
@@ -281,7 +281,7 @@ def statehandle(event):
             response = "選択肢一つを選択してください。"
             for option in motionopt[itemselected]["subItems"]:
                 response+="\n"+option["subItemName"]
-            apicall(event, '/updatehistmotionopt', {"user_id": event.source.user_id, "data": responsehist})
+            apicall(event, '/updatehistmotionopt', {"user_id": event.source.user_id, "data": responsehist}, nores=True)
             state_dict[event.source.user_id]['state'] = 'selected_motion_item'
     elif state_dict[event.source.user_id]['state'] == 'selected_motion_item':
         optionselected = int(event.message.text)-1
@@ -310,7 +310,7 @@ def statehandle(event):
             response = "選択肢一つを選択してください。"
             for elmnt in motionopt[responsehist["selected_motion"]]["subItems"][optionselected]["subSubItems"]:
                 response+="\n"+elmnt["MenuText"]
-            apicall(event, '/updatehistmotionopt', {"user_id": event.source.user_id, "data": responsehist})
+            apicall(event, '/updatehistmotionopt', {"user_id": event.source.user_id, "data": responsehist}, nores=True)
             state_dict[event.source.user_id]['state'] = 'selected_motion_item_option'
     elif state_dict[event.source.user_id]['state'] == 'selected_motion_item_option':
         elmntselected = int(event.message.text)-1
@@ -375,7 +375,7 @@ def statehandle(event):
         else:
             response = "Q" + str(state_dict[event.source.user_id]['cq']+1)+ ") "+ questionaire['questionItems'][state_dict[event.source.user_id]['cq']]['questionText'] + options
             state_dict[event.source.user_id]['cq']+=1 
-            apicall(event, '/updatehistques', {"bot_id": bot_id})
+            apicall(event, '/updatehistques', {"bot_id": bot_id}, nores=True)
 
     elif state_dict[event.source.user_id]['state'] == 'selected_record':
         response = "Please enter the value"
