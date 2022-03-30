@@ -12,7 +12,7 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage, FlexSendMessage
+    MessageEvent, TextMessage, TextSendMessage, FlexSendMessage, FollowEvent
 )
 from linebot.models.flex_message import BubbleContainer, FlexContainer
 
@@ -121,21 +121,24 @@ def handle_message(event):
     """ Here's all the messages will be handled and processed by the program """
     print("handleevent")
     print(event)
-    if event.type == "message": 
-        # #print(event)
-        resp = statehandle(event)
-        # #print(event)
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=resp))
-    if event.type == "follow": 
-        print(state_dict)
-        resp = followhandle(event)
-        print(state_dict)
-        #print(event)
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=resp))
+    resp = statehandle(event)
+    # #print(event)
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=resp))
+
+@handler.add(FollowEvent)
+def handle_follow(event):
+    """ Here's all the messages will be handled and processed by the program """
+    print("handleevent")
+    print(event)
+    print(state_dict)
+    resp = followhandle(event)
+    print(state_dict)
+    #print(event)
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=resp))
 
 def followhandle(event):
     print("followhabdle")
