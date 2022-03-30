@@ -194,7 +194,7 @@ def statehandle(event):
             # questionaire = json.load(f)
             if(resp): 
                 print(resp)
-                motionopt = resp["motionopt"]
+                motionopt = resp["motionopt"]["items"]
                 responsehist = resp["responsehist"]
             else: return "api failed fuck you gaygan"
             print("qqq3")
