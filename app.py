@@ -133,7 +133,7 @@ def authheaders():
 
 def followhandle(event):
     if(event.source.type == "user"):
-        r = client.post(apiurl+'/followevent', data= {"userId": event.source.userId}, headers=authheaders())
+        r = client.post(apiurl+'/followevent', data= {"user_id": event.source.userId, "botId": bot_id}, headers=authheaders())
         print(r)
         if(r.status_code == 200):
             state_dict[event.source.userId]= {"state": "start", "cq":1}
@@ -162,7 +162,7 @@ def statehandle(event):
     elif state_dict[event.source.userId]['state'] == "menu_select":
         if event.message.text == '1':
 
-            resp = apicall(event, '/motionopt', {"bot_id": bot_id})
+            resp = apicall(event, '/motionopt', {"user_id": event.source.userId, "bot_id": bot_id})
             # f =  open('./resources/quesaire.json', encoding='utf8')
             # questionaire = json.load(f)
             global motionopt
@@ -177,17 +177,17 @@ def statehandle(event):
 
             response = "選択肢一つを選択してください。"
             for item in motionopt:
-                response+= "\n"+item["label"]
+                response+= "\n"+item["itemName"]
             state_dict[event.source.userId]['state'] = 'selected_motion'
             # line_bot_api.set_default_rich_menu(back_menu_id)
 
         elif event.message.text == '2':
 
-            resp = apicall(event, '/questionaire', {"bot_id": bot_id})
+            resp = apicall(event, '/questionaire', {"user_id": event.source.userId, "bot_id": bot_id})
             # f =  open('./resources/quesaire.json', encoding='utf8')
             # questionaire = json.load(f)
             global questionaire
-            if(resp): questionaire = resp
+            if(resp): questionaire = resp.questionaire
             else: return "api failed fuck you gaygan"
             print("qqq")
             print(questionaire)
@@ -232,7 +232,7 @@ def statehandle(event):
 
     elif state_dict[event.source.userId]['state'] == 'selected_motion':
 
-        resp = apicall(event, '/motionopt', {"bot_id": bot_id})
+        resp = apicall(event, '/motionopt', {"user_id": event.source.userId, "bot_id": bot_id})
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
         global motionopt
@@ -251,50 +251,50 @@ def statehandle(event):
                 TextSendMessage(text="Please select a valid response."))            
             response = "選択肢一つを選択してください。"
             for item in motionopt:
-                response+= "\n"+item["label"]
+                response+= "\n"+item["itemName"]
             state_dict[event.source.userId]['state'] = 'selected_motion'
         else:
             responsehist["selected_motion"]=itemselected
             response = "選択肢一つを選択してください。"
-            for option in motionopt[itemselected]["subopt"]:
-                response+="\n"+option["label"]
-            apicall(event, '/updatehistmotionopt', {"bot_id": bot_id})
+            for option in motionopt[itemselected]["subItems"]:
+                response+="\n"+option["subItemName"]
+            apicall(event, '/updatehistmotionopt', {"user_id": event.source.userId, "data": responsehist})
             state_dict[event.source.userId]['state'] = 'selected_motion_item'
     elif state_dict[event.source.userId]['state'] == 'selected_motion_item':
         optionselected = int(event.message.text)-1
 
-        resp = apicall(event, '/motionopt', {"bot_id": bot_id})
+        resp = apicall(event, '/motionopt', {"user_id": event.source.userId, "bot_id": bot_id})
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
         global motionopt
         global responsehist
         if(resp): 
-            motionopt = resp.motionopt
+            motionopt = resp.motionopt.items
             responsehist = resp.responsehist
         else: return "api failed fuck you gaygan"
         print("qqq5")
         # print(questionaire)
 
             
-        if optionselected >= len(motionopt[responsehist["selected_motion"]]["subopt"]) or optionselected < 0:
+        if optionselected >= len(motionopt[responsehist["selected_motion"]]["subItems"]) or optionselected < 0:
             line_bot_api.push_message(
                 event.source.user_id,
                 TextSendMessage(text="Please select a valid response."))            
             response = "選択肢一つを選択してください。"
-            for option in motionopt[responsehist["selected_motion"]]["subopt"]:
-                response+="\n"+option["label"]
+            for option in motionopt[responsehist["selected_motion"]]["subItems"]:
+                response+="\n"+option["subItemName"]
             state_dict[event.source.userId]['state'] = 'selected_motion_item'
         else:
             responsehist["selected_motion_item"]=optionselected
             response = "選択肢一つを選択してください。"
-            for elmnt in motionopt[responsehist["selected_motion"]]["subopt"][optionselected]["subtext"]:
-                response+="\n"+elmnt
-            apicall(event, '/updatehistmotionopt', {"bot_id": bot_id})
+            for elmnt in motionopt[responsehist["selected_motion"]]["subItems"][optionselected]["subSubItems"]:
+                response+="\n"+elmnt["MenuText"]
+            apicall(event, '/updatehistmotionopt', {"user_id": event.source.userId, "data": responsehist})
             state_dict[event.source.userId]['state'] = 'selected_motion_item_option'
     elif state_dict[event.source.userId]['state'] == 'selected_motion_item_option':
         elmntselected = int(event.message.text)-1
 
-        resp = apicall(event, '/motionopt', {"bot_id": bot_id})
+        resp = apicall(event, '/motionopt', {"user_id": event.source.userId, "bot_id": bot_id})
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
         global motionopt
@@ -307,13 +307,13 @@ def statehandle(event):
         # print(questionaire)
 
             
-        if elmntselected >= len(motionopt[responsehist["selected_motion"]]["subopt"][responsehist["selected_motion_item"]]["subtext"]) or elmntselected < 0:
+        if elmntselected >= len(motionopt[responsehist["selected_motion"]]["subItems"][responsehist["selected_motion_item"]]["subSubItems"]) or elmntselected < 0:
             line_bot_api.push_message(
                 event.source.user_id,
                 TextSendMessage(text="Please select a valid response."))            
             response = "選択肢一つを選択してください。"
-            for elmnt in motionopt[responsehist["selected_motion"]]["subopt"][responsehist["selected_motion_item"]]["subtext"]:
-                response+="\n"+elmnt
+            for elmnt in motionopt[responsehist["selected_motion"]]["subItems"][responsehist["selected_motion_item"]]["subSubItems"]:
+                response+="\n"+elmnt["MenuText"]
             state_dict[event.source.userId]['state'] = 'selected_motion_item_option'
         else:
             responsehist["selected_motion_item_option"]=elmntselected
@@ -384,50 +384,50 @@ def statehandle(event):
     
     
     elif state_dict[event.source.userId]['state'] == 'height':
-        apicall(event,"/user_record",{"bot_id": bot_id,"data": {"value": event.message.txt,"type": "height","userId": event.source.userId}})
+        apicall(event,"/user_record",{"user_id": event.source.userId,"data": {"value": event.message.txt,"type": "height","user_id": event.source.userId}})
         # response = "ご返信ありがとうございます。"
         response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         state_dict[event.source.userId]['state'] = "menu_select"
 
     elif state_dict[event.source.userId]['state'] == 'weight':
-        apicall(event,"/user_record",{"bot_id": bot_id,"data": {"value": event.message.txt,"type": "weight","userId": event.source.userId}})
+        apicall(event,"/user_record",{"user_id": event.source.userId,"data": {"value": event.message.txt,"type": "weight","user_id": event.source.userId}})
         # response = "ご返信ありがとうございます。"
         response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         state_dict[event.source.userId]['state'] = "menu_select"
     
     elif state_dict[event.source.userId]['state'] == 'fatrate':
-        apicall(event,"/user_record",{"bot_id": bot_id,"data": {"value": event.message.txt,"type": "fatrate","userId": event.source.userId}})
+        apicall(event,"/user_record",{"user_id": event.source.userId,"data": {"value": event.message.txt,"type": "fatrate","user_id": event.source.userId}})
         # response = "ご返信ありがとうございます。"
         response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         state_dict[event.source.userId]['state'] = "menu_select"
 
     
     elif state_dict[event.source.userId]['state'] == 'muscleamt':
-        apicall(event,"/user_record",{"bot_id": bot_id,"data": {"value": event.message.txt,"type": "muscleamt","userId": event.source.userId}})
+        apicall(event,"/user_record",{"user_id": event.source.userId,"data": {"value": event.message.txt,"type": "muscleamt","user_id": event.source.userId}})
         # response = "ご返信ありがとうございます。"
         response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         state_dict[event.source.userId]['state'] = "menu_select"
 
     elif state_dict[event.source.userId]['state'] == 'bloodpressure':
-        apicall(event,"/user_record",{"bot_id": bot_id,"data": {"value": event.message.txt,"type": "bloodpressure","userId": event.source.userId}})
+        apicall(event,"/user_record",{"user_id": event.source.userId,"data": {"value": event.message.txt,"type": "bloodpressure","user_id": event.source.userId}})
         # response = "ご返信ありがとうございます。"
         response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         state_dict[event.source.userId]['state'] = "menu_select"
 
     elif state_dict[event.source.userId]['state'] == 'musclepow':
-        apicall(event,"/user_record",{"bot_id": bot_id,"data": {"value": event.message.txt,"type": "musclepow","userId": event.source.userId}})
+        apicall(event,"/user_record",{"user_id": event.source.userId,"data": {"value": event.message.txt,"type": "musclepow","user_id": event.source.userId}})
         # response = "ご返信ありがとうございます。"
         response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         state_dict[event.source.userId]['state'] = "menu_select"
     
     elif state_dict[event.source.userId]['state'] == 'flexibility':
-        apicall(event,"/user_record",{"bot_id": bot_id,"data": {"value": event.message.txt,"type": "flexibility","userId": event.source.userId}})
+        apicall(event,"/user_record",{"user_id": event.source.userId,"data": {"value": event.message.txt,"type": "flexibility","user_id": event.source.userId}})
         # response = "ご返信ありがとうございます。"
         response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         state_dict[event.source.userId]['state'] = "menu_select"
 
     elif state_dict[event.source.userId]['state'] == 'bloodtest':
-        apicall(event,"/bloodtest",{"bot_id": bot_id,"data": {"value": event.message.txt,"type": "bloodtest","userId": event.source.userId}})
+        apicall(event,"/bloodtest",{"bot_id": bot_id,"data": {"value": event.message.txt,"type": "bloodtest","user_id": event.source.userId}})
         # response = "ご返信ありがとうございます。"
         response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         state_dict[event.source.userId]['state'] = "menu_select"
