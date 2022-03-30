@@ -120,15 +120,17 @@ def callback():
 def handle_message(event):
     """ Here's all the messages will be handled and processed by the program """
     if event.type == "message": 
-        print(event)
+        # #print(event)
         resp = statehandle(event)
-        print(event)
+        # #print(event)
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=resp))
     if event.type == "follow": 
+        print(state_dict)
         resp = followhandle(event)
-        print(event)
+        print(state_dict)
+        #print(event)
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=resp))
@@ -139,7 +141,8 @@ def followhandle(event):
         print(r)
         if(r.status_code == 200):
             print("ff")
-            print(event)
+            #print(event)
+
             state_dict[event.source.user_id]= {"state": "start", "cq":1}
             return 'added'
         else:
@@ -159,13 +162,14 @@ def statehandle(event):
         response = "rebooted"
     ###########debugging################
     print("state")
-    print(event)
+    #print(event)
     print(event.source)
     print(type(event))
     print(type(event.source))
     # print(len(event.source))
     print(event.source.user_id)
     # print(event.source.user_id)
+    print(state_dict)
     if state_dict[event.source.user_id]['state'] == "start":
         print("nycbruh")
         # "Please select one option. \ n 1. Motion \ n 2. Meal \ n 3. Attitude \ n 4. Record"
