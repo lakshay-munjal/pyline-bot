@@ -64,7 +64,16 @@ def authheaders():
           "Content-Type": "application/json",
         }
 
-
+def makeoptions(choices):
+    global options
+    if len(choices)!=0:
+        options = "\n選択肢一つを選択してください。\n 1. まったくその通りだ \n 2. どちらかというとそうだ  \n 3. ときどき思い当たることがある \n 4. そんなことはない"
+    else:
+        options = "\n選択肢一つを選択してください。"
+        count = 0
+        for choice in choices:
+            count+=1
+            options+= "\n "+count+". "+choice["choiceText"]
 def apicall(event, url, postdata, nores = False):
     postdata = json.dumps(postdata)
     if(not event):
@@ -216,7 +225,7 @@ def statehandle(event):
             else: return "api failed fuck you gaygan"
             print("qqq")
             print(questionaire)
-            
+            makeoptions(questionaire['questionItems'][0]['choiceItems'])
             response = "アンケートを始めましょう: \n Q1) " + questionaire['questionItems'][0]['questionText'] + options
             state_dict[event.source.user_id]['state']= 'questionaire'
             # line_bot_api.set_default_rich_menu(back_menu_id)
@@ -358,24 +367,29 @@ def statehandle(event):
         else: return "api failed fuck you gaygan"
         print("qqq2")
         # print(questionaire)
-
-        responsehist["questionaire"][str(state_dict[event.source.user_id]['cq'])] = event.message.text
-        if state_dict[event.source.user_id]['cq'] >= len(questionaire['questionItems']):
-            print(state_dict[event.source.user_id]['cq'])
-            
-            state_dict[event.source.user_id]['cq']=1
-            line_bot_api.push_message(
-                event.source.user_id,
-                TextSendMessage(text="Thank You for your responses."))            
-            response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
-            responsehist.clear()
-            # apicall(event, '/clearhistques', {"bot_id": bot_id})
-
-            state_dict[event.source.user_id]['state']='menu_select'
+        choiceselected = int(event.message.text)-1
+        if choiceselected <= 0 or choiceselected > len(questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['choiceItems']):
+            makeoptions(questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['choiceItems'])
+            response = "Q" + str(state_dict[event.source.user_id]['cq'])+ ") "+ questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['questionText'] + options
         else:
-            response = "Q" + str(state_dict[event.source.user_id]['cq']+1)+ ") "+ questionaire['questionItems'][state_dict[event.source.user_id]['cq']]['questionText'] + options
-            state_dict[event.source.user_id]['cq']+=1 
-            apicall(event, '/updatehistques', {"bot_id": bot_id}, nores=True)
+            responsehist["questionaire"][str(state_dict[event.source.user_id]['cq'])] = choiceselected
+            if state_dict[event.source.user_id]['cq'] >= len(questionaire['questionItems']):
+                print(state_dict[event.source.user_id]['cq'])
+                
+                state_dict[event.source.user_id]['cq']=1
+                line_bot_api.push_message(
+                    event.source.user_id,
+                    TextSendMessage(text="Thank You for your responses."))            
+                response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+                responsehist.clear()
+                # apicall(event, '/clearhistques', {"bot_id": bot_id})
+
+                state_dict[event.source.user_id]['state']='menu_select'
+            else:
+                makeoptions(questionaire['questionItems'][state_dict[event.source.user_id]['cq']]['choiceItems'])
+                response = "Q" + str(state_dict[event.source.user_id]['cq']+1)+ ") "+ questionaire['questionItems'][state_dict[event.source.user_id]['cq']]['questionText'] + options
+                state_dict[event.source.user_id]['cq']+=1 
+                apicall(event, '/updatehistques', {"user_id": event.source.user_id, "data": responsehist}, nores=True)
 
     elif state_dict[event.source.user_id]['state'] == 'selected_record':
         response = "Please enter the value"
