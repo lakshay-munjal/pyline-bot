@@ -66,6 +66,7 @@ def authheaders():
 
 
 def apicall(event, url, postdata):
+    postdata = json.dumps(postdata)
     if(not event):
         r = client.get(apiurl+url, headers=authheaders())
         print(r)
@@ -73,7 +74,7 @@ def apicall(event, url, postdata):
             return r.json()
         else:
             return None
-    if(event.source.type == "user"):
+    else:
         r = client.post(apiurl+url, data= postdata, headers=authheaders())
         print(r)
         if(r != None and r.status_code == 200):
