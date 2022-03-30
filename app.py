@@ -136,10 +136,11 @@ def handle_message(event):
             TextSendMessage(text=resp))
 
 def followhandle(event):
+    print("followhabdle")
     if(event.source.type == "user"):
         r = client.post(apiurl+'/followevent', data= {"user_id": event.source.user_id, "botId": bot_id}, headers=authheaders())
         print(r)
-        if(r.status_code == 200):
+        if(r != None and r.status_code == 200):
             print("ff")
             #print(event)
             print("gaygan")
