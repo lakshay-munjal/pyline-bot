@@ -142,6 +142,7 @@ def followhandle(event):
         if(r.status_code == 200):
             print("ff")
             #print(event)
+            print("gaygan")
 
             state_dict[event.source.user_id]= {"state": "start", "cq":1}
             return 'added'
