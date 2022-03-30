@@ -193,6 +193,7 @@ def statehandle(event):
             # f =  open('./resources/quesaire.json', encoding='utf8')
             # questionaire = json.load(f)
             if(resp): 
+                print(resp)
                 motionopt = resp["motionopt"]
                 responsehist = resp["responsehist"]
             else: return "api failed fuck you gaygan"
