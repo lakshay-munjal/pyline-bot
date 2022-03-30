@@ -309,7 +309,7 @@ def statehandle(event):
             responsehist["selected_motion_item"]=optionselected
             response = "選択肢一つを選択してください。"
             for elmnt in motionopt[responsehist["selected_motion"]]["subItems"][optionselected]["subSubItems"]:
-                response+="\n"+elmnt["MenuText"]
+                response+="\n"+elmnt["menuText"]
             apicall(event, '/updatehistmotionopt', {"user_id": event.source.user_id, "data": responsehist}, nores=True)
             state_dict[event.source.user_id]['state'] = 'selected_motion_item_option'
     elif state_dict[event.source.user_id]['state'] == 'selected_motion_item_option':
@@ -332,7 +332,7 @@ def statehandle(event):
                 TextSendMessage(text="Please select a valid response."))            
             response = "選択肢一つを選択してください。"
             for elmnt in motionopt[responsehist["selected_motion"]]["subItems"][responsehist["selected_motion_item"]]["subSubItems"]:
-                response+="\n"+elmnt["MenuText"]
+                response+="\n"+elmnt["menuText"]
             state_dict[event.source.user_id]['state'] = 'selected_motion_item_option'
         else:
             responsehist["selected_motion_item_option"]=elmntselected
