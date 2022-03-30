@@ -1,4 +1,4 @@
-from asyncio.windows_events import NULL
+
 from http import client
 import os
 import json
@@ -65,16 +65,16 @@ def apicall(event, url, postdata):
         if(r.status_code == 200):
             return r.json()
         else:
-            return NULL
+            return None
     if(event.source.type == "user"):
         r = client.post(apiurl+url, data= postdata, headers=authheaders())
         print(r)
         if(r.status_code == 200):
             return r.json()
         else:
-            return NULL
+            return None
 
-usrlist = apicall(NULL, '/userlist', {"bot_id": bot_id})
+usrlist = apicall(None, '/userlist', {"bot_id": bot_id})
 if(usrlist): print("userlist returned")
 else: print("userlist wasn't returned")
 
