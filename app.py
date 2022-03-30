@@ -160,6 +160,8 @@ def statehandle(event):
     ###########debugging################
     print("state")
     print(event)
+    print(event.source)
+    print(event.source.userId)
     if state_dict[event.source.userId]['state'] == "start":
         print("nycbruh")
         # "Please select one option. \ n 1. Motion \ n 2. Meal \ n 3. Attitude \ n 4. Record"
