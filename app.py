@@ -50,7 +50,7 @@ options = "\n選択肢一つを選択してください。\n 1. まったくそ�
 
 
 bot_id = "lkMI2xb0HpBdCpeOZpvM"
-apiurl = 'http://localhost:3000/bot' 
+apiurl = 'https://linewebbackend.herokuapp.com/api' 
 client = requests.session()
 app = Flask(__name__)
 
@@ -326,7 +326,7 @@ def statehandle(event):
                 TextSendMessage(text="Thank You for your response."))            
             response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
             responsehist.clear()
-            apicall(event, '/clearhistmotionopt', {"bot_id": bot_id})
+            # apicall(event, '/clearhistmotionopt', {"bot_id": bot_id})
             state_dict[event.source.userId]['state']='menu_select'
     elif state_dict[event.source.userId]['state'] == 'questionaire':
 
@@ -352,7 +352,7 @@ def statehandle(event):
                 TextSendMessage(text="Thank You for your responses."))            
             response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
             responsehist.clear()
-            apicall(event, '/clearhistques', {"bot_id": bot_id})
+            # apicall(event, '/clearhistques', {"bot_id": bot_id})
 
             state_dict[event.source.userId]['state']='menu_select'
         else:
