@@ -50,7 +50,7 @@ options = "\n選択肢一つを選択してください。\n 1. まったくそ�
 
 
 bot_id = "lkMI2xb0HpBdCpeOZpvM"
-apiurl = 'https://linewebbackend.herokuapp.com/api' 
+apiurl = 'https://linewebbackend.herokuapp.com/api/bot' 
 client = requests.session()
 app = Flask(__name__)
 
@@ -69,14 +69,14 @@ def apicall(event, url, postdata):
     if(not event):
         r = client.get(apiurl+url, headers=authheaders())
         print(r)
-        if(r.status_code == 200):
+        if(r != None and r.status_code == 200):
             return r.json()
         else:
             return None
     if(event.source.type == "user"):
         r = client.post(apiurl+url, data= postdata, headers=authheaders())
         print(r)
-        if(r.status_code == 200):
+        if(r != None and r.status_code == 200):
             return r.json()
         else:
             return None
