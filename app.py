@@ -58,6 +58,13 @@ line_bot_api = LineBotApi('lnoN3pNo/DUuie5L3OT9exNM+/WZzquIkqGIZdVFcOTHOAhdkNe8I
 handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
 
 ######################init for every user init dict - lakshay
+def authheaders():
+    return {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        }
+
+
 def apicall(event, url, postdata):
     if(not event):
         r = client.get(apiurl+url, headers=authheaders())
@@ -124,12 +131,6 @@ def handle_message(event):
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=resp))
-
-def authheaders():
-    return {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        }
 
 def followhandle(event):
     if(event.source.type == "user"):
