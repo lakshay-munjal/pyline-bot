@@ -147,6 +147,7 @@ def followhandle(event):
             state_dict[event.source.user_id]= {"state": "start", "cq":1}
             return 'added'
         else:
+            print("error")
             return 'error'
     
 def statehandle(event):
