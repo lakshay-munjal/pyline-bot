@@ -193,8 +193,8 @@ def statehandle(event):
             # f =  open('./resources/quesaire.json', encoding='utf8')
             # questionaire = json.load(f)
             if(resp): 
-                motionopt = resp.motionopt
-                responsehist = resp.responsehist
+                motionopt = resp["motionopt"]
+                responsehist = resp["responsehist"]
             else: return "api failed fuck you gaygan"
             print("qqq3")
             # print(questionaire)
@@ -211,7 +211,7 @@ def statehandle(event):
             resp = apicall(event, '/questionaire', {"user_id": event.source.user_id, "bot_id": bot_id})
             # f =  open('./resources/quesaire.json', encoding='utf8')
             # questionaire = json.load(f)
-            if(resp): questionaire = resp.questionaire
+            if(resp): questionaire = resp["questionaire"]
             else: return "api failed fuck you gaygan"
             print("qqq")
             print(questionaire)
@@ -260,8 +260,8 @@ def statehandle(event):
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
         if(resp): 
-            motionopt = resp.motionopt
-            responsehist = resp.responsehist
+            motionopt = resp["motionopt"]
+            responsehist = resp["responsehist"]
         else: return "api failed fuck you gaygan"
         # print(questionaire)
 
@@ -289,8 +289,8 @@ def statehandle(event):
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
         if(resp): 
-            motionopt = resp.motionopt.items
-            responsehist = resp.responsehist
+            motionopt = resp["motionopt"].items
+            responsehist = resp["responsehist"]
         else: return "api failed fuck you gaygan"
         print("qqq5")
         # print(questionaire)
@@ -318,8 +318,8 @@ def statehandle(event):
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
         if(resp): 
-            motionopt = resp.motionopt
-            responsehist = resp.responsehist
+            motionopt = resp["motionopt"]
+            responsehist = resp["responsehist"]
         else: return "api failed fuck you gaygan"
         print("qqq6")
         # print(questionaire)
@@ -352,8 +352,8 @@ def statehandle(event):
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
         if(resp): 
-            questionaire = resp.questionaire
-            responsehist = resp.responsehist
+            questionaire = resp["questionaire"]
+            responsehist = resp["responsehist"]
         else: return "api failed fuck you gaygan"
         print("qqq2")
         # print(questionaire)
