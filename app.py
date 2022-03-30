@@ -261,7 +261,7 @@ def statehandle(event):
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
         if(resp): 
-            motionopt = resp["motionopt"]
+            motionopt = resp["motionopt"]["items"]
             responsehist = resp["responsehist"]
         else: return "api failed fuck you gaygan"
         # print(questionaire)
@@ -290,7 +290,7 @@ def statehandle(event):
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
         if(resp): 
-            motionopt = resp["motionopt"].items
+            motionopt = resp["motionopt"]["items"]
             responsehist = resp["responsehist"]
         else: return "api failed fuck you gaygan"
         print("qqq5")
@@ -319,7 +319,7 @@ def statehandle(event):
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
         if(resp): 
-            motionopt = resp["motionopt"]
+            motionopt = resp["motionopt"]["items"]
             responsehist = resp["responsehist"]
         else: return "api failed fuck you gaygan"
         print("qqq6")
