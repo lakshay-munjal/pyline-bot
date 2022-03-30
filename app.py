@@ -161,6 +161,10 @@ def statehandle(event):
     print("state")
     print(event)
     print(event.source)
+    print(type(event))
+    print(type(event.source))
+    print(len(event.source))
+    print(event.source.user_id)
     print(event.source.userId)
     if state_dict[event.source.userId]['state'] == "start":
         print("nycbruh")
