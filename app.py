@@ -415,50 +415,50 @@ def statehandle(event):
     
     
     elif state_dict[event.source.user_id]['state'] == 'height':
-        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "height","user_id": event.source.user_id}})
+        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "height","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
         response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     elif state_dict[event.source.user_id]['state'] == 'weight':
-        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "weight","user_id": event.source.user_id}})
+        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "weight","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
         response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         state_dict[event.source.user_id]['state'] = "menu_select"
     
     elif state_dict[event.source.user_id]['state'] == 'fatrate':
-        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "fatrate","user_id": event.source.user_id}})
+        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "fatrate","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
         response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     
     elif state_dict[event.source.user_id]['state'] == 'muscleamt':
-        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "muscleamt","user_id": event.source.user_id}})
+        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "muscleamt","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
         response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     elif state_dict[event.source.user_id]['state'] == 'bloodpressure':
-        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "bloodpressure","user_id": event.source.user_id}})
+        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "bloodpressure","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
         response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     elif state_dict[event.source.user_id]['state'] == 'musclepow':
-        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "musclepow","user_id": event.source.user_id}})
+        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "musclepow","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
         response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         state_dict[event.source.user_id]['state'] = "menu_select"
     
     elif state_dict[event.source.user_id]['state'] == 'flexibility':
-        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "flexibility","user_id": event.source.user_id}})
+        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "flexibility","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
         response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     elif state_dict[event.source.user_id]['state'] == 'bloodtest':
-        apicall(event,"/bloodtest",{"bot_id": bot_id,"data": {"value": event.message.text,"type": "bloodtest","user_id": event.source.user_id}})
+        apicall(event,"/bloodtest",{"bot_id": bot_id,"data": {"value": event.message.text,"type": "bloodtest","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
         response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         state_dict[event.source.user_id]['state'] = "menu_select"
