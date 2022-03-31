@@ -358,7 +358,7 @@ def statehandle(event):
             state_dict[event.source.user_id]['state']='menu_select'
     elif state_dict[event.source.user_id]['state'] == 'questionaire':
 
-            resp = apicall(event, '/questionaire', {"user_id": event.source.user_id, "bot_id": bot_id})
+        resp = apicall(event, '/questionaire', {"user_id": event.source.user_id, "bot_id": bot_id})
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
         if(resp): 
