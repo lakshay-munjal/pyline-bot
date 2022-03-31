@@ -381,8 +381,8 @@ def statehandle(event):
                     event.source.user_id,
                     TextSendMessage(text="Thank You for your responses."))            
                 response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+                apicall(event, '/updatehistques',{"user_id": event.source.user_id, "data": responsehist}, nores=True)
                 responsehist.clear()
-                # apicall(event, '/clearhistques', {"bot_id": bot_id})
 
                 state_dict[event.source.user_id]['state']='menu_select'
             else:
