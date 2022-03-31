@@ -49,7 +49,7 @@ options = "\n選択肢一つを選択してください。\n 1. まったくそ�
 #2) records has multiple fileds like height that is a map from timestamp to value registered
 
 
-bot_id = "E8d27Ltz6VA4YVqWcynx"
+bot_id = "lkMI2xb0HpBdCpeOZpvM"
 apiurl = 'https://linewebbackend.herokuapp.com/api/bot' 
 client = requests.session()
 app = Flask(__name__)
