@@ -372,7 +372,7 @@ def statehandle(event):
             makeoptions(questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['choiceItems'])
             response = "Q" + str(state_dict[event.source.user_id]['cq'])+ ") "+ questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['questionText'] + options
         else:
-            responsehist["questionaire"][str(state_dict[event.source.user_id]['cq'])] = {"choicenum": choiceselected, "choiceWeight": questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['choiceItems'][choiceselected]["choiceWeight"], "questionType": questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['questionType']}
+            responsehist["questionaire"][str(state_dict[event.source.user_id]['cq'])] = {"choicenum": choiceselected, "choiceWeight": questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['choiceItems'][choiceselected-1]["choiceWeight"], "questionType": questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['questionType']}
             if state_dict[event.source.user_id]['cq'] >= len(questionaire['questionItems']):
                 print(state_dict[event.source.user_id]['cq'])
                 
