@@ -160,11 +160,11 @@ def followhandle(event):
             #print(event)
             print("gaygan")
 
-            state_dict[event.source.user_id]= {"state": "start", "cq":1}
+            state_dict[event.source.user_id]= {"state": "init", "cq":1,"creds": {"username": "","password": ""}}
             return 'added'
         else:
             print("error")
-            state_dict[event.source.user_id]= {"state": "start", "cq":1}
+            # state_dict[event.source.user_id]= {"state": "start", "cq":1}
             return 'error'
     
 def statehandle(event):
@@ -189,7 +189,29 @@ def statehandle(event):
     print(event.source.user_id)
     # print(event.source.user_id)
     print(state_dict)
-    if state_dict[event.source.user_id]['state'] == "start":
+    if state_dict[event.source.user_id]['state'] == "init":
+        # Please enter your username:
+        response = "ユーザー名を入力してください："
+        state_dict[event.source.user_id]['state'] = "init_username"
+
+    elif state_dict[event.source.user_id]['state'] == "init_username":
+        # Please enter your password:
+        response = "パスワードを入力してください："
+        state_dict[event.source.user_id]['creds']['username'] = event.message.text
+        state_dict[event.source.user_id]['state'] = "init_password"
+
+    elif state_dict[event.source.user_id]['state'] == "init_password":
+        state_dict[event.source.user_id]['creds']['password'] = event.message.text
+        resp = apicall(event, '/register', {"user_id": event.source.user_id, "email": state_dict[event.source.user_id]['creds']['username'],"password": state_dict[event.source.user_id]['creds']['password']})
+        if(resp == None):
+            response = "正しいクレデンシャルを入力してください。\n\n ユーザー名を入力してください："
+            state_dict[event.source.user_id]['state'] = "init_username"
+        else:
+            response = "正常にログインしました。 \n\n 選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+            state_dict[event.source.user_id]['state'] = "menu_select"
+    
+
+    elif state_dict[event.source.user_id]['state'] == "start":
         print("nycbruh")
         # "Please select one option. \ n 1. Motion \ n 2. Meal \ n 3. Attitude \ n 4. Record"
         response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
