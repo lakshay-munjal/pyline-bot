@@ -351,10 +351,15 @@ def statehandle(event):
 
             line_bot_api.push_message(
                 event.source.user_id,
-                TextSendMessage(text="Thank You for your response."))            
+                TextSendMessage(text="Thank You for your response."))  
+            textmsg=apicall(event, '/clearhistmotionopt', {"user_id": event.source.user_id, "bot_id": bot_id, "data": responsehist})
+            for msg in textmsg:
+                line_bot_api.push_message(
+                    event.source.user_id,
+                    TextSendMessage(text=msg))  
+
             response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
             responsehist.clear()
-            # apicall(event, '/clearhistmotionopt', {"bot_id": bot_id})
             state_dict[event.source.user_id]['state']='menu_select'
     elif state_dict[event.source.user_id]['state'] == 'questionaire':
 
