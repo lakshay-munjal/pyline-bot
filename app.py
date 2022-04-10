@@ -4,6 +4,35 @@ import os
 import json
 import requests
 from flask import Flask, request, abort
+import pyrebase
+
+firebaseConfig = {
+  "apiKey": "AIzaSyBbpL1cGJHXiQsqaFc7C-F41VgcG8LN3pk",
+  "authDomain": "lineweb-d1174.firebaseapp.com",
+  "projectId": "lineweb-d1174",
+  "storageBucket": "lineweb-d1174.appspot.com",
+  "messagingSenderId": "854065790129",
+  "appId": "1:854065790129:web:0f9c4747e925b9fc1db690",
+  "databaseURL": "https://lineweb-d1174.firebaseio.com/"
+};
+
+firebase=pyrebase.initialize_app(firebaseConfig)
+auth=firebase.auth()
+
+def login(email,password):
+    # print("Log in...")
+    # email=input("Enter email: ")
+    # password=input("Enter password: ")
+    try:
+        login = auth.sign_in_with_email_and_password(email, password)
+        return login["idToken"]
+        print("Successfully logged in!")
+        # print(auth.get_account_info(login['idToken']))
+       # email = auth.get_account_info(login['idToken'])['users'][0]['email']
+       # print(email)
+    except:
+        print("Invalid email or password")
+    return
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -203,11 +232,17 @@ def statehandle(event):
 
     elif state_dict[event.source.user_id]['state'] == "init_password":
         state_dict[event.source.user_id]['creds']['password'] = event.message.text
-        resp = apicall(event, '/register', {"user_id": event.source.user_id, "email": state_dict[event.source.user_id]['creds']['username'],"password": state_dict[event.source.user_id]['creds']['password']})
+        # resp = apicall(event, '/register', {"user_id": event.source.user_id, "email": state_dict[event.source.user_id]['creds']['username'],"password": state_dict[event.source.user_id]['creds']['password']})
+        resp = login(state_dict[event.source.user_id]['creds']['username'],state_dict[event.source.user_id]['creds']['password'])
         if(resp == None):
             response = "正しいクレデンシャルを入力してください。\n\n ユーザー名を入力してください："
             state_dict[event.source.user_id]['state'] = "init_username"
         else:
+            resp2 = apicall(event, '/register', {"user_id": event.source.user_id,"idToken": resp})
+            if(resp2 == None):
+                response = "正しいクレデンシャルを入力してください。\n\n ユーザー名を入力してください："
+                state_dict[event.source.user_id]['state'] = "init_username"
+
             response = "正常にログインしました。 \n\n 選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
             state_dict[event.source.user_id]['state'] = "menu_select"
     
