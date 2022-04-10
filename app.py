@@ -49,7 +49,7 @@ options = "\n選択肢一つを選択してください。\n 1. まったくそ�
 #2) records has multiple fileds like height that is a map from timestamp to value registered
 
 
-bot_id = "lkMI2xb0HpBdCpeOZpvM"
+# 333333333 = "lkMI2xb0HpBdCpeOZpvM"
 apiurl = 'https://linewebbackend.herokuapp.com/api/bot' 
 client = requests.session()
 app = Flask(__name__)
@@ -91,7 +91,7 @@ def apicall(event, url, postdata, nores = False):
         else:
             return None
 
-usrlist = apicall(None, '/userlist', {"bot_id": bot_id})
+usrlist = apicall(None, '/userlist', {"bot_id":""})
 if(usrlist): print("userlist returned")
 else: print("userlist wasn't returned")
 
@@ -153,7 +153,7 @@ def handle_follow(event):
 def followhandle(event):
     print("followhabdle")
     if(event.source.type == "user"):
-        r = client.post(apiurl+'/followevent', data= json.dumps({"user_id": event.source.user_id, "botId": bot_id}), headers=authheaders())
+        r = client.post(apiurl+'/followevent', data= json.dumps({"user_id": event.source.user_id}), headers=authheaders())
         print(r)
         if(r != None and r.status_code == 200):
             print("ff")
@@ -163,6 +163,7 @@ def followhandle(event):
             state_dict[event.source.user_id]= {"state": "init", "cq":1,"creds": {"username": "","password": ""}}
             return 'added'
         else:
+
             print("error")
             # state_dict[event.source.user_id]= {"state": "start", "cq":1}
             return 'error'
@@ -220,7 +221,7 @@ def statehandle(event):
     elif state_dict[event.source.user_id]['state'] == "menu_select":
         if event.message.text == '1':
 
-            resp = apicall(event, '/motionopt', {"user_id": event.source.user_id, "bot_id": bot_id})
+            resp = apicall(event, '/motionopt', {"user_id": event.source.user_id})
             # f =  open('./resources/quesaire.json', encoding='utf8')
             # questionaire = json.load(f)
             if(resp): 
@@ -240,7 +241,7 @@ def statehandle(event):
 
         elif event.message.text == '2':
 
-            resp = apicall(event, '/questionaire', {"user_id": event.source.user_id, "bot_id": bot_id})
+            resp = apicall(event, '/questionaire', {"user_id": event.source.user_id})
             # f =  open('./resources/quesaire.json', encoding='utf8')
             # questionaire = json.load(f)
             if(resp): questionaire = resp["questionaire"]
@@ -288,7 +289,7 @@ def statehandle(event):
 
     elif state_dict[event.source.user_id]['state'] == 'selected_motion':
 
-        resp = apicall(event, '/motionopt', {"user_id": event.source.user_id, "bot_id": bot_id})
+        resp = apicall(event, '/motionopt', {"user_id": event.source.user_id})
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
         if(resp): 
@@ -317,7 +318,7 @@ def statehandle(event):
     elif state_dict[event.source.user_id]['state'] == 'selected_motion_item':
         optionselected = int(event.message.text)-1
 
-        resp = apicall(event, '/motionopt', {"user_id": event.source.user_id, "bot_id": bot_id})
+        resp = apicall(event, '/motionopt', {"user_id": event.source.user_id})
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
         if(resp): 
@@ -346,7 +347,7 @@ def statehandle(event):
     elif state_dict[event.source.user_id]['state'] == 'selected_motion_item_option':
         elmntselected = int(event.message.text)-1
 
-        resp = apicall(event, '/motionopt', {"user_id": event.source.user_id, "bot_id": bot_id})
+        resp = apicall(event, '/motionopt', {"user_id": event.source.user_id})
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
         if(resp): 
@@ -374,7 +375,7 @@ def statehandle(event):
             line_bot_api.push_message(
                 event.source.user_id,
                 TextSendMessage(text="Thank You for your response."))  
-            textmsg=apicall(event, '/clearhistmotionopt', {"user_id": event.source.user_id, "bot_id": bot_id, "data": responsehist})
+            textmsg=apicall(event, '/clearhistmotionopt', {"user_id": event.source.user_id,"data": responsehist})
             for msg in textmsg:
                 line_bot_api.push_message(
                     event.source.user_id,
@@ -385,7 +386,7 @@ def statehandle(event):
             state_dict[event.source.user_id]['state']='menu_select'
     elif state_dict[event.source.user_id]['state'] == 'questionaire':
 
-        resp = apicall(event, '/questionaire', {"user_id": event.source.user_id, "bot_id": bot_id})
+        resp = apicall(event, '/questionaire', {"user_id": event.source.user_id})
         # f =  open('./resources/quesaire.json', encoding='utf8')
         # questionaire = json.load(f)
         if(resp): 
@@ -506,7 +507,7 @@ def statehandle(event):
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     elif state_dict[event.source.user_id]['state'] == 'bloodtest':
-        apicall(event,"/bloodtest",{"bot_id": bot_id,"data": {"value": event.message.text,"type": "bloodtest","user_id": event.source.user_id}}, nores=True)
+        apicall(event,"/bloodtest",{"data": {"value": event.message.text,"type": "bloodtest","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
         line_bot_api.push_message(
             event.source.user_id,
