@@ -478,7 +478,7 @@ def statehandle(event):
     
     
     elif state_dict[event.source.user_id]['state'] == 'height':
-        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "height","user_id": event.source.user_id}}, nores=True)
+        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "height","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
         line_bot_api.push_message(
             event.source.user_id,
@@ -487,7 +487,7 @@ def statehandle(event):
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     elif state_dict[event.source.user_id]['state'] == 'weight':
-        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "weight","user_id": event.source.user_id}}, nores=True)
+        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "weight","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
         line_bot_api.push_message(
             event.source.user_id,
@@ -496,7 +496,7 @@ def statehandle(event):
         state_dict[event.source.user_id]['state'] = "menu_select"
     
     elif state_dict[event.source.user_id]['state'] == 'fatrate':
-        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "fatrate","user_id": event.source.user_id}}, nores=True)
+        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "fatrate","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
         line_bot_api.push_message(
             event.source.user_id,
@@ -506,7 +506,7 @@ def statehandle(event):
 
     
     elif state_dict[event.source.user_id]['state'] == 'muscleamt':
-        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "muscleamt","user_id": event.source.user_id}}, nores=True)
+        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "muscleamt","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
         line_bot_api.push_message(
             event.source.user_id,
@@ -515,7 +515,7 @@ def statehandle(event):
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     elif state_dict[event.source.user_id]['state'] == 'bloodpressure':
-        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "bloodpressure","user_id": event.source.user_id}}, nores=True)
+        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "bloodpressure","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
         line_bot_api.push_message(
             event.source.user_id,
@@ -524,7 +524,7 @@ def statehandle(event):
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     elif state_dict[event.source.user_id]['state'] == 'musclepow':
-        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "musclepow","user_id": event.source.user_id}}, nores=True)
+        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "musclepow","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
         line_bot_api.push_message(
             event.source.user_id,
@@ -533,7 +533,7 @@ def statehandle(event):
         state_dict[event.source.user_id]['state'] = "menu_select"
     
     elif state_dict[event.source.user_id]['state'] == 'flexibility':
-        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": event.message.text,"type": "flexibility","user_id": event.source.user_id}}, nores=True)
+        apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "flexibility","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
         line_bot_api.push_message(
             event.source.user_id,
@@ -542,7 +542,7 @@ def statehandle(event):
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     elif state_dict[event.source.user_id]['state'] == 'bloodtest':
-        apicall(event,"/bloodtest",{"data": {"value": event.message.text,"type": "bloodtest","user_id": event.source.user_id}}, nores=True)
+        apicall(event,"/bloodtest",{"data": {"value": float(event.message.text),"type": "bloodtest","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
         line_bot_api.push_message(
             event.source.user_id,
