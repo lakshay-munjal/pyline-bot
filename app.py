@@ -263,7 +263,7 @@ def statehandle(event):
                 print(resp)
                 motionopt = resp["motionopt"]["items"]
                 responsehist = resp["responsehist"]
-            else: return "api failed fuck you gaygan"
+            else: return "api failed"
             print("qqq3")
             # print(questionaire)
 
@@ -280,7 +280,7 @@ def statehandle(event):
             # f =  open('./resources/quesaire.json', encoding='utf8')
             # questionaire = json.load(f)
             if(resp): questionaire = resp["questionaire"]
-            else: return "api failed fuck you gaygan"
+            else: return "api failed"
             print("qqq")
             print(questionaire)
             makeoptions(questionaire['questionItems'][0]['choiceItems'])
@@ -330,7 +330,7 @@ def statehandle(event):
         if(resp): 
             motionopt = resp["motionopt"]["items"]
             responsehist = resp["responsehist"]
-        else: return "api failed fuck you gaygan"
+        else: return "api failed"
         # print(questionaire)
 
 
@@ -359,7 +359,7 @@ def statehandle(event):
         if(resp): 
             motionopt = resp["motionopt"]["items"]
             responsehist = resp["responsehist"]
-        else: return "api failed fuck you gaygan"
+        else: return "api failed"
         print("qqq5")
         # print(questionaire)
 
@@ -388,7 +388,7 @@ def statehandle(event):
         if(resp): 
             motionopt = resp["motionopt"]["items"]
             responsehist = resp["responsehist"]
-        else: return "api failed fuck you gaygan"
+        else: return "api failed"
         print("qqq6")
         # print(questionaire)
 
@@ -427,7 +427,7 @@ def statehandle(event):
         if(resp): 
             questionaire = resp["questionaire"]
             responsehist = resp["responsehist"]
-        else: return "api failed fuck you gaygan"
+        else: return "api failed"
         print("qqq2")
         # print(questionaire)
         choiceselected = int(event.message.text)-1
