@@ -431,7 +431,7 @@ def statehandle(event):
         print("qqq2")
         # print(questionaire)
         choiceselected = int(event.message.text)-1
-        if choiceselected <= 0 or choiceselected > len(questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['choiceItems']):
+        if choiceselected < 0 or choiceselected >= len(questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['choiceItems']):
             makeoptions(questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['choiceItems'])
             response = "Q" + str(state_dict[event.source.user_id]['cq'])+ ") "+ questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['questionText'] + options
         else:
