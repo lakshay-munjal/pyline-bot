@@ -263,7 +263,7 @@ def statehandle(event):
                 print(resp)
                 motionopt = resp["motionopt"]["items"]
                 responsehist = resp["responsehist"]
-            else: return "api failed ."
+            else: return "api failed"
             print("qqq3")
             # print(questionaire)
 
@@ -280,7 +280,11 @@ def statehandle(event):
             # f =  open('./resources/quesaire.json', encoding='utf8')
             # questionaire = json.load(f)
             if(resp): questionaire = resp["questionaire"]
+<<<<<<< HEAD
             else: return "api failed ."
+=======
+            else: return "api failed"
+>>>>>>> 2af84679deb60dd4eceb86039f585865e0d09ca7
             print("qqq")
             print(questionaire)
             makeoptions(questionaire['questionItems'][0]['choiceItems'])
@@ -330,7 +334,11 @@ def statehandle(event):
         if(resp): 
             motionopt = resp["motionopt"]["items"]
             responsehist = resp["responsehist"]
+<<<<<<< HEAD
         else: return "api failed ."
+=======
+        else: return "api failed"
+>>>>>>> 2af84679deb60dd4eceb86039f585865e0d09ca7
         # print(questionaire)
 
 
@@ -359,7 +367,11 @@ def statehandle(event):
         if(resp): 
             motionopt = resp["motionopt"]["items"]
             responsehist = resp["responsehist"]
+<<<<<<< HEAD
         else: return "api failed ."
+=======
+        else: return "api failed"
+>>>>>>> 2af84679deb60dd4eceb86039f585865e0d09ca7
         print("qqq5")
         # print(questionaire)
 
@@ -388,7 +400,11 @@ def statehandle(event):
         if(resp): 
             motionopt = resp["motionopt"]["items"]
             responsehist = resp["responsehist"]
+<<<<<<< HEAD
         else: return "api failed ."
+=======
+        else: return "api failed"
+>>>>>>> 2af84679deb60dd4eceb86039f585865e0d09ca7
         print("qqq6")
         # print(questionaire)
 
@@ -427,11 +443,15 @@ def statehandle(event):
         if(resp): 
             questionaire = resp["questionaire"]
             responsehist = resp["responsehist"]
+<<<<<<< HEAD
         else: return "api failed ."
+=======
+        else: return "api failed"
+>>>>>>> 2af84679deb60dd4eceb86039f585865e0d09ca7
         print("qqq2")
         # print(questionaire)
         choiceselected = int(event.message.text)-1
-        if choiceselected <= 0 or choiceselected > len(questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['choiceItems']):
+        if choiceselected < 0 or choiceselected >= len(questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['choiceItems']):
             makeoptions(questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['choiceItems'])
             response = "Q" + str(state_dict[event.source.user_id]['cq'])+ ") "+ questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['questionText'] + options
         else:
