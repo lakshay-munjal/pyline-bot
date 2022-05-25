@@ -234,8 +234,15 @@ def imstatehandle(event):
     else:
         return "Not a valid input"
     message_content = line_bot_api.get_message_content(event.message.id)
+    # file_path = "./iter_cont.txt"
+    # with open(file_path, 'wb') as fd:
+    #     for chunk in message_content.iter_content():
+    #         fd.write(chunk)
     encoded = base64.b64encode(message_content.content).decode("ascii")
-    resp = apicall(event, '/posturedata', {"user_id": event.source.user_id,"pose": pos, "direction": dir, "image":encoded})
+    # file_path2 = "./encoded.txt"
+    # with open(file_path2,"wb") as fd:
+    #     fd.write(encoded)
+    resp = apicall(event, '/posturedata', {"user_id": event.source.user_id,"pose": pos, "direction": dir, "image":"data:image/jpeg;base64," + encoded})
     if(resp): 
         print(resp)
         orurl = resp["orurl"]
