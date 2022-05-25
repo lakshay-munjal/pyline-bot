@@ -5,6 +5,7 @@ import json
 import requests
 from flask import Flask, request, abort
 import pyrebase
+import base64
 
 firebaseConfig = {
   "apiKey": "AIzaSyBbpL1cGJHXiQsqaFc7C-F41VgcG8LN3pk",
@@ -41,7 +42,7 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage, FlexSendMessage, FollowEvent
+    MessageEvent, TextMessage, TextSendMessage, ImageMessage, ImageSendMessage, FollowEvent
 )
 from linebot.models.flex_message import BubbleContainer, FlexContainer
 
@@ -166,6 +167,17 @@ def handle_message(event):
         event.reply_token,
         TextSendMessage(text=resp))
 
+@handler.add(MessageEvent, message=ImageMessage)
+def handle_imagemessage(event):
+    """ Here's all the messages will be handled and processed by the program """
+    print("handleevent")
+    print(event)
+    resp = imstatehandle(event)
+    # #print(event)
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=resp))
+
 @handler.add(FollowEvent)
 def handle_follow(event):
     """ Here's all the messages will be handled and processed by the program """
@@ -196,7 +208,44 @@ def followhandle(event):
             print("error")
             # state_dict[event.source.user_id]= {"state": "start", "cq":1}
             return 'error'
-    
+
+def imstatehandle(event):
+    pos="standing"
+    dir="front"
+    if state_dict[event.source.user_id]['state'] == "att_stand_front":
+        pos="standing"
+        dir="front"
+    elif state_dict[event.source.user_id]['state'] == "att_stand_left":
+        pos="standing"
+        dir="left"
+    elif state_dict[event.source.user_id]['state'] == "att_stand_right":
+        pos="standing"
+        dir="right"
+    elif state_dict[event.source.user_id]['state'] == "att_sit_front":
+        pos="sitting"
+        dir="front"
+    elif state_dict[event.source.user_id]['state'] == "att_sit_left":
+        pos="sitting"
+        dir="left"
+    elif state_dict[event.source.user_id]['state'] == "att_sit_right":
+        pos="sitting"
+        dir="right"
+    else:
+        return "Not a valid input"
+    message_content = line_bot_api.get_message_content(event.message.id)
+    encoded = base64.b64encode(message_content)
+    resp = apicall(event, '/posturedata', {"user_id": event.source.user_id,"pose": pos, "direction": dir, "image":encoded})
+    if(resp): 
+        print(resp)
+        orurl = resp["orurl"]
+    else: return "api failed"
+
+    line_bot_api.push_message(
+        event.source.user_id,
+        ImageSendMessage(original_content_url=orurl, preview_image_url=orurl))
+    state_dict[event.source.user_id]['state'] = "menu_select"
+    response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+    return response
 def statehandle(event):
     global questionaire
     global motionopt
@@ -289,7 +338,7 @@ def statehandle(event):
             # line_bot_api.set_default_rich_menu(back_menu_id)
 
         elif event.message.text == '3':
-            response = "still to be updated"
+            response = "Enter Pose: \n1. Standing\n2. Sitting"
             state_dict[event.source.user_id]['state'] = 'selected_attitude'
             # line_bot_api.set_default_rich_menu(back_menu_id)
         elif event.message.text == '4':
@@ -453,7 +502,40 @@ def statehandle(event):
                 response = "Q" + str(state_dict[event.source.user_id]['cq']+1)+ ") "+ questionaire['questionItems'][state_dict[event.source.user_id]['cq']]['questionText'] + options
                 state_dict[event.source.user_id]['cq']+=1 
                 apicall(event, '/updatehistques', {"user_id": event.source.user_id, "data": responsehist}, nores=True)
-
+ 
+    elif state_dict[event.source.user_id]['state'] == 'selected_attitude':
+        if event.message.text == '1':
+            state_dict[event.source.user_id]['state'] = 'att_stand'
+            response = "Enter direction: \n1. front\n2. left\n3. right"
+        elif event.message.text == '2':
+            state_dict[event.source.user_id]['state'] = 'att_sit'
+            response = "Enter direction: \n1. front\n2. left\n3. right"
+        else:
+            response = "Please enter a valid value"
+    elif state_dict[event.source.user_id]['state'] == 'att_stand':
+        if event.message.text == '1':
+            state_dict[event.source.user_id]['state'] = 'att_stand_front'
+            response = "Upload the image"
+        elif event.message.text == '2':
+            state_dict[event.source.user_id]['state'] = 'att_stand_left'
+            response = "Upload the image"
+        elif event.message.text == '2':
+            state_dict[event.source.user_id]['state'] = 'att_stand_right'
+            response = "Upload the image"
+        else:
+            response = "Please enter a valid value"
+    elif state_dict[event.source.user_id]['state'] == 'att_sit':
+        if event.message.text == '1':
+            state_dict[event.source.user_id]['state'] = 'att_sit_front'
+            response = "Upload the image"
+        elif event.message.text == '2':
+            state_dict[event.source.user_id]['state'] = 'att_sit_left'
+            response = "Upload the image"
+        elif event.message.text == '2':
+            state_dict[event.source.user_id]['state'] = 'att_sit_right'
+            response = "Upload the image"
+        else:
+            response = "Please enter a valid value"
     elif state_dict[event.source.user_id]['state'] == 'selected_record':
         response = "Please enter the value"
         response = "値を入力してください"
