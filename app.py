@@ -233,7 +233,7 @@ def imstatehandle(event):
     else:
         return "Not a valid input"
     message_content = line_bot_api.get_message_content(event.message.id)
-    encoded = base64.b64encode(message_content)
+    encoded = base64.b64encode(message_content.content())
     resp = apicall(event, '/posturedata', {"user_id": event.source.user_id,"pose": pos, "direction": dir, "image":encoded})
     if(resp): 
         print(resp)
