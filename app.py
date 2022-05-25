@@ -2,6 +2,7 @@
 from http import client
 import os
 import json
+from re import ASCII
 import requests
 from flask import Flask, request, abort
 import pyrebase
@@ -233,7 +234,7 @@ def imstatehandle(event):
     else:
         return "Not a valid input"
     message_content = line_bot_api.get_message_content(event.message.id)
-    encoded = base64.b64encode(message_content.content)
+    encoded = base64.b64encode(message_content.content).decode("ascii")
     resp = apicall(event, '/posturedata', {"user_id": event.source.user_id,"pose": pos, "direction": dir, "image":encoded})
     if(resp): 
         print(resp)
