@@ -193,7 +193,7 @@ def handle_follow(event):
         TextSendMessage(text=resp))
 
 def followhandle(event):
-    print("followhabdle")
+    print("followhandle")
     if(event.source.type == "user"):
         r = client.post(apiurl+'/followevent', data= json.dumps({"user_id": event.source.user_id}), headers=authheaders())
         print(r)
@@ -203,7 +203,7 @@ def followhandle(event):
             print("gaygan")
 
             state_dict[event.source.user_id]= {"state": "init", "cq":1,"creds": {"username": "","password": ""}}
-            return 'added'
+            return "ユーザー名を入力してください："
         else:
 
             print("error")
@@ -277,11 +277,6 @@ def statehandle(event):
     # print(event.source.user_id)
     print(state_dict)
     if state_dict[event.source.user_id]['state'] == "init":
-        # Please enter your username:
-        response = "ユーザー名を入力してください："
-        state_dict[event.source.user_id]['state'] = "init_username"
-
-    elif state_dict[event.source.user_id]['state'] == "init_username":
         # Please enter your password:
         response = "パスワードを入力してください："
         state_dict[event.source.user_id]['creds']['username'] = event.message.text
@@ -299,9 +294,18 @@ def statehandle(event):
             if(resp2 == None):
                 response = "正しいクレデンシャルを入力してください。\n\n ユーザー名を入力してください："
                 state_dict[event.source.user_id]['state'] = "init_username"
-
-            response = "正常にログインしました。 \n\n 選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
-            state_dict[event.source.user_id]['state'] = "menu_select"
+            else:
+                re = client.post(apiurl+'/greeting', data= json.dumps({"user_id": event.source.user_id}), headers=authheaders())
+                if(re != None and re.status_code == 200):
+                    line_bot_api.push_message(
+                        event.source.user_id,
+                        TextSendMessage(text=re["greet"])) 
+                else:
+                    line_bot_api.push_message(
+                        event.source.user_id,
+                        TextSendMessage(text="Hey there!!")) 
+                response = "正常にログインしました。 \n\n 選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+                state_dict[event.source.user_id]['state'] = "menu_select"
     
 
     elif state_dict[event.source.user_id]['state'] == "start":
