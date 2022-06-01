@@ -288,12 +288,12 @@ def statehandle(event):
         resp = login(state_dict[event.source.user_id]['creds']['username'],state_dict[event.source.user_id]['creds']['password'])
         if(resp == None):
             response = "正しいクレデンシャルを入力してください。\n\n ユーザー名を入力してください："
-            state_dict[event.source.user_id]['state'] = "init_username"
+            state_dict[event.source.user_id]['state'] = "init"
         else:
             resp2 = apicall(event, '/register', {"user_id": event.source.user_id,"idToken": resp})
             if(resp2 == None):
                 response = "正しいクレデンシャルを入力してください。\n\n ユーザー名を入力してください："
-                state_dict[event.source.user_id]['state'] = "init_username"
+                state_dict[event.source.user_id]['state'] = "init"
             else:
                 re = client.post(apiurl+'/greeting', data= json.dumps({"user_id": event.source.user_id}), headers=authheaders())
                 if(re != None and re.status_code == 200):
