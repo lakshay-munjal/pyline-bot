@@ -288,7 +288,7 @@ def statehandle(event):
 
         line_bot_api.push_message(
             event.source.user_id,
-            FlexSendMessage(alt_text="yo",contents=FlexContainer(**dict1)))
+            FlexSendMessage(alt_text="yo",contents=dict1))
 
     ###########debugging################
     print("state")
