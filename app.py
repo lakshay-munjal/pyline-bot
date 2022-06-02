@@ -8,6 +8,7 @@ from flask import Flask, request, abort
 import pyrebase
 import base64
 
+
 firebaseConfig = {
   "apiKey": "AIzaSyBbpL1cGJHXiQsqaFc7C-F41VgcG8LN3pk",
   "authDomain": "lineweb-d1174.firebaseapp.com",
@@ -43,7 +44,7 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage, ImageMessage, ImageSendMessage, FollowEvent
+    MessageEvent, TextMessage, TextSendMessage, ImageMessage, ImageSendMessage, FollowEvent, FlexSendMessage, BubbleContainer
 )
 from linebot.models.flex_message import BubbleContainer, FlexContainer
 
@@ -264,8 +265,31 @@ def statehandle(event):
     if event.message.text.lower() == 'back' :
         state_dict[event.source.user_id]['state'] = "start"
         state_dict[event.source.user_id]['cq'] = 1
-        # print(line_bot_api.get_rich_menu_list())
+        # print(line_bot_api.get_rih_menu_list())
         response = "rebooted"
+
+        dict1 = {
+            "type": "bubble", 
+            "body": { 
+                "type": "box", 
+                "layout": "horizontal", 
+                "contents": [ 
+                {
+                    "type": "text", 
+                    "text": "Hello,"
+                },
+                {
+                    "type": "text", 
+                    "text": "World!"
+                }
+                ]
+            }
+            }
+
+        line_bot_api.push_message(
+            event.source.user_id,
+            FlexSendMessage(alt_text="yo",contents=FlexContainer(**dict1)))
+
     ###########debugging################
     print("state")
     #print(event)
