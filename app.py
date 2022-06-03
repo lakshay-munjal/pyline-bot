@@ -555,11 +555,15 @@ def statehandle(event):
             line_bot_api.push_message(
                 event.source.user_id,
                 TextSendMessage(text="Thank You for your response."))  
-            textmsg=apicall(event, '/clearhistmotionopt', {"user_id": event.source.user_id,"data": responsehist})
-            for msg in textmsg:
+            respmsg=apicall(event, '/clearhistmotionopt', {"user_id": event.source.user_id,"data": responsehist})
+            for msg in respmsg["text"]:
                 line_bot_api.push_message(
                     event.source.user_id,
                     TextSendMessage(text=msg))  
+            if respmsg["image"] is not None:
+                line_bot_api.push_message(
+                    event.source.user_id,
+                    ImageSendMessage(original_content_url=respmsg["image"]))  
 
             response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
             responsehist.clear()
