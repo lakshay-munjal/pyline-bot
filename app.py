@@ -564,7 +564,7 @@ def statehandle(event):
             if respmsg["image"] is not None:
                 line_bot_api.push_message(
                     event.source.user_id,
-                    ImageSendMessage(original_content_url=respmsg["image"]))  
+                    ImageSendMessage(original_content_url=respmsg["image"],preview_image_url=respmsg["image"]))  
 
             response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
             responsehist.clear()
