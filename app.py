@@ -560,6 +560,7 @@ def statehandle(event):
                 line_bot_api.push_message(
                     event.source.user_id,
                     TextSendMessage(text=msg))  
+            print(respmsg["image"])
             if respmsg["image"] is not None:
                 line_bot_api.push_message(
                     event.source.user_id,
