@@ -190,9 +190,16 @@ def handle_follow(event):
     resp = followhandle(event)
     print(state_dict)
     #print(event)
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=resp))
+    
+
+    try: 
+        line_bot_api.reply_message(
+            event.reply_token,
+            FlexSendMessage(alt_text="yo",contents=resp))
+    except:
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=resp))
 
 def followhandle(event):
     print("followhandle")
@@ -255,6 +262,8 @@ def imstatehandle(event):
         ImageSendMessage(original_content_url=orurl, preview_image_url=orurl))
     state_dict[event.source.user_id]['state'] = "menu_select"
     response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+
+
     return response
 def statehandle(event):
     global questionaire
@@ -270,7 +279,6 @@ def statehandle(event):
         response = "rebooted"
 
         dict1 = util.func()
-        
         line_bot_api.push_message(
             event.source.user_id,
             FlexSendMessage(alt_text="yo",contents=dict1))
