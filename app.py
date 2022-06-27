@@ -277,7 +277,7 @@ def statehandle(event):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "姿勢画像の送信 lawde",
+                    "text": "姿勢画像の送信 lawde~",
                     "weight": "bold",
                     "size": "lg",
                     "align": "center"
