@@ -1,3 +1,6 @@
+from msilib import _directories
+
+
 def func():
     dict1 = {
             "type": "bubble",
@@ -77,3 +80,37 @@ def func():
             }
         }
     return dict1
+
+
+
+def simpleTextMessage(msg):
+    dictResp = {
+        "type": "bubble",
+        "size": "kilo",
+        "body": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+            {
+                "type": "text",
+                "text": msg
+            }
+            ]
+        },
+        "footer": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": []
+        },
+        "styles": {
+            "body": {
+            "backgroundColor": "#F4F3F9"
+            },
+            "footer": {
+            "separator": False,
+            "backgroundColor": "#F4F3F9"
+            }
+        }
+    }
+
+    return dictResp 

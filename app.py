@@ -196,6 +196,7 @@ def handle_follow(event):
         line_bot_api.reply_message(
             event.reply_token,
             FlexSendMessage(alt_text="yo",contents=resp))
+
     except:
         line_bot_api.reply_message(
             event.reply_token,
@@ -295,7 +296,8 @@ def statehandle(event):
     print(state_dict)
     if state_dict[event.source.user_id]['state'] == "init":
         # Please enter your password:
-        response = "パスワードを入力してください："
+        # response = "パスワードを入力してください："
+        response = util.simpleTextMessage("パスワードを入力してください：")
         state_dict[event.source.user_id]['creds']['username'] = event.message.text
         state_dict[event.source.user_id]['state'] = "init_password"
 
@@ -328,7 +330,9 @@ def statehandle(event):
     elif state_dict[event.source.user_id]['state'] == "start":
         print("nycbruh")
         # "Please select one option. \ n 1. Motion \ n 2. Meal \ n 3. Attitude \ n 4. Record"
-        response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+        # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+        response = util.simpleTextMessage(r"選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録")
+
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     elif state_dict[event.source.user_id]['state'] == "menu_select":
@@ -571,7 +575,7 @@ def statehandle(event):
         else:
             response = "Please enter a valid value"
     elif state_dict[event.source.user_id]['state'] == 'selected_record':
-        response = "Please enter the value"
+        # response = "Please enter the value"
         response = "値を入力してください"
         ## record the value here
 
