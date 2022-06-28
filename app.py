@@ -279,7 +279,7 @@ def statehandle(event):
         # print(line_bot_api.get_rih_menu_list())
         response = "rebooted"
 
-        dict1 = util.func2()
+        dict1 = util.func()
         line_bot_api.push_message(
             event.source.user_id,
             FlexSendMessage(alt_text="yo",contents=dict1))
