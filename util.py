@@ -1,4 +1,4 @@
-from msilib import _directories
+# from msilib import _directories
 
 
 def func():
