@@ -279,6 +279,60 @@ def simpleTextMessage(msg):
 
     return dictResp 
 
+
+
+def responseList(headingMsg,respItems):
+
+    respList = []
+    for resp in respItems:
+        respList.append(simpleTextMessage(resp))
+
+    listDict = {
+        "type": "bubble",
+        "size": "kilo",
+        "body": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+            {
+                "type": "text",
+                "text": headingMsg,
+                "wrap": True,
+                "align": "center",
+                "margin": "md"
+            },
+            {
+                "type": "separator",
+                "margin": "sm"
+            },
+            {
+                "type": "box",
+                "layout": "vertical",
+                "margin": "md",
+                "spacing": "sm",
+                "contents": respList
+            }
+            ]
+        },
+        "footer": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": []
+        },
+        "styles": {
+            "body": {
+            "backgroundColor": "#F4F3F9"
+            },
+            "footer": {
+            "separator": True,
+            "backgroundColor": "#F4F3F9"
+            }
+        }
+    }
+
+    return listDict
+
+
 def singleElementofList(index,msg):
     contentdict = {
         "type": "box",
@@ -333,7 +387,7 @@ def listTextMessage(optionsList):
             "contents": [
             {
                 "type": "text",
-                "text": "記録",
+                "text": "メニュー",
                 "weight": "bold",
                 "size": "lg",
                 "align": "center"
