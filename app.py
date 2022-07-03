@@ -181,7 +181,7 @@ def handle_message(event):
             event.reply_token,
             FlexSendMessage(alt_text="yo",contents=resp))
 
-@handler.add(MessageEvent,message=FlexMessage)
+# @handler.add(MessageEvent,message=FlexM/essage)
 
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_imagemessage(event):
