@@ -386,6 +386,8 @@ def statehandle(event):
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     elif state_dict[event.source.user_id]['state'] == "menu_select":
+
+        print("ffffffffffffffffffffffffffffffffffffffffffffffffffffff")
         if event.message.text == '1':
 
             resp = apicall(event, '/motionopt', {"user_id": event.source.user_id})
