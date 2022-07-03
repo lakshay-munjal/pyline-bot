@@ -22,7 +22,7 @@ def func():
             {
                 "type": "text",
                 "text": "どちらで送信しますか？",
-                "wrap": true,
+                "wrap": True,
                 "align": "center",
                 "margin": "md"
             },
@@ -77,7 +77,7 @@ def func():
             "backgroundColor": "#F4F3F9"
             },
             "footer": {
-            "separator": true,
+            "separator": True,
             "backgroundColor": "#F4F3F9"
             }
         }
