@@ -698,8 +698,14 @@ def statehandle(event):
 
                 state_dict[event.source.user_id]['state']='menu_select'
             else:
-                makeoptions(questionaire['questionItems'][state_dict[event.source.user_id]['cq']]['choiceItems'])
-                response = "Q" + str(state_dict[event.source.user_id]['cq']+1)+ ") "+ questionaire['questionItems'][state_dict[event.source.user_id]['cq']]['questionText'] + options
+                options = makeoptions(questionaire['questionItems'][state_dict[event.source.user_id]['cq']]['choiceItems'])
+                # response = "Q" + str(state_dict[event.source.user_id]['cq']+1)+ ") "+ questionaire['questionItems'][state_dict[event.source.user_id]['cq']]['questionText'] + options
+                line_bot_api.push_message(
+                    event.source.user_id,
+                    FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("Q" + str(state_dict[event.source.user_id]['cq']+1)+ ") "+ questionaire['questionItems'][state_dict[event.source.user_id]['cq']]['questionText'],True)))
+
+                response = util.listTextMessage(options,"アンケートを始めましょう")
+                flag = True
                 state_dict[event.source.user_id]['cq']+=1 
                 apicall(event, '/updatehistques', {"user_id": event.source.user_id, "data": responsehist}, nores=True)
  
