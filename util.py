@@ -285,7 +285,7 @@ def responseList(headingMsg,respItems):
 
     respList = []
     for resp in respItems:
-        respList.append(simpleTextMessage(resp))
+        respList.append(simpleContent(resp))
 
     listDict = {
         "type": "bubble",
