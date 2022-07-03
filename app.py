@@ -198,6 +198,7 @@ def handle_follow(event):
             FlexSendMessage(alt_text="yo",contents=resp))
 
     except:
+        print("jugaad working")
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=resp))
