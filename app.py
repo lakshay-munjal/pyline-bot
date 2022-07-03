@@ -316,6 +316,7 @@ def statehandle(event):
         # Please enter your password:
         # response = "パスワードを入力してください："
         response = util.simpleTextMessage("パスワードを入力してください：")
+        flag = True
         state_dict[event.source.user_id]['creds']['username'] = event.message.text
         state_dict[event.source.user_id]['state'] = "init_password"
 
@@ -324,26 +325,37 @@ def statehandle(event):
         # resp = apicall(event, '/register', {"user_id": event.source.user_id, "email": state_dict[event.source.user_id]['creds']['username'],"password": state_dict[event.source.user_id]['creds']['password']})
         resp = login(state_dict[event.source.user_id]['creds']['username'],state_dict[event.source.user_id]['creds']['password'])
         if(resp == None):
-            response = "正しいクレデンシャルを入力してください。\n\n ユーザー名を入力してください："
+            # response = "正しいクレデンシャルを入力してください。\n\n ユーザー名を入力してください："
+            response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
+            flag = True
             state_dict[event.source.user_id]['state'] = "init"
         else:
             resp2 = apicall(event, '/register', {"user_id": event.source.user_id,"idToken": resp})
             if(resp2 == None):
-                response = "正しいクレデンシャルを入力してください。\n\n ユーザー名を入力してください："
+                # response = "正しいクレデンシャルを入力してください。\n\n ユーザー名を入力してください："
+                response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
+                flag = True
                 state_dict[event.source.user_id]['state'] = "init"
             else:
                 re = client.post(apiurl+'/greeting', data= json.dumps({"user_id": event.source.user_id}), headers=authheaders())
+                # if(re != None and re.status_code == 200):
+                #     line_bot_api.push_message(
+                #         event.source.user_id,
+                #         TextSendMessage(text=re["greet"])) 
                 if(re != None and re.status_code == 200):
                     line_bot_api.push_message(
                         event.source.user_id,
-                        TextSendMessage(text=re["greet"])) 
+                        FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage(re["greet"]))) 
 
                         
                 else:
                     line_bot_api.push_message(
                         event.source.user_id,
                         TextSendMessage(text="Hey there!!")) 
-                response = "正常にログインしました。 \n\n 選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+                # response = "正常にログインしました。 \n\n 選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+                responseOptions = ["運動","食事","姿勢","記録"]
+                response = util.listTextMessage(responseOptions)
+                flag = True
                 state_dict[event.source.user_id]['state'] = "menu_select"
     
 
@@ -354,12 +366,13 @@ def statehandle(event):
         # response = util.simpleTextMessage("選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録")
         responseOptions = ["運動","食事","姿勢","記録"]
         response = util.listTextMessage(responseOptions)
+        flag = True
         print("ttttttttttttttttttt")
         print(response)
         # line_bot_api.reply_message(
         #     event.reply_token,
         #     FlexSendMessage(alt_text="yo",contents=resp))
-        flag = True
+        # flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     elif state_dict[event.source.user_id]['state'] == "menu_select":
@@ -377,9 +390,16 @@ def statehandle(event):
             # print(questionaire)
 
 
-            response = "選択肢一つを選択してください。"
+            # response = "選択肢一つを選択してください。"
+            # for item in motionopt:
+            #     response+= "\n"+item["itemName"]
+
+            respItems = []
             for item in motionopt:
-                response+= "\n"+item["itemName"]
+                respItems.append(item["itemName"])
+            response = util.responseList("選択肢一つを選択してください。",respItems)
+            flag = True
+
             state_dict[event.source.user_id]['state'] = 'selected_motion'
             # line_bot_api.set_default_rich_menu(back_menu_id)
 

@@ -1,6 +1,9 @@
 # from msilib import _directories
 
 
+from csv import DictReader
+
+
 def func():
     dict1 = {
         "type": "bubble",
@@ -199,6 +202,49 @@ def func2():
     return dict1
 
 
+def simpleContent(msg):
+    simpleTextDict = {
+            "type": "text",
+            "text": msg,
+            "wrap": True
+        }
+    return simpleTextDict
+
+def simpleListTextMessage(msgs):
+    n = len(msgs)
+    msgList = []
+    for el in msgs:
+        msgList.append(simpleContent(el))
+    
+    dictResp = {
+        "type": "bubble",
+        "size": "kilo",
+        "body": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": msgList
+        },
+        "footer": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": []
+        },
+        "styles": {
+            "body": {
+            "backgroundColor": "#F4F3F9"
+            },
+            "footer": {
+            "separator": False,
+            "backgroundColor": "#F4F3F9"
+            }
+        }
+    }
+
+    return dictResp
+
+    
+
+
 
 def simpleTextMessage(msg):
     dictResp = {
@@ -210,7 +256,8 @@ def simpleTextMessage(msg):
             "contents": [
             {
                 "type": "text",
-                "text": msg
+                "text": msg,
+                "wrap": True
             }
             ]
         },
