@@ -262,8 +262,8 @@ def singleElementofList(index,msg):
             "action": {
                 "type": "postback",
                 "label": "action",
-                "data": str(index),
-                "displayText": str(index)
+                "data": str(index+1),
+                "displayText": str(index+1)
             }
             }
         ]
