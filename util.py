@@ -205,7 +205,7 @@ def func2():
 def simpleContent(msg):
     simpleTextDict = {
             "type": "text",
-            "text": msg,
+            "text": ". " + msg,
             "wrap": True
         }
     return simpleTextDict
