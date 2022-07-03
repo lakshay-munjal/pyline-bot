@@ -2,6 +2,7 @@
 from http import client
 import os
 import json
+from pydoc import resolve
 from re import ASCII
 import requests
 from flask import Flask, request, abort
@@ -418,12 +419,15 @@ def statehandle(event):
             makeoptions(questionaire['questionItems'][0]['choiceItems'])
             # response = "アンケートを始めましょう: \n Q1) " + questionaire['questionItems'][0]['questionText'] + options
             response = util.listTextMessage(["アンケートを始めましょう","Q1) " + questionaire['questionItems'][0]['questionText'] + options])
+            flag = True
 
             state_dict[event.source.user_id]['state']= 'questionaire'
             # line_bot_api.set_default_rich_menu(back_menu_id)
 
         elif event.message.text == '3':
-            response = "Enter Pose: \n1. Standing\n2. Sitting"
+            # response = "Enter Pose: \n1. Standing\n2. Sitting"
+            response = util.listTextMessage(["ポーズを入力する", "1) スタンディング","2) 座位"])
+            flag = True
             state_dict[event.source.user_id]['state'] = 'selected_attitude'
             # line_bot_api.set_default_rich_menu(back_menu_id)
         elif event.message.text == '4':
@@ -449,12 +453,16 @@ def statehandle(event):
         # };
 
 
-            response = "何を録音したいですか？ \n 1) 身長 \n 2) 体重 \n 3) 脂肪率 \n 4) 筋量 \n 5) 血圧 \n 6) 筋力 \n 7) 柔軟性 \n 8) 血液検査" #update this line
+            # response = "何を録音したいですか？ \n 1) 身長 \n 2) 体重 \n 3) 脂肪率 \n 4) 筋量 \n 5) 血圧 \n 6) 筋力 \n 7) 柔軟性 \n 8) 血液検査" #update this line
+            response = util.listTextMessage(["何を録音したいですか？","1) 身長","2) 体重","3) 脂肪率","4) 筋量","5) 血圧","6) 筋力","7) 柔軟性","8) 血液検査"])
+            flag = True
             state_dict[event.source.user_id]['state'] = 'selected_record'
             # line_bot_api.set_default_rich_menu(back_menu_id)
         else:
             # "Please select a valid option."
-            response = "有効なオプションを選択してください。"
+            # response = "有効なオプションを選択してください。"
+            response = util.simpleListTextMessage("有効なオプションを選択してください。")
+            flag = True
 
     elif state_dict[event.source.user_id]['state'] == 'selected_motion':
 
