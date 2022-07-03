@@ -170,7 +170,7 @@ def handle_message(event):
         event.reply_token,
         TextSendMessage(text=resp))
 
-    if flag:
+    if not flag:
         print("jugaad working")
         line_bot_api.reply_message(
             event.reply_token,
@@ -180,6 +180,8 @@ def handle_message(event):
         line_bot_api.reply_message(
             event.reply_token,
             FlexSendMessage(alt_text="yo",contents=resp))
+
+@handler.add(MessageEvent,message=FlexMessage)
 
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_imagemessage(event):
@@ -344,6 +346,9 @@ def statehandle(event):
         # "Please select one option. \ n 1. Motion \ n 2. Meal \ n 3. Attitude \ n 4. Record"
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         response = util.simpleTextMessage("選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録")
+        # line_bot_api.reply_message(
+        #     event.reply_token,
+        #     FlexSendMessage(alt_text="yo",contents=resp))
         flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
 
