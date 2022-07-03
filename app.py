@@ -165,6 +165,10 @@ def handle_message(event):
     print("handleevent")
     print(event)
     resp,flag = statehandle(event)
+
+    print("$$$$$$$$$$$$$$$")
+    print(resp)
+    print(flag)
     # #print(event)
     line_bot_api.reply_message(
         event.reply_token,
