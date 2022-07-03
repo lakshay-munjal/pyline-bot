@@ -398,6 +398,8 @@ def statehandle(event):
             for item in motionopt:
                 respItems.append(item["itemName"])
             response = util.responseList("選択肢一つを選択してください。",respItems)
+            print("respppp")
+            print(response)
             flag = True
 
             state_dict[event.source.user_id]['state'] = 'selected_motion'
