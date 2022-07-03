@@ -164,11 +164,22 @@ def handle_message(event):
     """ Here's all the messages will be handled and processed by the program """
     print("handleevent")
     print(event)
-    resp = statehandle(event)
+    resp,flag = statehandle(event)
     # #print(event)
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=resp))
+
+    if flag:
+        print("jugaad working")
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=resp))
+
+    else:
+        line_bot_api.reply_message(
+            event.reply_token,
+            FlexSendMessage(alt_text="yo",contents=resp))
 
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_imagemessage(event):
@@ -187,20 +198,15 @@ def handle_follow(event):
     print("handleevent")
     print(event)
     print(state_dict)
-    resp,flag = followhandle(event)
+    resp = followhandle(event)
     print(state_dict)
     #print(event)
     
-    if flag:
-        print("jugaad working")
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=resp))
+    # print("jugaad working")
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=resp))
 
-    else:
-        line_bot_api.reply_message(
-            event.reply_token,
-            FlexSendMessage(alt_text="yo",contents=resp))
 
     
         
