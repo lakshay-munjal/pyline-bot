@@ -99,11 +99,11 @@ def authheaders():
         }
 
 def makeoptions(choices):
-    options = {}
     optionslst = []
     if len(choices)==0:
         # options = "\n選択肢一つを選択してください。\n 1. まったくその通りだ \n 2. どちらかというとそうだ  \n 3. ときどき思い当たることがある \n 4. そんなことはない"
-        options = util.listTextMessage(["まったくその通りだ","どちらかというとそうだ","ときどき思い当たることがある","そんなことはない"],"n選択肢一つを選択してください。")
+        # return util.listTextMessage(["まったくその通りだ","どちらかというとそうだ","ときどき思い当たることがある","そんなことはない"],"n選択肢一つを選択してください。")
+        return ["まったくその通りだ","どちらかというとそうだ","ときどき思い当たることがある","そんなことはない"]
     else:
         # options = "\n選択肢一つを選択してください。"
         count = 0
@@ -111,7 +111,8 @@ def makeoptions(choices):
             count+=1
             # options+= "\n "+count+". "+choice["choiceText"]
             optionslst.append(choice["choiceText"])
-        options = util.listTextMessage(optionslst,"n選択肢一つを選択してください。")
+        return optionslst
+        # options = util.listTextMessage(optionslst,"n選択肢一つを選択してください。")
     return options
 def apicall(event, url, postdata, nores = False):
     postdata = json.dumps(postdata)
@@ -424,12 +425,14 @@ def statehandle(event):
             else: return "api failed"
             print("qqq")
             print(questionaire)
-            options = makeoptions(questionaire['questionItems'][0]['choiceItems'])
+            optionsAll = makeoptions(questionaire['questionItems'][0]['choiceItems'])
             # response = "アンケートを始めましょう: \n Q1) " + questionaire['questionItems'][0]['questionText'] + options
             line_bot_api.push_message(
-            event.source.user_id,
-            FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("Q1) " + questionaire['questionItems'][0]['questionText'],True)))
-            response = util.listTextMessage(options,"アンケートを始めましょう")
+                event.source.user_id,
+                FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("Q1) " + questionaire['questionItems'][0]['questionText'],True)))
+            print("options")
+            print(optionsAll)
+            response = util.listTextMessage(optionsAll,"アンケートを始めましょう")
             flag = True
 
             state_dict[event.source.user_id]['state']= 'questionaire'
