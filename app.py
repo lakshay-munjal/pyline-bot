@@ -187,21 +187,24 @@ def handle_follow(event):
     print("handleevent")
     print(event)
     print(state_dict)
-    resp = followhandle(event)
+    resp,flag = followhandle(event)
     print(state_dict)
     #print(event)
     
-
-    try: 
-        line_bot_api.reply_message(
-            event.reply_token,
-            FlexSendMessage(alt_text="yo",contents=resp))
-
-    except:
+    if flag:
         print("jugaad working")
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=resp))
+
+    else:
+        line_bot_api.reply_message(
+            event.reply_token,
+            FlexSendMessage(alt_text="yo",contents=resp))
+
+    
+        
+    
 
 def followhandle(event):
     print("followhandle")
@@ -272,12 +275,14 @@ def statehandle(event):
     global motionopt
     global responsehist
     response = ''
+    flag = False
+    # false -> text, true -> flex 
 
     ###########debugging################
     if event.message.text.lower() == 'back' :
         state_dict[event.source.user_id]['state'] = "start"
         state_dict[event.source.user_id]['cq'] = 1
-        # print(line_bot_api.get_rih_menu_list())
+        # print(line_bot_api.get_rih_menu_list)
         response = "rebooted"
 
         dict1 = util.func()
@@ -333,7 +338,7 @@ def statehandle(event):
         # "Please select one option. \ n 1. Motion \ n 2. Meal \ n 3. Attitude \ n 4. Record"
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         response = util.simpleTextMessage("選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録")
-
+        flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     elif state_dict[event.source.user_id]['state'] == "menu_select":
@@ -676,7 +681,7 @@ def statehandle(event):
 
     else:
         response = "errrrr"
-    return response  
+    return response,flag
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
