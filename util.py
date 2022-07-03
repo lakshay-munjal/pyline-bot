@@ -234,40 +234,41 @@ def simpleTextMessage(msg):
 
 def singleElementofList(index,msg):
     contentdict = {
-            "type": "box",
-            "layout": "horizontal",
-            "margin": "lg",
-            "contents": [
-              {
-                "type": "text",
-                "text": msg,
-                "size": "md",
-                "align": "start",
-                "weight": "bold",
-                "flex": 5,
-                "gravity": "center",
-                "margin": "sm",
-                "wrap": True
-              },
-              {
-                "type": "text",
-                "text": "選択",
-                "size": "lg",
-                "color": "#111111",
-                "align": "center",
-                "flex": 2,
-                "offsetStart": "12px",
-                "weight": "bold",
-                "decoration": "underline",
-                "action": {
-                  "type": "postback",
-                  "label": "action",
-                  "data": str(index),
-                  "displayText": str(index)
-                }
-              }
-            ]
-          }
+        "type": "box",
+        "layout": "horizontal",
+        "margin": "lg",
+        "contents": [
+            {
+            "type": "text",
+            "text": msg,
+            "size": "md",
+            "align": "start",
+            "weight": "bold",
+            "flex": 5,
+            "gravity": "center",
+            "margin": "sm",
+            "wrap": True
+            },
+            {
+            "type": "text",
+            "text": "選択",
+            "size": "lg",
+            "color": "#111111",
+            "align": "center",
+            "flex": 2,
+            "offsetStart": "12px",
+            "weight": "bold",
+            "decoration": "underline",
+            "action": {
+                "type": "postback",
+                "label": "action",
+                "data": str(index),
+                "displayText": str(index)
+            }
+            }
+        ]
+    }
+    return contentdict
 
 def listTextMessage(optionsList):
     n = len(optionsList)
