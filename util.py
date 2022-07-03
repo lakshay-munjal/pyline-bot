@@ -341,7 +341,7 @@ def singleElementofList(index,msg):
         "contents": [
             {
             "type": "text",
-            "text": msg,
+            "text": str(index+1)+") "+ msg,
             "size": "md",
             "align": "start",
             "weight": "bold",

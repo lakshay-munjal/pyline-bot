@@ -385,7 +385,8 @@ def statehandle(event):
                 print(resp)
                 motionopt = resp["motionopt"]["items"]
                 responsehist = resp["responsehist"]
-            else: return "api failed"
+            else: 
+                return "api failed"
             print("qqq3")
             # print(questionaire)
 
@@ -397,7 +398,7 @@ def statehandle(event):
             respItems = []
             for item in motionopt:
                 respItems.append(item["itemName"])
-            response = util.responseList("選択肢一つを選択してください。",respItems)
+            response = util.singleElementofList(respItems)
             print("respppp")
             print(response)
             flag = True
