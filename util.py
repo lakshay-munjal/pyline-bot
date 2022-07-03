@@ -14,15 +14,15 @@ def func():
             "contents": [
             {
                 "type": "text",
-                "text": "姿勢(座位)",
+                "text": "姿勢画像の送信",
                 "weight": "bold",
                 "size": "lg",
                 "align": "center"
             },
             {
                 "type": "text",
-                "text": "どの方向から診断しますか？",
-                "wrap": True,
+                "text": "どちらで送信しますか？",
+                "wrap": true,
                 "align": "center",
                 "margin": "md"
             },
@@ -39,9 +39,12 @@ def func():
                 {
                     "type": "button",
                     "action": {
-                    "type": "message",
-                    "label": "左側",
-                    "text": "座位で左側から診断"
+                    "type": "uri",
+                    "label": "カメラ",
+                    "uri": "https://line.me/R/nv/camera/",
+                    "altUri": {
+                        "desktop": "https://line.me/R/nv/camera/"
+                    }
                     },
                     "style": "secondary",
                     "height": "sm"
@@ -49,9 +52,12 @@ def func():
                 {
                     "type": "button",
                     "action": {
-                    "type": "message",
-                    "label": "右側",
-                    "text": "座位で右側から診断"
+                    "type": "uri",
+                    "label": "画像",
+                    "uri": "https://line.me/R/nv/cameraRoll/single",
+                    "altUri": {
+                        "desktop": "https://line.me/R/nv/cameraRoll/single"
+                    }
                     },
                     "style": "secondary",
                     "height": "sm",
@@ -71,11 +77,11 @@ def func():
             "backgroundColor": "#F4F3F9"
             },
             "footer": {
-            "separator": True,
+            "separator": true,
             "backgroundColor": "#F4F3F9"
             }
         }
-        }
+    }
     return dict1
 
 

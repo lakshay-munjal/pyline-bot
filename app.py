@@ -713,17 +713,17 @@ def statehandle(event):
         if event.message.text == '1':
             state_dict[event.source.user_id]['state'] = 'att_stand_front'
             # response = "Upload the image"
-            response = util.simpleTextMessage("画像をアップロードする")
+            response = util.func()
             flag = True
         elif event.message.text == '2':
             state_dict[event.source.user_id]['state'] = 'att_stand_left'
             # response = "Upload the image"
-            response = util.simpleTextMessage("画像をアップロードする")
+            response = util.func()
             flag = True
         elif event.message.text == '2':
             state_dict[event.source.user_id]['state'] = 'att_stand_right'
             # response = "Upload the image"
-            response = util.simpleTextMessage("画像をアップロードする")
+            response = util.func()
             flag = True
         else:
             response = "Please enter a valid value"
@@ -731,17 +731,17 @@ def statehandle(event):
         if event.message.text == '1':
             state_dict[event.source.user_id]['state'] = 'att_sit_front'
             # response = "Upload the image"
-            response = util.simpleTextMessage("画像をアップロードする")
+            response = util.func()
             flag = True
         elif event.message.text == '2':
             state_dict[event.source.user_id]['state'] = 'att_sit_left'
             # response = "Upload the image"
-            response = util.simpleTextMessage("画像をアップロードする")
+            response = util.func()
             flag = True
         elif event.message.text == '2':
             state_dict[event.source.user_id]['state'] = 'att_sit_right'
             # response = "Upload the image"
-            response = util.simpleTextMessage("画像をアップロードする")
+            response = util.func()
             flag = True
         else:
             # response = "Please enter a valid value"
