@@ -183,7 +183,7 @@ def handle_message(event):
     else:
         line_bot_api.reply_message(
             event.reply_token,
-            FlexSendMessage(alt_text="yo",contents=json.dumps(resp)))
+            FlexSendMessage(alt_text="yo",contents=resp))
 
 # @handler.add(MessageEvent,message=FlexM/essage)
 
@@ -286,7 +286,7 @@ def statehandle(event):
     global questionaire
     global motionopt
     global responsehist
-    response = ''
+    response = 'ff'
     flag = False
     # false -> text, true -> flex 
 
@@ -300,7 +300,7 @@ def statehandle(event):
         dict1 = util.func()
         line_bot_api.push_message(
             event.source.user_id,
-            FlexSendMessage(alt_text="yo",contents=json.dumps(dict1)))
+            FlexSendMessage(alt_text="yo",contents=dict1))
 
     ###########debugging################
     print("state")
