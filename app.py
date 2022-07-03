@@ -417,6 +417,8 @@ def statehandle(event):
             print(questionaire)
             makeoptions(questionaire['questionItems'][0]['choiceItems'])
             # response = "アンケートを始めましょう: \n Q1) " + questionaire['questionItems'][0]['questionText'] + options
+            response = util.listTextMessage(["アンケートを始めましょう","Q1) " + questionaire['questionItems'][0]['questionText'] + options])
+
             state_dict[event.source.user_id]['state']= 'questionaire'
             # line_bot_api.set_default_rich_menu(back_menu_id)
 
