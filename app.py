@@ -508,7 +508,7 @@ def statehandle(event):
             respOpt = []
             for opt in motionopt[itemselected]["subItems"]:
                 respOpt.append(opt["subItemName"])
-            response = util.simpleListTextMessage(respOpt,"選択肢一つを選択してください。")
+            response = util.listTextMessage(respOpt,"選択肢一つを選択してください。")
             flag = True
 
             apicall(event, '/updatehistmotionopt', {"user_id": event.source.user_id, "data": responsehist}, nores=True)
