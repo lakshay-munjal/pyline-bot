@@ -279,7 +279,10 @@ def imstatehandle(event):
         event.source.user_id,
         ImageSendMessage(original_content_url=orurl, preview_image_url=orurl))
     state_dict[event.source.user_id]['state'] = "menu_select"
-    response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+    # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+    responseOptions = ["運動","食事","姿勢","記録"]
+    response = util.listTextMessage(responseOptions)
+    flag = True
 
 
     return response
@@ -418,7 +421,10 @@ def statehandle(event):
             print(questionaire)
             makeoptions(questionaire['questionItems'][0]['choiceItems'])
             # response = "アンケートを始めましょう: \n Q1) " + questionaire['questionItems'][0]['questionText'] + options
-            response = util.listTextMessage(["アンケートを始めましょう","Q1) " + questionaire['questionItems'][0]['questionText'] + options])
+            line_bot_api.push_message(
+            event.source.user_id,
+            FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("Q1) " + questionaire['questionItems'][0]['questionText'],True)))
+            response = util.listTextMessage(options,"アンケートを始めましょう")
             flag = True
 
             state_dict[event.source.user_id]['state']= 'questionaire'
@@ -426,7 +432,7 @@ def statehandle(event):
 
         elif event.message.text == '3':
             # response = "Enter Pose: \n1. Standing\n2. Sitting"
-            response = util.listTextMessage(["ポーズを入力する", "1) スタンディング","2) 座位"])
+            response = util.listTextMessage(["スタンディング","座位"],"ポーズを入力する")
             flag = True
             state_dict[event.source.user_id]['state'] = 'selected_attitude'
             # line_bot_api.set_default_rich_menu(back_menu_id)
@@ -454,7 +460,7 @@ def statehandle(event):
 
 
             # response = "何を録音したいですか？ \n 1) 身長 \n 2) 体重 \n 3) 脂肪率 \n 4) 筋量 \n 5) 血圧 \n 6) 筋力 \n 7) 柔軟性 \n 8) 血液検査" #update this line
-            response = util.listTextMessage(["何を録音したいですか？","1) 身長","2) 体重","3) 脂肪率","4) 筋量","5) 血圧","6) 筋力","7) 柔軟性","8) 血液検査"])
+            response = util.listTextMessage(["身長","体重","脂肪率","筋量","血圧","筋力","柔軟性","血液検査"],"何を録音したいですか？")
             flag = True
             state_dict[event.source.user_id]['state'] = 'selected_record'
             # line_bot_api.set_default_rich_menu(back_menu_id)
@@ -480,16 +486,31 @@ def statehandle(event):
         if itemselected >= len(motionopt) or itemselected < 0:
             line_bot_api.push_message(
                 event.source.user_id,
-                TextSendMessage(text="Please select a valid response.")) 
-            response = "選択肢一つを選択してください。"
+                FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("有効なオプションを選択してください。"))) 
+
+            # response = "選択肢一つを選択してください。"
+            # for item in motionopt:
+            #     response+= "\n"+item["itemName"]
+
+            respOptions = []
             for item in motionopt:
-                response+= "\n"+item["itemName"]
+                respOptions.append(item["itemName"])
+            response = util.simpleListTextMessage(respOptions,"選択肢一つを選択してください。")
+            flag = True
+
             state_dict[event.source.user_id]['state'] = 'selected_motion'
         else:
             responsehist["selected_motion"]=itemselected
-            response = "選択肢一つを選択してください。"
-            for option in motionopt[itemselected]["subItems"]:
-                response+="\n"+option["subItemName"]
+            # response = "選択肢一つを選択してください。"
+            # for option in motionopt[itemselected]["subItems"]:
+            #     response+="\n"+option["subItemName"]
+
+            respOpt = []
+            for opt in motionopt[itemselected]["subItems"]:
+                respOpt.append(opt["subItemName"])
+            response = util.simpleListTextMessage(respOpt,"選択肢一つを選択してください。")
+            flag = True
+
             apicall(event, '/updatehistmotionopt', {"user_id": event.source.user_id, "data": responsehist}, nores=True)
             state_dict[event.source.user_id]['state'] = 'selected_motion_item'
     elif state_dict[event.source.user_id]['state'] == 'selected_motion_item':
@@ -509,16 +530,38 @@ def statehandle(event):
         if optionselected >= len(motionopt[responsehist["selected_motion"]]["subItems"]) or optionselected < 0:
             line_bot_api.push_message(
                 event.source.user_id,
-                TextSendMessage(text="Please select a valid response."))            
-            response = "選択肢一つを選択してください。"
+                FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("有効なオプションを選択してください。")))          
+            # response = "選択肢一つを選択してください。"
+            # response = util.simpleTextMessage("選択肢一つを選択してください。")
+            # for option in motionopt[responsehist["selected_motion"]]["subItems"]:
+            #     response+="\n"+option["subItemName"]
+
+            respOpt = []
+            flag = True
+
             for option in motionopt[responsehist["selected_motion"]]["subItems"]:
-                response+="\n"+option["subItemName"]
+                respOpt.append(option["subItemName"])
+
+            response = util.listTextMessage(respOpt,"選択肢一つを選択してください。")
+
+            
             state_dict[event.source.user_id]['state'] = 'selected_motion_item'
         else:
             responsehist["selected_motion_item"]=optionselected
-            response = "選択肢一つを選択してください。"
-            for elmnt in motionopt[responsehist["selected_motion"]]["subItems"][optionselected]["subSubItems"]:
-                response+="\n"+elmnt["menuText"]
+
+            # response = "選択肢一つを選択してください。"
+            # for elmnt in motionopt[responsehist["selected_motion"]]["subItems"][optionselected]["subSubItems"]:
+            #     response+="\n"+elmnt["menuText"]
+
+            respOpt = []
+            flag = True
+
+            for option in motionopt[responsehist["selected_motion"]]["subItems"][optionselected]["subSubItems"]:
+                respOpt.append(option["menuText"])
+
+            response = util.listTextMessage(respOpt,"選択肢一つを選択してください。")
+
+
             apicall(event, '/updatehistmotionopt', {"user_id": event.source.user_id, "data": responsehist}, nores=True)
             state_dict[event.source.user_id]['state'] = 'selected_motion_item_option'
     elif state_dict[event.source.user_id]['state'] == 'selected_motion_item_option':
@@ -536,12 +579,28 @@ def statehandle(event):
 
             
         if elmntselected >= len(motionopt[responsehist["selected_motion"]]["subItems"][responsehist["selected_motion_item"]]["subSubItems"]) or elmntselected < 0:
+            # line_bot_api.push_message(
+            #     event.source.user_id,
+            #     TextSendMessage(text="Please select a valid response."))  
+
             line_bot_api.push_message(
                 event.source.user_id,
-                TextSendMessage(text="Please select a valid response."))            
-            response = "選択肢一つを選択してください。"
-            for elmnt in motionopt[responsehist["selected_motion"]]["subItems"][responsehist["selected_motion_item"]]["subSubItems"]:
-                response+="\n"+elmnt["menuText"]
+                FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("有効なオプションを選択してください。")))
+
+                      
+            # response = "選択肢一つを選択してください。"
+            # for elmnt in motionopt[responsehist["selected_motion"]]["subItems"][responsehist["selected_motion_item"]]["subSubItems"]:
+            #     response+="\n"+elmnt["menuText"]
+
+            respOpt = []
+            flag = True
+
+            for option in motionopt[responsehist["selected_motion"]]["subItems"][responsehist["selected_motion_item"]]["subSubItems"]:
+                respOpt.append(option["menuText"])
+
+            response = util.listTextMessage(respOpt,"選択肢一つを選択してください。")
+
+
             state_dict[event.source.user_id]['state'] = 'selected_motion_item_option'
         else:
             responsehist["selected_motion_item_option"]=elmntselected
@@ -549,21 +608,39 @@ def statehandle(event):
             #noob lakshay
 
 
+            # line_bot_api.push_message(
+            #     event.source.user_id,
+            #     TextSendMessage(text="Thank You for your response."))  
+
             line_bot_api.push_message(
                 event.source.user_id,
-                TextSendMessage(text="Thank You for your response."))  
+                FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
+
+
             respmsg=apicall(event, '/clearhistmotionopt', {"user_id": event.source.user_id,"data": responsehist})
+
+            # for msg in respmsg["text"]:
+            #     line_bot_api.push_message(
+            #         event.source.user_id,
+            #         TextSendMessage(text=msg))  
+
             for msg in respmsg["text"]:
                 line_bot_api.push_message(
-                    event.source.user_id,
-                    TextSendMessage(text=msg))  
+                event.source.user_id,
+                FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage(msg)))  
+
+
             print(respmsg["image"])
             if respmsg["image"] is not None:
                 line_bot_api.push_message(
                     event.source.user_id,
                     ImageSendMessage(original_content_url=respmsg["image"],preview_image_url=respmsg["image"]))  
 
-            response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+            # response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+            responseOptions = ["運動","食事","姿勢","記録"]
+            response = util.listTextMessage(responseOptions)
+            flag = True
+             
             responsehist.clear()
             state_dict[event.source.user_id]['state']='menu_select'
     elif state_dict[event.source.user_id]['state'] == 'questionaire':
@@ -580,17 +657,33 @@ def statehandle(event):
         choiceselected = int(event.message.text)-1
         if choiceselected < 0 or choiceselected >= len(questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['choiceItems']):
             makeoptions(questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['choiceItems'])
-            response = "Q" + str(state_dict[event.source.user_id]['cq'])+ ") "+ questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['questionText'] + options
+
+            # response = "Q" + str(state_dict[event.source.user_id]['cq'])+ ") "+ questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['questionText'] + options
+
+            line_bot_api.push_message(
+                event.source.user_id,
+                FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("Q" + str(state_dict[event.source.user_id]['cq'])+ ") "+ questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['questionText'],True)))
+            response = util.listTextMessage(options,"アンケートを始めましょう")
+            flag = True
         else:
             responsehist["questionaire"][str(state_dict[event.source.user_id]['cq'])] = {"choicenum": choiceselected, "choiceWeight": questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['choiceItems'][choiceselected-1]["choiceWeight"], "questionType": questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['questionType']}
             if state_dict[event.source.user_id]['cq'] >= len(questionaire['questionItems']):
                 print(state_dict[event.source.user_id]['cq'])
                 
                 state_dict[event.source.user_id]['cq']=1
+                # line_bot_api.push_message(
+                #     event.source.user_id,
+                #     TextSendMessage(text="Thank You for your responses."))     
                 line_bot_api.push_message(
                     event.source.user_id,
-                    TextSendMessage(text="Thank You for your responses."))            
-                response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+                    FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))  
+
+                # response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+                responseOptions = ["運動","食事","姿勢","記録"]
+                response = util.listTextMessage(responseOptions)
+                flag = True
+
+                state_dict[event.source.user_id]['state'] = "menu_select"
                 apicall(event, '/clearhistques',{"user_id": event.source.user_id, "data": responsehist, "questionName": questionaire['questionName']}, nores=True)
                 responsehist.clear()
 
@@ -604,39 +697,61 @@ def statehandle(event):
     elif state_dict[event.source.user_id]['state'] == 'selected_attitude':
         if event.message.text == '1':
             state_dict[event.source.user_id]['state'] = 'att_stand'
-            response = "Enter direction: \n1. front\n2. left\n3. right"
+            # response = "Enter direction: \n1. front\n2. left\n3. right"
+            response = util.listTextMessage(["フロント","左","右"],"方向を入力してください。")
+            flag = True
         elif event.message.text == '2':
             state_dict[event.source.user_id]['state'] = 'att_sit'
-            response = "Enter direction: \n1. front\n2. left\n3. right"
+            # response = "Enter direction: \n1. front\n2. left\n3. right"
+            response = util.listTextMessage(["フロント","左","右"],"方向を入力してください。")
+            flag = True
         else:
-            response = "Please enter a valid value"
+            # response = "Please enter a valid value"
+            response = util.simpleTextMessage("有効な値を入力してください。")
+            flag = True
     elif state_dict[event.source.user_id]['state'] == 'att_stand':
         if event.message.text == '1':
             state_dict[event.source.user_id]['state'] = 'att_stand_front'
-            response = "Upload the image"
+            # response = "Upload the image"
+            response = util.simpleTextMessage("画像をアップロードする")
+            flag = True
         elif event.message.text == '2':
             state_dict[event.source.user_id]['state'] = 'att_stand_left'
-            response = "Upload the image"
+            # response = "Upload the image"
+            response = util.simpleTextMessage("画像をアップロードする")
+            flag = True
         elif event.message.text == '2':
             state_dict[event.source.user_id]['state'] = 'att_stand_right'
-            response = "Upload the image"
+            # response = "Upload the image"
+            response = util.simpleTextMessage("画像をアップロードする")
+            flag = True
         else:
             response = "Please enter a valid value"
     elif state_dict[event.source.user_id]['state'] == 'att_sit':
         if event.message.text == '1':
             state_dict[event.source.user_id]['state'] = 'att_sit_front'
-            response = "Upload the image"
+            # response = "Upload the image"
+            response = util.simpleTextMessage("画像をアップロードする")
+            flag = True
         elif event.message.text == '2':
             state_dict[event.source.user_id]['state'] = 'att_sit_left'
-            response = "Upload the image"
+            # response = "Upload the image"
+            response = util.simpleTextMessage("画像をアップロードする")
+            flag = True
         elif event.message.text == '2':
             state_dict[event.source.user_id]['state'] = 'att_sit_right'
-            response = "Upload the image"
+            # response = "Upload the image"
+            response = util.simpleTextMessage("画像をアップロードする")
+            flag = True
         else:
-            response = "Please enter a valid value"
+            # response = "Please enter a valid value"
+            response = util.simpleTextMessage("有効な値を入力してください。")
+            flag = True
     elif state_dict[event.source.user_id]['state'] == 'selected_record':
         # response = "Please enter the value"
-        response = "値を入力してください"
+        # response = "値を入力してください"
+        response = util.simpleTextMessage("値を入力してください")
+        flag = True
         ## record the value here
 
         if event.message.text == '1':
@@ -660,74 +775,122 @@ def statehandle(event):
     elif state_dict[event.source.user_id]['state'] == 'height':
         apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "height","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
+        # line_bot_api.push_message(
+        #     event.source.user_id,
+        #     TextSendMessage(text="Thank You for your response."))  
         line_bot_api.push_message(
-            event.source.user_id,
-            TextSendMessage(text="Thank You for your response."))  
-        response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+                event.source.user_id,
+                FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
+        # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+        responseOptions = ["運動","食事","姿勢","記録"]
+        response = util.listTextMessage(responseOptions)
+        flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     elif state_dict[event.source.user_id]['state'] == 'weight':
         apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "weight","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
+        # line_bot_api.push_message(
+        #     event.source.user_id,
+        #     TextSendMessage(text="Thank You for your response.")) 
         line_bot_api.push_message(
-            event.source.user_id,
-            TextSendMessage(text="Thank You for your response.")) 
-        response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+                event.source.user_id,
+                FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
+        # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+        responseOptions = ["運動","食事","姿勢","記録"]
+        response = util.listTextMessage(responseOptions)
+        flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
     
     elif state_dict[event.source.user_id]['state'] == 'fatrate':
         apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "fatrate","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
+        # line_bot_api.push_message(
+        #     event.source.user_id,
+        #     TextSendMessage(text="Thank You for your response.")) 
         line_bot_api.push_message(
-            event.source.user_id,
-            TextSendMessage(text="Thank You for your response.")) 
-        response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+                event.source.user_id,
+                FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
+        # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+        responseOptions = ["運動","食事","姿勢","記録"]
+        response = util.listTextMessage(responseOptions)
+        flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     
     elif state_dict[event.source.user_id]['state'] == 'muscleamt':
         apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "muscleamt","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
+        # line_bot_api.push_message(
+        #     event.source.user_id,
+        #     TextSendMessage(text="Thank You for your response.")) 
         line_bot_api.push_message(
-            event.source.user_id,
-            TextSendMessage(text="Thank You for your response.")) 
-        response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+                event.source.user_id,
+                FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
+        # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+        responseOptions = ["運動","食事","姿勢","記録"]
+        response = util.listTextMessage(responseOptions)
+        flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     elif state_dict[event.source.user_id]['state'] == 'bloodpressure':
         apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "bloodpressure","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
+        # line_bot_api.push_message(
+        #     event.source.user_id,
+        #     TextSendMessage(text="Thank You for your response.")) 
         line_bot_api.push_message(
-            event.source.user_id,
-            TextSendMessage(text="Thank You for your response.")) 
-        response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+                event.source.user_id,
+                FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
+        # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+        responseOptions = ["運動","食事","姿勢","記録"]
+        response = util.listTextMessage(responseOptions)
+        flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     elif state_dict[event.source.user_id]['state'] == 'musclepow':
         apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "musclepow","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
+        # line_bot_api.push_message(
+        #     event.source.user_id,
+        #     TextSendMessage(text="Thank You for your response.")) 
         line_bot_api.push_message(
-            event.source.user_id,
-            TextSendMessage(text="Thank You for your response.")) 
-        response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+                event.source.user_id,
+                FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
+        # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+        responseOptions = ["運動","食事","姿勢","記録"]
+        response = util.listTextMessage(responseOptions)
+        flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
     
     elif state_dict[event.source.user_id]['state'] == 'flexibility':
         apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "flexibility","user_id": event.source.user_id}}, nores=True)
-        # response = "ご返信ありがとうございます。"
+        # # response = "ご返信ありがとうございます。"
+        # line_bot_api.push_message(
+        #     event.source.user_id,
+        #     TextSendMessage(text="Thank You for your response.")) 
         line_bot_api.push_message(
-            event.source.user_id,
-            TextSendMessage(text="Thank You for your response.")) 
-        response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+                event.source.user_id,
+                FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
+        # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+        responseOptions = ["運動","食事","姿勢","記録"]
+        response = util.listTextMessage(responseOptions)
+        flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
 
     elif state_dict[event.source.user_id]['state'] == 'bloodtest':
         apicall(event,"/bloodtest",{"data": {"value": float(event.message.text),"type": "bloodtest","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
+        # line_bot_api.push_message(
+        #     event.source.user_id,
+        #     TextSendMessage(text="Thank You for your response.")) 
         line_bot_api.push_message(
-            event.source.user_id,
-            TextSendMessage(text="Thank You for your response.")) 
-        response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+                event.source.user_id,
+                FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
+        # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+        responseOptions = ["運動","食事","姿勢","記録"]
+        response = util.listTextMessage(responseOptions)
+        flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
 
 

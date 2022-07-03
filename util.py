@@ -203,12 +203,14 @@ def func2():
 
 
 def simpleContent(msg):
-    simpleTextDict = {
-            "type": "text",
-            "text": ". " + msg,
-            "wrap": True
-        }
-    return simpleTextDict
+    
+    return {
+        "type": "text",
+        "text": ". " + msg,
+        "wrap": True
+    }
+    
+    
 
 def simpleListTextMessage(msgs):
     n = len(msgs)
@@ -246,38 +248,70 @@ def simpleListTextMessage(msgs):
 
 
 
-def simpleTextMessage(msg):
-    dictResp = {
-        "type": "bubble",
-        "size": "kilo",
-        "body": {
-            "type": "box",
-            "layout": "vertical",
-            "contents": [
-            {
-                "type": "text",
-                "text": msg,
-                "wrap": True
-            }
-            ]
-        },
-        "footer": {
-            "type": "box",
-            "layout": "vertical",
-            "contents": []
-        },
-        "styles": {
+def simpleTextMessage(msg,weight=False):
+    if weight:
+        return {
+            "type": "bubble",
+            "size": "kilo",
             "body": {
-            "backgroundColor": "#F4F3F9"
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                {
+                    "type": "text",
+                    "text": msg,
+                    "wrap": True,
+                    "weight": "bold"
+                }
+                ]
             },
             "footer": {
-            "separator": False,
-            "backgroundColor": "#F4F3F9"
+                "type": "box",
+                "layout": "vertical",
+                "contents": []
+            },
+            "styles": {
+                "body": {
+                "backgroundColor": "#F4F3F9"
+                },
+                "footer": {
+                "separator": False,
+                "backgroundColor": "#F4F3F9"
+                }
             }
         }
+
+    else:
+        return {
+            "type": "bubble",
+            "size": "kilo",
+            "body": {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                {
+                    "type": "text",
+                    "text": msg,
+                    "wrap": True
+                }
+                ]
+            },
+            "footer": {
+                "type": "box",
+                "layout": "vertical",
+                "contents": []
+            },
+            "styles": {
+                "body": {
+                "backgroundColor": "#F4F3F9"
+                },
+                "footer": {
+                "separator": False,
+                "backgroundColor": "#F4F3F9"
+                }
+            }
     }
 
-    return dictResp 
 
 
 
@@ -370,7 +404,7 @@ def singleElementofList(index,msg):
     }
     return contentdict
 
-def listTextMessage(optionsList):
+def listTextMessage(optionsList,question="下からご希望の項目をお選びください。"):
     n = len(optionsList)
 
     msgList = []
@@ -394,7 +428,7 @@ def listTextMessage(optionsList):
             },
             {
                 "type": "text",
-                "text": "下からご希望の項目をお選びください。",
+                "text": question,
                 "wrap": True,
                 "align": "center",
                 "margin": "md"
