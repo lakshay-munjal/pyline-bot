@@ -136,7 +136,7 @@ def func2():
                         "weight": "bold",
                         "decoration": "underline",
                         "action": {
-                        "type": "postback",
+                        "type": "message",
                         "label": "action",
                         "data": "shokuji="
                         }
@@ -260,7 +260,7 @@ def singleElementofList(index,msg):
             "weight": "bold",
             "decoration": "underline",
             "action": {
-                "type": "postback",
+                "type": "message",
                 "label": "action",
                 "data": str(index+1),
                 "displayText": str(index+1)
