@@ -99,15 +99,20 @@ def authheaders():
         }
 
 def makeoptions(choices):
-    global options
-    if len(choices)!=0:
-        options = "\n選択肢一つを選択してください。\n 1. まったくその通りだ \n 2. どちらかというとそうだ  \n 3. ときどき思い当たることがある \n 4. そんなことはない"
+    options = {}
+    optionslst = []
+    if len(choices)==0:
+        # options = "\n選択肢一つを選択してください。\n 1. まったくその通りだ \n 2. どちらかというとそうだ  \n 3. ときどき思い当たることがある \n 4. そんなことはない"
+        options = util.listTextMessage(["まったくその通りだ","どちらかというとそうだ","ときどき思い当たることがある","そんなことはない"],"n選択肢一つを選択してください。")
     else:
-        options = "\n選択肢一つを選択してください。"
+        # options = "\n選択肢一つを選択してください。"
         count = 0
         for choice in choices:
             count+=1
-            options+= "\n "+count+". "+choice["choiceText"]
+            # options+= "\n "+count+". "+choice["choiceText"]
+            optionslst.append(choice["choiceText"])
+        options = util.listTextMessage(optionslst,"n選択肢一つを選択してください。")
+    return options
 def apicall(event, url, postdata, nores = False):
     postdata = json.dumps(postdata)
     if(not event):
@@ -419,7 +424,7 @@ def statehandle(event):
             else: return "api failed"
             print("qqq")
             print(questionaire)
-            makeoptions(questionaire['questionItems'][0]['choiceItems'])
+            options = makeoptions(questionaire['questionItems'][0]['choiceItems'])
             # response = "アンケートを始めましょう: \n Q1) " + questionaire['questionItems'][0]['questionText'] + options
             line_bot_api.push_message(
             event.source.user_id,
