@@ -262,8 +262,7 @@ def singleElementofList(index,msg):
             "action": {
                 "type": "message",
                 "label": "action",
-                "data": str(index+1),
-                "displayText": str(index+1)
+                "text": str(index+1)
             }
             }
         ]
