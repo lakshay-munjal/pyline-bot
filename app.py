@@ -169,10 +169,10 @@ def handle_message(event):
     print("$$$$$$$$$$$$$$$")
     print(resp)
     print(flag)
-    # #print(event)
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=resp))
+    # # #print(event)
+    # line_bot_api.reply_message(
+    #     event.reply_token,
+    #     TextSendMessage(text=resp))
 
     if not flag:
         print("jugaad working")
