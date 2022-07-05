@@ -8,6 +8,8 @@ import requests
 from flask import Flask, request, abort
 import pyrebase
 import base64
+
+from torch import angle
 import util
 
 
@@ -199,11 +201,19 @@ def handle_imagemessage(event):
     """ Here's all the messages will be handled and processed by the program """
     print("handleevent")
     print(event)
-    resp = imstatehandle(event)
+    resp,flag = imstatehandle(event)
     # #print(event)
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=resp))
+    
+    if not flag:
+        print("jugaad working")
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=resp))
+
+    else:
+        line_bot_api.reply_message(
+            event.reply_token,
+            FlexSendMessage(alt_text="yo",contents=resp))
 
 @handler.add(FollowEvent)
 def handle_follow(event):
@@ -279,11 +289,29 @@ def imstatehandle(event):
     if(resp): 
         print(resp)
         orurl = resp["orurl"]
+        angles = resp["angles"]
     else: return "api failed"
 
     line_bot_api.push_message(
         event.source.user_id,
         ImageSendMessage(original_content_url=orurl, preview_image_url=orurl))
+    resp = apicall(event, '/conditionprocess', {"user_id": event.source.user_id,"pose": pos, "direction": dir, "image":angles})
+    if(resp): 
+        print(resp)
+        eva = resp["eval"]
+        typ = resp["type"]
+        responsetexts = resp["resp"]
+    else: return "api failed"     
+    line_bot_api.push_message(
+        event.source.user_id,
+        FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("Evaluation: "+eva+", Type: "+typ , weight=True)))
+
+    for responsetext in responsetexts:
+        line_bot_api.push_message(
+            event.source.user_id,
+            FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage(responsetext)))
+    
+   
     state_dict[event.source.user_id]['state'] = "menu_select"
     # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
     responseOptions = ["運動","食事","姿勢","記録"]
@@ -291,7 +319,7 @@ def imstatehandle(event):
     flag = True
 
 
-    return response
+    return response, flag
 def statehandle(event):
     global questionaire
     global motionopt
