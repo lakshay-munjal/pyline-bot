@@ -290,6 +290,8 @@ def imstatehandle(event):
         angles = resp["angles"]
     else: return "api failed"
 
+    print("gaygaygyaygaygyagyaygaygay")
+
     line_bot_api.push_message(
         event.source.user_id,
         TextSendMessage(text=orurl))
