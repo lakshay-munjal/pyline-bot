@@ -1,8 +1,7 @@
-
 from http import client
 import os
 import json
-from pydoc import resolve
+
 from re import ASCII
 import requests
 from flask import Flask, request, abort
@@ -290,6 +289,10 @@ def imstatehandle(event):
         orurl = resp["orurl"]
         angles = resp["angles"]
     else: return "api failed"
+
+    line_bot_api.push_message(
+        event.source.user_id,
+        TextSendMessage(text=orurl))
 
     line_bot_api.push_message(
         event.source.user_id,
