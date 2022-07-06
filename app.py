@@ -299,7 +299,7 @@ def imstatehandle(event):
     line_bot_api.push_message(
         event.source.user_id,
         ImageSendMessage(original_content_url=orurl, preview_image_url=orurl))
-    resp = apicall(event, '/conditionprocess', {"user_id": event.source.user_id,"pose": pos, "direction": dir, "image":angles})
+    resp = apicall(event, '/conditionprocess', {"user_id": event.source.user_id,"pose": pos, "direction": dir, "angles":angles})
     if(resp): 
         print(resp)
         eva = resp["eval"]
