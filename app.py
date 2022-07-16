@@ -292,9 +292,6 @@ def imstatehandle(event):
 
     print("gaygaygyaygaygyagyaygaygay")
 
-    line_bot_api.push_message(
-        event.source.user_id,
-        TextSendMessage(text=orurl))
 
     line_bot_api.push_message(
         event.source.user_id,
