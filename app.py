@@ -383,6 +383,7 @@ def statehandle(event):
                 state_dict[event.source.user_id]['state'] = "init"
             else:
                 re = client.post(apiurl+'/greeting', data= json.dumps({"user_id": event.source.user_id}), headers=authheaders())
+                re = re.json()
                 # if(re != None and re.status_code == 200):
                 #     line_bot_api.push_message(
                 #         event.source.user_id,
