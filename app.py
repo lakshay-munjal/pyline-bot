@@ -348,13 +348,14 @@ def statehandle(event):
 
     ###########debugging################
     print("state")
-    #print(event)
-    print(event.source)
-    print(type(event))
-    print(type(event.source))
-    # print(len(event.source))
-    print(event.source.user_id)
+    # #print(event)
+    # print(event.source)
+    # print(type(event))
+    # print(type(event.source))
+    # # print(len(event.source))
     # print(event.source.user_id)
+    # print(event.source.user_id)
+    print(state_dict[event.source.user_id]['state'] )
     print(state_dict)
     if state_dict[event.source.user_id]['state'] == "init":
         # Please enter your password:
