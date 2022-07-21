@@ -329,8 +329,13 @@ def statehandle(event):
     flag = False
     # false -> text, true -> flex 
 
+    if event.source.user_id not in state_dict.keys(): 
+        respNew = followhandle(event)
+        return respNew
+        
     ###########debugging################
     if event.message.text.lower() == 'back' :
+        
         state_dict[event.source.user_id]['state'] = "start"
         state_dict[event.source.user_id]['cq'] = 1
         # print(line_bot_api.get_rih_menu_list)
