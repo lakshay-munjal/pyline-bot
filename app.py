@@ -331,7 +331,7 @@ def statehandle(event):
 
     if event.source.user_id not in state_dict.keys(): 
         respNew = followhandle(event)
-        return respNew
+        return respNew,True
         
     ###########debugging################
     if event.message.text.lower() == 'back' :
