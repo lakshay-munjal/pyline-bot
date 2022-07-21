@@ -247,9 +247,9 @@ def followhandle(event):
             return "ユーザー名を入力してください："
         else:
 
-            print("error")
+            print("Follow Failed")
             # state_dict[event.source.user_id]= {"state": "start", "cq":1}
-            return 'error'
+            return 'Follow Failed'
 
 def imstatehandle(event):
     pos="standing"
