@@ -30,8 +30,10 @@ def login(email,password):
     # password=input("Enter password: ")
     try:
         login = auth.sign_in_with_email_and_password(email, password)
-        return login["idToken"]
-        print("Successfully logged in!")
+        if(login["idToken"]): 
+            return login["idToken"]
+        else:
+            return None
         # print(auth.get_account_info(login['idToken']))
        # email = auth.get_account_info(login['idToken'])['users'][0]['email']
        # print(email)
@@ -334,18 +336,28 @@ def statehandle(event):
         return respNew,True
         
     ###########debugging################
-    if event.message.text.lower() == 'back' :
-        
+    if state_dict[event.source.user_id]['creds']['username'] == '' or state_dict[event.source.user_id]['creds']['password'] == '':
+        response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
+        flag = True
+        state_dict[event.source.user_id]['creds']['username'] = ''
+        state_dict[event.source.user_id]['creds']['password'] = ''
+        state_dict[event.source.user_id]['state'] = "init"
+        state_dict[event.source.user_id]['cq'] = 1    
+    if event.message.text == 'リセット' :
         state_dict[event.source.user_id]['state'] = "start"
         state_dict[event.source.user_id]['cq'] = 1
-        # print(line_bot_api.get_rih_menu_list)
-        response = "rebooted"
-
-        dict1 = util.func()
-        line_bot_api.push_message(
-            event.source.user_id,
-            FlexSendMessage(alt_text="yo",contents=dict1))
-
+        print("reset")
+        response = "Reset"
+    elif event.message.text == '再ログイン' :
+        response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
+        flag = True
+        state_dict[event.source.user_id]['creds']['username'] = ''
+        state_dict[event.source.user_id]['creds']['password'] = ''
+        state_dict[event.source.user_id]['state'] = "init"
+        state_dict[event.source.user_id]['cq'] = 1
+    elif event.message.text in ["運動","食事","姿勢","記録"]:
+        state_dict[event.source.user_id]['state'] = "menu_select"
+        state_dict[event.source.user_id]['cq'] = 1
     ###########debugging################
     print("state")
     # #print(event)
@@ -373,10 +385,12 @@ def statehandle(event):
             # response = "正しいクレデンシャルを入力してください。\n\n ユーザー名を入力してください："
             response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
             flag = True
+            state_dict[event.source.user_id]['creds']['username'] = ''
+            state_dict[event.source.user_id]['creds']['password'] = ''
             state_dict[event.source.user_id]['state'] = "init"
         else:
             resp2 = apicall(event, '/register', {"user_id": event.source.user_id,"idToken": resp})
-            if(resp2 == None):
+            if(resp2 == None or resp2.status_code != 200):
                 # response = "正しいクレデンシャルを入力してください。\n\n ユーザー名を入力してください："
                 response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
                 flag = True
@@ -425,7 +439,7 @@ def statehandle(event):
     elif state_dict[event.source.user_id]['state'] == "menu_select":
 
         print("ffffffffffffffffffffffffffffffffffffffffffffffffffffff")
-        if event.message.text == '1':
+        if event.message.text == '運動':
 
             resp = apicall(event, '/motionopt', {"user_id": event.source.user_id})
             # f =  open('./resources/quesaire.json', encoding='utf8')
@@ -455,7 +469,7 @@ def statehandle(event):
             state_dict[event.source.user_id]['state'] = 'selected_motion'
             # line_bot_api.set_default_rich_menu(back_menu_id)
 
-        elif event.message.text == '2':
+        elif event.message.text == '食事':
 
             resp = apicall(event, '/questionaire', {"user_id": event.source.user_id})
             # f =  open('./resources/quesaire.json', encoding='utf8')
@@ -477,13 +491,13 @@ def statehandle(event):
             state_dict[event.source.user_id]['state']= 'questionaire'
             # line_bot_api.set_default_rich_menu(back_menu_id)
 
-        elif event.message.text == '3':
+        elif event.message.text == '姿勢':
             # response = "Enter Pose: \n1. Standing\n2. Sitting"
             response = util.listTextMessage(["スタンディング","座位"],"ポーズを入力する")
             flag = True
             state_dict[event.source.user_id]['state'] = 'selected_attitude'
             # line_bot_api.set_default_rich_menu(back_menu_id)
-        elif event.message.text == '4':
+        elif event.message.text == '記録':
 
             # resp = apicall(event, '/records', {"bot_id": bot_id})
             # f =  open('./resources/quesaire.json', encoding='utf8')
@@ -514,7 +528,7 @@ def statehandle(event):
         else:
             # "Please select a valid option."
             # response = "有効なオプションを選択してください。"
-            response = util.simpleListTextMessage("有効なオプションを選択してください。")
+            response = util.simpleTextMessage("有効なオプションを選択してください。")
             flag = True
 
     elif state_dict[event.source.user_id]['state'] == 'selected_motion':
