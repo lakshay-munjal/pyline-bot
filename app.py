@@ -528,7 +528,7 @@ def statehandle(event):
         else:
             # "Please select a valid option."
             # response = "有効なオプションを選択してください。"
-            response = util.simpleListTextMessage("有効なオプションを選択してください。")
+            response = util.simpleTextMessage("有効なオプションを選択してください。")
             flag = True
 
     elif state_dict[event.source.user_id]['state'] == 'selected_motion':
