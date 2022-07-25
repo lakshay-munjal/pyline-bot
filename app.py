@@ -37,7 +37,7 @@ def login(email,password):
        # print(email)
     except:
         print("Invalid email or password")
-    return
+    return None
 
 from linebot import (
     LineBotApi, WebhookHandler
