@@ -346,7 +346,7 @@ def statehandle(event):
     if event.message.text == 'リセット' :
         state_dict[event.source.user_id]['state'] = "start"
         state_dict[event.source.user_id]['cq'] = 1
-        # print(line_bot_api.get_rih_menu_list)
+        print("reset")
         response = "Reset"
     elif event.message.text == '再ログイン' :
         response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
