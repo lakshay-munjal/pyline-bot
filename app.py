@@ -290,10 +290,16 @@ def imstatehandle(event):
         print(resp)
         orurl = resp["orurl"]
         angles = resp["angles"]
+        angnames= resp["angnames"]
     else: return "api failed"
 
     print("gaygaygyaygaygyagyaygaygay")
-
+    angtext=[]
+    for angnam, ang  in zip(angnames, angles):
+        angtext.append(angnam + ': '+ang)
+    line_bot_api.push_message(
+        event.source.user_id,
+        FlexSendMessage(alt_text="yo",contents=util.responseList( "角度", angtext)))
 
     line_bot_api.push_message(
         event.source.user_id,
