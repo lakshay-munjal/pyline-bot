@@ -336,28 +336,42 @@ def statehandle(event):
         return respNew,True
         
     ###########debugging################
-    if state_dict[event.source.user_id]['creds']['username'] == '' or state_dict[event.source.user_id]['creds']['password'] == '':
-        response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
-        flag = True
-        state_dict[event.source.user_id]['creds']['username'] = ''
-        state_dict[event.source.user_id]['creds']['password'] = ''
-        state_dict[event.source.user_id]['state'] = "init"
-        state_dict[event.source.user_id]['cq'] = 1    
+    if state_dict[event.source.user_id].get('state') != 'init_password':
+        if not state_dict[event.source.user_id].get('creds') or state_dict[event.source.user_id]['creds']['username'] == '' \
+            or state_dict[event.source.user_id]['creds']['password'] == '':
+            response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
+            flag = True
+            state_dict[event.source.user_id]['creds']={"username": "","password": ""}
+            state_dict[event.source.user_id]['state'] = "init"
+            state_dict[event.source.user_id]['cq'] = 1    
     if event.message.text == 'リセット' :
-        state_dict[event.source.user_id]['state'] = "start"
-        state_dict[event.source.user_id]['cq'] = 1
-        print("reset")
-        response = "Reset"
+        if state_dict[event.source.user_id].get('state') in ["init_password", "init"]:
+            response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
+            flag = True
+            state_dict[event.source.user_id]['creds']={"username": "","password": ""}
+            state_dict[event.source.user_id]['state'] = "init"
+            state_dict[event.source.user_id]['cq'] = 1    
+        else:
+            state_dict[event.source.user_id]['state'] = "start"
+            state_dict[event.source.user_id]['cq'] = 1
+            print("reset")
+            response = "Reset"
     elif event.message.text == '再ログイン' :
         response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
         flag = True
-        state_dict[event.source.user_id]['creds']['username'] = ''
-        state_dict[event.source.user_id]['creds']['password'] = ''
+        state_dict[event.source.user_id]['creds']={"username": "","password": ""}
         state_dict[event.source.user_id]['state'] = "init"
         state_dict[event.source.user_id]['cq'] = 1
     elif event.message.text in ["運動","食事","姿勢","記録"]:
-        state_dict[event.source.user_id]['state'] = "menu_select"
-        state_dict[event.source.user_id]['cq'] = 1
+        if state_dict[event.source.user_id].get('state') in ["init_password", "init"]:
+            response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
+            flag = True
+            state_dict[event.source.user_id]['creds']={"username": "","password": ""}
+            state_dict[event.source.user_id]['state'] = "init"
+            state_dict[event.source.user_id]['cq'] = 1    
+        else:
+            state_dict[event.source.user_id]['state'] = "menu_select"
+            state_dict[event.source.user_id]['cq'] = 1
     ###########debugging################
     print("state")
     # #print(event)
