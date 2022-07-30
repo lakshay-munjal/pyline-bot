@@ -364,14 +364,14 @@ def statehandle(event):
             response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
             flag = True
             state_dict[event.source.user_id]['creds']={"username": "","password": ""}
-            state_dict[event.source.user_id]['state'] = "init"
+            state_dict[event.source.user_id]['state'] = "initus"
             state_dict[event.source.user_id]['cq'] = 1    
     if event.message.text == 'リセット' :
         if state_dict[event.source.user_id].get('state') in ["init_password", "init"]:
             response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
             flag = True
             state_dict[event.source.user_id]['creds']={"username": "","password": ""}
-            state_dict[event.source.user_id]['state'] = "init"
+            state_dict[event.source.user_id]['state'] = "initus"
             state_dict[event.source.user_id]['cq'] = 1    
         else:
             state_dict[event.source.user_id]['state'] = "start"
@@ -382,14 +382,14 @@ def statehandle(event):
         response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
         flag = True
         state_dict[event.source.user_id]['creds']={"username": "","password": ""}
-        state_dict[event.source.user_id]['state'] = "init"
+        state_dict[event.source.user_id]['state'] = "initus"
         state_dict[event.source.user_id]['cq'] = 1
     elif event.message.text in ["運動","食事","姿勢","記録"]:
         if state_dict[event.source.user_id].get('state') in ["init_password", "init"]:
             response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
             flag = True
             state_dict[event.source.user_id]['creds']={"username": "","password": ""}
-            state_dict[event.source.user_id]['state'] = "init"
+            state_dict[event.source.user_id]['state'] = "initus"
             state_dict[event.source.user_id]['cq'] = 1    
         else:
             state_dict[event.source.user_id]['state'] = "menu_select"
@@ -405,7 +405,10 @@ def statehandle(event):
     # print(event.source.user_id)
     print(state_dict[event.source.user_id]['state'] )
     print(state_dict)
-    if state_dict[event.source.user_id]['state'] == "init":
+    if state_dict[event.source.user_id]['state'] == "initus":
+        response = util.simpleTextMessage("ユーザー名を入力してください：")
+        
+    elif state_dict[event.source.user_id]['state'] == "init":
         # Please enter your password:
         # response = "パスワードを入力してください："
         response = util.simpleTextMessage("パスワードを入力してください：")
