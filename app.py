@@ -419,12 +419,14 @@ def statehandle(event):
         resp = login(state_dict[event.source.user_id]['creds']['username'],state_dict[event.source.user_id]['creds']['password'])
         if(resp == None):
             # response = "正しいクレデンシャルを入力してください。\n\n ユーザー名を入力してください："
+            print('noneresp')
             response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
             flag = True
             state_dict[event.source.user_id]['creds']['username'] = ''
             state_dict[event.source.user_id]['creds']['password'] = ''
             state_dict[event.source.user_id]['state'] = "init"
         else:
+            print('reg')
             resp2 = apicall(event, '/register', {"user_id": event.source.user_id,"idToken": resp})
             if(resp2 == None):
                 # response = "正しいクレデンシャルを入力してください。\n\n ユーザー名を入力してください："
