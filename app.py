@@ -12,14 +12,23 @@ import util
 
 
 firebaseConfig = {
-  "apiKey": "AIzaSyBbpL1cGJHXiQsqaFc7C-F41VgcG8LN3pk",
-  "authDomain": "lineweb-d1174.firebaseapp.com",
-  "projectId": "lineweb-d1174",
-  "storageBucket": "lineweb-d1174.appspot.com",
-  "messagingSenderId": "854065790129",
-  "appId": "1:854065790129:web:0f9c4747e925b9fc1db690",
+  "apiKey": "AIzaSyCulzTY93K3424lDUEAQwHV6vj35z-gSYE",
+  "authDomain": "linewebbot.firebaseapp.com",
+  "projectId": "linewebbot",
+  "storageBucket": "linewebbot.appspot.com",
+  "messagingSenderId": "432628358278",
+  "appId": "1:432628358278:web:8329e7c5e6ccdfccf60507",
   "databaseURL": "https://lineweb-d1174.firebaseio.com/"
-};
+}
+# firebaseConfig = {
+#   "apiKey": "AIzaSyBbpL1cGJHXiQsqaFc7C-F41VgcG8LN3pk",
+#   "authDomain": "lineweb-d1174.firebaseapp.com",
+#   "projectId": "lineweb-d1174",
+#   "storageBucket": "lineweb-d1174.appspot.com",
+#   "messagingSenderId": "854065790129",
+#   "appId": "1:854065790129:web:0f9c4747e925b9fc1db690",
+#   "databaseURL": "https://lineweb-d1174.firebaseio.com/"
+# };
 
 firebase=pyrebase.initialize_app(firebaseConfig)
 auth=firebase.auth()
