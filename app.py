@@ -367,7 +367,7 @@ def statehandle(event):
             state_dict[event.source.user_id]['state'] = "initus"
             state_dict[event.source.user_id]['cq'] = 1    
     if event.message.text == 'リセット' :
-        if state_dict[event.source.user_id].get('state') in ["init_password", "init"]:
+        if state_dict[event.source.user_id].get('state') in ["init_password", "init", 'initus']:
             response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
             flag = True
             state_dict[event.source.user_id]['creds']={"username": "","password": ""}
@@ -407,7 +407,8 @@ def statehandle(event):
     print(state_dict)
     if state_dict[event.source.user_id]['state'] == "initus":
         response = util.simpleTextMessage("ユーザー名を入力してください：")
-        
+        flag = True
+        state_dict[event.source.user_id]['state'] = "init"
     elif state_dict[event.source.user_id]['state'] == "init":
         # Please enter your password:
         # response = "パスワードを入力してください："
