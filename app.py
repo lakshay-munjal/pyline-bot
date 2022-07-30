@@ -426,7 +426,7 @@ def statehandle(event):
             state_dict[event.source.user_id]['state'] = "init"
         else:
             resp2 = apicall(event, '/register', {"user_id": event.source.user_id,"idToken": resp})
-            if(resp2 == None or resp2.status_code != 200):
+            if(resp2 == None):
                 # response = "正しいクレデンシャルを入力してください。\n\n ユーザー名を入力してください："
                 response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
                 flag = True
