@@ -358,7 +358,7 @@ def statehandle(event):
         return respNew,True
         
     ###########debugging################
-    if state_dict[event.source.user_id].get('state') != 'init_password':
+    if not state_dict[event.source.user_id].get('state') in ['init_password', 'init', 'initus']:
         if not state_dict[event.source.user_id].get('creds') or state_dict[event.source.user_id]['creds']['username'] == '' \
             or state_dict[event.source.user_id]['creds']['password'] == '':
             response = util.simpleListTextMessage(["正しいクレデンシャルを入力してください。","ユーザー名を入力してください："])
