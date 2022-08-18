@@ -319,6 +319,11 @@ def imstatehandle(event):
     else: return "api failed"
 
     print("gaygaygyaygaygyagyaygaygay")
+
+    line_bot_api.push_message(
+        event.source.user_id,
+        ImageSendMessage(original_content_url=orurl, preview_image_url=orurl))
+        
     angtext=[]
     for angnam, ang  in zip(angnames, angles):
         angtext.append(angnam + ': '+ang)
@@ -326,9 +331,6 @@ def imstatehandle(event):
         event.source.user_id,
         FlexSendMessage(alt_text="yo",contents=util.responseList( "角度", angtext)))
 
-    line_bot_api.push_message(
-        event.source.user_id,
-        ImageSendMessage(original_content_url=orurl, preview_image_url=orurl))
     resp = apicall(event, '/conditionprocess', {"user_id": event.source.user_id,"pose": pos, "direction": dir, "angles":angles})
     if(resp): 
         print(resp)
