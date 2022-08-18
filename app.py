@@ -349,7 +349,7 @@ def imstatehandle(event):
     state_dict[event.source.user_id]['state'] = "menu_select"
     # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
     responseOptions = ["運動","食事","姿勢","記録"]
-    response = util.listTextMessage(responseOptions)
+    response = util.listTextMessageWithText(responseOptions)
     flag = True
 
 
@@ -466,7 +466,7 @@ def statehandle(event):
                         TextSendMessage(text="Hey there!!")) 
                 # response = "正常にログインしました。 \n\n 選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
                 responseOptions = ["運動","食事","姿勢","記録"]
-                response = util.listTextMessage(responseOptions)
+                response = util.listTextMessageWithText(responseOptions)
                 flag = True
                 state_dict[event.source.user_id]['state'] = "menu_select"
     
@@ -477,7 +477,7 @@ def statehandle(event):
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         # response = util.simpleTextMessage("選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録")
         responseOptions = ["運動","食事","姿勢","記録"]
-        response = util.listTextMessage(responseOptions)
+        response = util.listTextMessageWithText(responseOptions)
         flag = True
         print("ttttttttttttttttttt")
         print(response)
@@ -755,7 +755,7 @@ def statehandle(event):
 
             # response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
             responseOptions = ["運動","食事","姿勢","記録"]
-            response = util.listTextMessage(responseOptions)
+            response = util.listTextMessageWithText(responseOptions)
             flag = True
              
             responsehist.clear()
@@ -798,7 +798,7 @@ def statehandle(event):
 
                 # response= "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
                 responseOptions = ["運動","食事","姿勢","記録"]
-                response = util.listTextMessage(responseOptions)
+                response = util.listTextMessageWithText(responseOptions)
                 flag = True
 
                 state_dict[event.source.user_id]['state'] = "menu_select"
@@ -915,7 +915,7 @@ def statehandle(event):
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         responseOptions = ["運動","食事","姿勢","記録"]
-        response = util.listTextMessage(responseOptions)
+        response = util.listTextMessageWithText(responseOptions)
         flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
 
@@ -930,7 +930,7 @@ def statehandle(event):
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         responseOptions = ["運動","食事","姿勢","記録"]
-        response = util.listTextMessage(responseOptions)
+        response = util.listTextMessageWithText(responseOptions)
         flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
     
@@ -945,7 +945,7 @@ def statehandle(event):
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         responseOptions = ["運動","食事","姿勢","記録"]
-        response = util.listTextMessage(responseOptions)
+        response = util.listTextMessageWithText(responseOptions)
         flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
 
@@ -961,7 +961,7 @@ def statehandle(event):
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         responseOptions = ["運動","食事","姿勢","記録"]
-        response = util.listTextMessage(responseOptions)
+        response = util.listTextMessageWithText(responseOptions)
         flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
 
@@ -976,7 +976,7 @@ def statehandle(event):
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         responseOptions = ["運動","食事","姿勢","記録"]
-        response = util.listTextMessage(responseOptions)
+        response = util.listTextMessageWithText(responseOptions)
         flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
 
@@ -991,7 +991,7 @@ def statehandle(event):
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         responseOptions = ["運動","食事","姿勢","記録"]
-        response = util.listTextMessage(responseOptions)
+        response = util.listTextMessageWithText(responseOptions)
         flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
     
@@ -1006,7 +1006,7 @@ def statehandle(event):
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         responseOptions = ["運動","食事","姿勢","記録"]
-        response = util.listTextMessage(responseOptions)
+        response = util.listTextMessageWithText(responseOptions)
         flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
 
@@ -1021,7 +1021,7 @@ def statehandle(event):
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
         responseOptions = ["運動","食事","姿勢","記録"]
-        response = util.listTextMessage(responseOptions)
+        response = util.listTextMessageWithText(responseOptions)
         flag = True
         state_dict[event.source.user_id]['state'] = "menu_select"
 
