@@ -224,12 +224,12 @@ def callback(botid):
     # Get request body as text
     body = request.get_data(as_text=True)
 
-    jsonBody = json.loads(body)
+    # jsonBody = json.loads(body)
 
-    for event in jsonBody['events']:
-        event['botid'] = botid
+    # for event in jsonBody['events']:
+    #     event['botid'] = botid
 
-    body = json.dumps(jsonBody)
+    # body = json.dumps(jsonBody)
 
     app.logger.info("Request body: " + body)
 
@@ -237,7 +237,9 @@ def callback(botid):
     try:
         if botid not in botdict.keys():
             addAllHandlers()
+        print("Work here")
         botdict[botid]["handler"].handle(body, signature)
+        print("Works here too")
     except InvalidSignatureError:
         abort(422)
 
