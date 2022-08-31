@@ -228,7 +228,7 @@ def callback(botid):
             addAllHandlers()
         botdict[botid]["handler"].handle(body, signature)
     except InvalidSignatureError:
-        abort(400)
+        abort(422)
 
     return 'OK'
 
