@@ -149,6 +149,9 @@ def addAllHandlers():
             'handler': newHandler,
             'line_bot_api': new_bot_api
         }
+    
+    print("all handlers 2") 
+    print(allHandlersData)
 
 ######################init for every user init dict - lakshay
 def authheaders():
