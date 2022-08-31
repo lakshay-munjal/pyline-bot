@@ -122,7 +122,7 @@ app = Flask(__name__)
 
 def addAllHandlers():
 
-    allHandlersData = apicall(None,"/allhandlers")
+    allHandlersData = apicall(None,"/allhandlers",None)
 
     
     for handlerBot in allHandlersData:
