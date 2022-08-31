@@ -204,6 +204,8 @@ def questionnaireWrapper(ques):
 # what to do here
 @app.route("/callback/<botid>", methods=['POST'])
 def callback(botid):
+    print("WTFFFFFFFFF")
+    print(botid)
     # Get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
     # botid = request.args.get("botid")
