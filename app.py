@@ -126,7 +126,7 @@ def addAllHandlers():
 
     
     for handlerBot in allHandlersData:
-        handlerbotid = handlerBot["botid"]
+        handlerbotid = handlerBot["botID"]
         channelSecret = handlerBot["channelSecret"]
         channelAccessToken =handlerBot["channelAccessToken"] 
 
@@ -236,7 +236,7 @@ def addNewHandler():
     body = request.get_json()
     #list of secret keys
 
-    handlerbotid = body["botid"]
+    handlerbotid = body["botID"]
     channelSecret = body["channelSecret"]
     channelAccessToken = body["channelAccessToken"]
     
