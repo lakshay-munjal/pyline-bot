@@ -223,13 +223,14 @@ def callback(botid):
 
     # Get request body as text
     body = request.get_data(as_text=True)
+    app.logger.info("Request body init: " + body)
 
-    # jsonBody = json.loads(body)
+    jsonBody = json.loads(body)
 
-    # for event in jsonBody['events']:
-    #     event['botid'] = botid
+    for event in jsonBody['events']:
+        event['botid'] = botid
 
-    # body = json.dumps(jsonBody)
+    body = json.dumps(jsonBody)
 
     app.logger.info("Request body: " + body)
 
