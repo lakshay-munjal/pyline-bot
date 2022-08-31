@@ -3,6 +3,7 @@ import os
 import json
 
 from re import ASCII
+import re
 import requests
 from flask import Flask, request, abort
 import pyrebase
@@ -75,6 +76,7 @@ questionflex = {}
 motionopt = {}
 records = {}
 responsehist = {}
+botdict = {}
 options = "\n選択肢一つを選択してください。\n 1. まったくその通りだ \n 2. どちらかというとそうだ  \n 3. ときどき思い当たることがある \n 4. そんなことはない"
 
 indtxt = [
@@ -115,8 +117,30 @@ apiurl = 'https://linewebbackend.herokuapp.com/api/bot'
 client = requests.session()
 app = Flask(__name__)
 
-line_bot_api = LineBotApi('lnoN3pNo/DUuie5L3OT9exNM+/WZzquIkqGIZdVFcOTHOAhdkNe8IXDilhrKQNrFLQViNJv0MVcZtIzaU7sFKoOkc9s657sq5xb64EtiVqbCoDPEwqt0xwZgkuFriqVOVKVQrP7sXhjR4dNQm5Gk1QdB04t89/1O/w1cDnyilFU=')
-handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
+# botdict[event['BotID']]['line_bot_api'] = LineBotApi('lnoN3pNo/DUuie5L3OT9exNM+/WZzquIkqGIZdVFcOTHOAhdkNe8IXDilhrKQNrFLQViNJv0MVcZtIzaU7sFKoOkc9s657sq5xb64EtiVqbCoDPEwqt0xwZgkuFriqVOVKVQrP7sXhjR4dNQm5Gk1QdB04t89/1O/w1cDnyilFU=')
+# handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
+
+def addAllHandlers():
+
+    allHandlersData = apicall(None,"/allhandlers")
+
+    
+    for handlerBot in allHandlersData:
+        handlerBotId = handlerBot["botID"]
+        channelSecret = handlerBot["channelSecret"]
+        channelAccessToken =handlerBot["channelAccessToken"] 
+
+        newHandler = WebhookHandler(channelSecret)
+        newHandler.add(MessageEvent,message=TextMessage)(handle_message)
+        newHandler.add(FollowEvent)(handle_follow)
+        newHandler.add(MessageEvent, message=ImageMessage)(handle_imagemessage)
+
+        new_bot_api = LineBotApi(channelAccessToken)
+
+        botdict[handlerBotId] = {
+            'handler': newHandler,
+            'line_bot_api': new_bot_api
+        }
 
 ######################init for every user init dict - lakshay
 def authheaders():
@@ -176,24 +200,65 @@ def questionnaireWrapper(ques):
     
     return question
 
+
+# what to do here
 @app.route("/callback", methods=['POST'])
 def callback():
     # Get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
+    botID = request.args.get("botID")
 
     # Get request body as text
     body = request.get_data(as_text=True)
+
+    jsonBody = json.loads(body)
+
+    for event in jsonBody['events']:
+        event['BotID'] = botID
+
+    body = json.dumps(jsonBody)
+
     app.logger.info("Request body: " + body)
 
     # Handle webhook body
     try:
-        handler.handle(body, signature)
+        if botID not in botdict.keys():
+            addAllHandlers()
+        botdict[botID]["handler"].handle(body, signature)
     except InvalidSignatureError:
         abort(400)
 
     return 'OK'
 
-@handler.add(MessageEvent, message=TextMessage)
+
+@app.route("/newbot")
+def addNewHandler():
+    body = request.get_json()
+    #list of secret keys
+
+    handlerBotId = body["botID"]
+    channelSecret = body["channelSecret"]
+    channelAccessToken = body["channelAccessToken"]
+    
+
+    newHandler = WebhookHandler(channelSecret)
+
+    newHandler.add(MessageEvent,message=TextMessage)(handle_message)
+    newHandler.add(FollowEvent)(handle_follow)
+    newHandler.add(MessageEvent, message=ImageMessage)(handle_imagemessage)
+
+    new_bot_api = LineBotApi(channelAccessToken)
+
+    botdict[handlerBotId] = {
+        'handler': newHandler,
+        'line_bot_api': new_bot_api
+    }
+
+            
+
+
+
+
 def handle_message(event):
     """ Here's all the messages will be handled and processed by the program """
     print("handleevent")
@@ -204,24 +269,24 @@ def handle_message(event):
     print(resp)
     print(flag)
     # # #print(event)
-    # line_bot_api.reply_message(
+    # botdict[event['BotID']]['line_bot_api'].reply_message(
     #     event.reply_token,
     #     TextSendMessage(text=resp))
 
+    # botdict[event['BotID']]['botdict[event['BotID']]['line_bot_api']']
+
     if not flag:
         print("jugaad working")
-        line_bot_api.reply_message(
+        botdict[event['BotID']]['line_bot_api'].reply_message(
             event.reply_token,
             TextSendMessage(text=resp))
 
     else:
-        line_bot_api.reply_message(
+        botdict[event['BotID']]['line_bot_api'].reply_message(
             event.reply_token,
             FlexSendMessage(alt_text="yo",contents=resp))
 
-# @handler.add(MessageEvent,message=FlexM/essage)
 
-@handler.add(MessageEvent, message=ImageMessage)
 def handle_imagemessage(event):
     """ Here's all the messages will be handled and processed by the program """
     print("handleevent")
@@ -231,16 +296,15 @@ def handle_imagemessage(event):
     
     if not flag:
         print("jugaad working")
-        line_bot_api.reply_message(
+        botdict[event['BotID']]['line_bot_api'].reply_message(
             event.reply_token,
             TextSendMessage(text=resp))
 
     else:
-        line_bot_api.reply_message(
+        botdict[event['BotID']]['line_bot_api'].reply_message(
             event.reply_token,
             FlexSendMessage(alt_text="yo",contents=resp))
 
-@handler.add(FollowEvent)
 def handle_follow(event):
     """ Here's all the messages will be handled and processed by the program """
     print("handleevent")
@@ -251,9 +315,71 @@ def handle_follow(event):
     #print(event)
     
     # print("jugaad working")
-    line_bot_api.reply_message(
+    botdict[event['BotID']]['line_bot_api'].reply_message(
         event.reply_token,
         TextSendMessage(text=resp))
+
+# @handler.add(MessageEvent, message=TextMessage)
+# def handle_message(event):
+#     """ Here's all the messages will be handled and processed by the program """
+#     print("handleevent")
+#     print(event)
+#     resp,flag = statehandle(event)
+
+#     print("$$$$$$$$$$$$$$$")
+#     print(resp)
+#     print(flag)
+#     # # #print(event)
+#     # botdict[event['BotID']]['line_bot_api'].reply_message(
+#     #     event.reply_token,
+#     #     TextSendMessage(text=resp))
+
+#     if not flag:
+#         print("jugaad working")
+#         botdict[event['BotID']]['line_bot_api'].reply_message(
+#             event.reply_token,
+#             TextSendMessage(text=resp))
+
+#     else:
+#         botdict[event['BotID']]['line_bot_api'].reply_message(
+#             event.reply_token,
+#             FlexSendMessage(alt_text="yo",contents=resp))
+
+# # @handler.add(MessageEvent,message=FlexM/essage)
+
+# @handler.add(MessageEvent, message=ImageMessage)
+# def handle_imagemessage(event):
+#     """ Here's all the messages will be handled and processed by the program """
+#     print("handleevent")
+#     print(event)
+#     resp,flag = imstatehandle(event)
+#     # #print(event)
+    
+#     if not flag:
+#         print("jugaad working")
+#         botdict[event['BotID']]['line_bot_api'].reply_message(
+#             event.reply_token,
+#             TextSendMessage(text=resp))
+
+#     else:
+#         botdict[event['BotID']]['line_bot_api'].reply_message(
+#             event.reply_token,
+#             FlexSendMessage(alt_text="yo",contents=resp))
+
+# @handler.add(FollowEvent)
+# def handle_follow(event):
+#     """ Here's all the messages will be handled and processed by the program """
+#     print("handleevent")
+#     print(event)
+#     print(state_dict)
+#     resp = followhandle(event)
+#     print(state_dict)
+#     #print(event)
+    
+#     # print("jugaad working")
+#     botdict[event['BotID']]['line_bot_api'].reply_message(
+#         event.reply_token,
+#         TextSendMessage(text=resp))
 
 
     
@@ -301,7 +427,7 @@ def imstatehandle(event):
         dir="right"
     else:
         return "Not a valid input"
-    message_content = line_bot_api.get_message_content(event.message.id)
+    message_content = botdict[event['BotID']]['line_bot_api'].get_message_content(event.message.id)
     # file_path = "./iter_cont.txt"
     # with open(file_path, 'wb') as fd:
     #     for chunk in message_content.iter_content():
@@ -320,14 +446,14 @@ def imstatehandle(event):
 
     print("gaygaygyaygaygyagyaygaygay")
 
-    line_bot_api.push_message(
+    botdict[event['BotID']]['line_bot_api'].push_message(
         event.source.user_id,
         ImageSendMessage(original_content_url=orurl, preview_image_url=orurl))
         
     angtext=[]
     for angnam, ang  in zip(angnames, angles):
         angtext.append(angnam + ': '+ang)
-    line_bot_api.push_message(
+    botdict[event['BotID']]['line_bot_api'].push_message(
         event.source.user_id,
         FlexSendMessage(alt_text="yo",contents=util.responseList( "角度", angtext)))
 
@@ -338,12 +464,12 @@ def imstatehandle(event):
         typ = resp["type"]
         responsetexts = resp["resp"]
     else: return "api failed"     
-    line_bot_api.push_message(
+    botdict[event['BotID']]['line_bot_api'].push_message(
         event.source.user_id,
         FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("Evaluation: "+eva+", Type: "+typ , weight=True)))
 
     for responsetext in responsetexts:
-        line_bot_api.push_message(
+        botdict[event['BotID']]['line_bot_api'].push_message(
             event.source.user_id,
             FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage(responsetext)))
     
@@ -452,18 +578,18 @@ def statehandle(event):
                 re = client.post(apiurl+'/greeting', data= json.dumps({"user_id": event.source.user_id}), headers=authheaders())
                 
                 # if(re != None and re.status_code == 200):
-                #     line_bot_api.push_message(
+                #     botdict[event['BotID']]['line_bot_api'].push_message(
                 #         event.source.user_id,
                 #         TextSendMessage(text=re["greet"])) 
                 if(re != None and re.status_code == 200):
                     re = re.json()
-                    line_bot_api.push_message(
+                    botdict[event['BotID']]['line_bot_api'].push_message(
                         event.source.user_id,
                         FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage(re["greet"]))) 
 
                         
                 else:
-                    line_bot_api.push_message(
+                    botdict[event['BotID']]['line_bot_api'].push_message(
                         event.source.user_id,
                         TextSendMessage(text="Hey there!!")) 
                 # response = "正常にログインしました。 \n\n 選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
@@ -483,7 +609,7 @@ def statehandle(event):
         flag = True
         print("ttttttttttttttttttt")
         print(response)
-        # line_bot_api.reply_message(
+        # botdict[event['BotID']]['line_bot_api'].reply_message(
         #     event.reply_token,
         #     FlexSendMessage(alt_text="yo",contents=resp))
         # flag = True
@@ -520,7 +646,7 @@ def statehandle(event):
             flag = True
 
             state_dict[event.source.user_id]['state'] = 'selected_motion'
-            # line_bot_api.set_default_rich_menu(back_menu_id)
+            # botdict[event['BotID']]['line_bot_api'].set_default_rich_menu(back_menu_id)
 
         elif event.message.text == '食事':
 
@@ -533,7 +659,7 @@ def statehandle(event):
             print(questionaire)
             optionsAll = makeoptions(questionaire['questionItems'][0]['choiceItems'])
             # response = "アンケートを始めましょう: \n Q1) " + questionaire['questionItems'][0]['questionText'] + options
-            line_bot_api.push_message(
+            botdict[event['BotID']]['line_bot_api'].push_message(
                 event.source.user_id,
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("Q1) " + questionaire['questionItems'][0]['questionText'],True)))
             print("options")
@@ -542,14 +668,14 @@ def statehandle(event):
             flag = True
 
             state_dict[event.source.user_id]['state']= 'questionaire'
-            # line_bot_api.set_default_rich_menu(back_menu_id)
+            # botdict[event['BotID']]['line_bot_api'].set_default_rich_menu(back_menu_id)
 
         elif event.message.text == '姿勢':
             # response = "Enter Pose: \n1. Standing\n2. Sitting"
             response = util.listTextMessage(["スタンディング","座位"],"ポーズを入力する")
             flag = True
             state_dict[event.source.user_id]['state'] = 'selected_attitude'
-            # line_bot_api.set_default_rich_menu(back_menu_id)
+            # botdict[event['BotID']]['line_bot_api'].set_default_rich_menu(back_menu_id)
         elif event.message.text == '記録':
 
             # resp = apicall(event, '/records', {"bot_id": bot_id})
@@ -577,7 +703,7 @@ def statehandle(event):
             response = util.listTextMessage(["身長","体重","脂肪率","筋量","血圧","筋力","柔軟性","血液検査"],"何を録音したいですか？")
             flag = True
             state_dict[event.source.user_id]['state'] = 'selected_record'
-            # line_bot_api.set_default_rich_menu(back_menu_id)
+            # botdict[event['BotID']]['line_bot_api'].set_default_rich_menu(back_menu_id)
         else:
             # "Please select a valid option."
             # response = "有効なオプションを選択してください。"
@@ -598,7 +724,7 @@ def statehandle(event):
 
         itemselected = int(event.message.text)-1
         if itemselected >= len(motionopt) or itemselected < 0:
-            line_bot_api.push_message(
+            botdict[event['BotID']]['line_bot_api'].push_message(
                 event.source.user_id,
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("有効なオプションを選択してください。"))) 
 
@@ -642,7 +768,7 @@ def statehandle(event):
 
             
         if optionselected >= len(motionopt[responsehist["selected_motion"]]["subItems"]) or optionselected < 0:
-            line_bot_api.push_message(
+            botdict[event['BotID']]['line_bot_api'].push_message(
                 event.source.user_id,
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("有効なオプションを選択してください。")))          
             # response = "選択肢一つを選択してください。"
@@ -693,11 +819,11 @@ def statehandle(event):
 
             
         if elmntselected >= len(motionopt[responsehist["selected_motion"]]["subItems"][responsehist["selected_motion_item"]]["subSubItems"]) or elmntselected < 0:
-            # line_bot_api.push_message(
+            # botdict[event['BotID']]['line_bot_api'].push_message(
             #     event.source.user_id,
             #     TextSendMessage(text="Please select a valid response."))  
 
-            line_bot_api.push_message(
+            botdict[event['BotID']]['line_bot_api'].push_message(
                 event.source.user_id,
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("有効なオプションを選択してください。")))
 
@@ -722,11 +848,11 @@ def statehandle(event):
             #noob lakshay
 
 
-            # line_bot_api.push_message(
+            # botdict[event['BotID']]['line_bot_api'].push_message(
             #     event.source.user_id,
             #     TextSendMessage(text="Thank You for your response."))  
 
-            line_bot_api.push_message(
+            botdict[event['BotID']]['line_bot_api'].push_message(
                 event.source.user_id,
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
 
@@ -734,24 +860,24 @@ def statehandle(event):
             respmsg=apicall(event, '/clearhistmotionopt', {"user_id": event.source.user_id,"data": responsehist})
 
             # for msg in respmsg["text"]:
-            #     line_bot_api.push_message(
+            #     botdict[event['BotID']]['line_bot_api'].push_message(
             #         event.source.user_id,
             #         TextSendMessage(text=msg))  
 
             for msg in respmsg["text"]:
-                line_bot_api.push_message(
+                botdict[event['BotID']]['line_bot_api'].push_message(
                 event.source.user_id,
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage(msg)))  
 
 
             print(respmsg["image"])
 
-            line_bot_api.push_message(
+            botdict[event['BotID']]['line_bot_api'].push_message(
                 event.source.user_id,
                 TextSendMessage(text=respmsg["image"]))
                 
             if respmsg["image"] is not None:
-                line_bot_api.push_message(
+                botdict[event['BotID']]['line_bot_api'].push_message(
                     event.source.user_id,
                     ImageSendMessage(original_content_url=respmsg["image"],preview_image_url=respmsg["image"]))  
 
@@ -779,7 +905,7 @@ def statehandle(event):
 
             # response = "Q" + str(state_dict[event.source.user_id]['cq'])+ ") "+ questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['questionText'] + options
 
-            line_bot_api.push_message(
+            botdict[event['BotID']]['line_bot_api'].push_message(
                 event.source.user_id,
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("Q" + str(state_dict[event.source.user_id]['cq'])+ ") "+ questionaire['questionItems'][state_dict[event.source.user_id]['cq']-1]['questionText'],True)))
 
@@ -791,10 +917,10 @@ def statehandle(event):
                 print(state_dict[event.source.user_id]['cq'])
                 
                 state_dict[event.source.user_id]['cq']=1
-                # line_bot_api.push_message(
+                # botdict[event['BotID']]['line_bot_api'].push_message(
                 #     event.source.user_id,
                 #     TextSendMessage(text="Thank You for your responses."))     
-                line_bot_api.push_message(
+                botdict[event['BotID']]['line_bot_api'].push_message(
                     event.source.user_id,
                     FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))  
 
@@ -810,7 +936,7 @@ def statehandle(event):
                 else:
                     ind = 0
                 for txt in indtxt[ind]:
-                    line_bot_api.push_message(
+                    botdict[event['BotID']]['line_bot_api'].push_message(
                         event.source.user_id,
                         FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage(txt)))
                 responsehist.clear()
@@ -819,7 +945,7 @@ def statehandle(event):
             else:
                 options = makeoptions(questionaire['questionItems'][state_dict[event.source.user_id]['cq']]['choiceItems'])
                 # response = "Q" + str(state_dict[event.source.user_id]['cq']+1)+ ") "+ questionaire['questionItems'][state_dict[event.source.user_id]['cq']]['questionText'] + options
-                line_bot_api.push_message(
+                botdict[event['BotID']]['line_bot_api'].push_message(
                     event.source.user_id,
                     FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("Q" + str(state_dict[event.source.user_id]['cq']+1)+ ") "+ questionaire['questionItems'][state_dict[event.source.user_id]['cq']]['questionText'],True)))
 
@@ -909,10 +1035,10 @@ def statehandle(event):
     elif state_dict[event.source.user_id]['state'] == 'height':
         apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "height","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
-        # line_bot_api.push_message(
+        # botdict[event['BotID']]['line_bot_api'].push_message(
         #     event.source.user_id,
         #     TextSendMessage(text="Thank You for your response."))  
-        line_bot_api.push_message(
+        botdict[event['BotID']]['line_bot_api'].push_message(
                 event.source.user_id,
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
@@ -924,10 +1050,10 @@ def statehandle(event):
     elif state_dict[event.source.user_id]['state'] == 'weight':
         apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "weight","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
-        # line_bot_api.push_message(
+        # botdict[event['BotID']]['line_bot_api'].push_message(
         #     event.source.user_id,
         #     TextSendMessage(text="Thank You for your response.")) 
-        line_bot_api.push_message(
+        botdict[event['BotID']]['line_bot_api'].push_message(
                 event.source.user_id,
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
@@ -939,10 +1065,10 @@ def statehandle(event):
     elif state_dict[event.source.user_id]['state'] == 'fatrate':
         apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "fatrate","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
-        # line_bot_api.push_message(
+        # botdict[event['BotID']]['line_bot_api'].push_message(
         #     event.source.user_id,
         #     TextSendMessage(text="Thank You for your response.")) 
-        line_bot_api.push_message(
+        botdict[event['BotID']]['line_bot_api'].push_message(
                 event.source.user_id,
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
@@ -955,10 +1081,10 @@ def statehandle(event):
     elif state_dict[event.source.user_id]['state'] == 'muscleamt':
         apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "muscleamt","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
-        # line_bot_api.push_message(
+        # botdict[event['BotID']]['line_bot_api'].push_message(
         #     event.source.user_id,
         #     TextSendMessage(text="Thank You for your response.")) 
-        line_bot_api.push_message(
+        botdict[event['BotID']]['line_bot_api'].push_message(
                 event.source.user_id,
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
@@ -970,10 +1096,10 @@ def statehandle(event):
     elif state_dict[event.source.user_id]['state'] == 'bloodpressure':
         apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "bloodpressure","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
-        # line_bot_api.push_message(
+        # botdict[event['BotID']]['line_bot_api'].push_message(
         #     event.source.user_id,
         #     TextSendMessage(text="Thank You for your response.")) 
-        line_bot_api.push_message(
+        botdict[event['BotID']]['line_bot_api'].push_message(
                 event.source.user_id,
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
@@ -985,10 +1111,10 @@ def statehandle(event):
     elif state_dict[event.source.user_id]['state'] == 'musclepow':
         apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "musclepow","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
-        # line_bot_api.push_message(
+        # botdict[event['BotID']]['line_bot_api'].push_message(
         #     event.source.user_id,
         #     TextSendMessage(text="Thank You for your response.")) 
-        line_bot_api.push_message(
+        botdict[event['BotID']]['line_bot_api'].push_message(
                 event.source.user_id,
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
@@ -1000,10 +1126,10 @@ def statehandle(event):
     elif state_dict[event.source.user_id]['state'] == 'flexibility':
         apicall(event,"/user_record",{"user_id": event.source.user_id,"data": {"value": float(event.message.text),"type": "flexibility","user_id": event.source.user_id}}, nores=True)
         # # response = "ご返信ありがとうございます。"
-        # line_bot_api.push_message(
+        # botdict[event['BotID']]['line_bot_api'].push_message(
         #     event.source.user_id,
         #     TextSendMessage(text="Thank You for your response.")) 
-        line_bot_api.push_message(
+        botdict[event['BotID']]['line_bot_api'].push_message(
                 event.source.user_id,
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
@@ -1015,10 +1141,10 @@ def statehandle(event):
     elif state_dict[event.source.user_id]['state'] == 'bloodtest':
         apicall(event,"/bloodtest",{"data": {"value": float(event.message.text),"type": "bloodtest","user_id": event.source.user_id}}, nores=True)
         # response = "ご返信ありがとうございます。"
-        # line_bot_api.push_message(
+        # botdict[event['BotID']]['line_bot_api'].push_message(
         #     event.source.user_id,
         #     TextSendMessage(text="Thank You for your response.")) 
-        line_bot_api.push_message(
+        botdict[event['BotID']]['line_bot_api'].push_message(
                 event.source.user_id,
                 FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("ご回答ありがとうございました。")))
         # response = "選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
@@ -1034,9 +1160,15 @@ def statehandle(event):
         response = "errrrr"
     return response,flag
 
+
+
+
+
+
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
+    addAllHandlers()
 
 
 
