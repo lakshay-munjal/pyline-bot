@@ -640,15 +640,27 @@ def statehandle(event):
             print(questionaire)
             optionsAll = makeoptions(questionaire['questionItems'][0]['choiceItems'])
             # response = "アンケートを始めましょう: \n Q1) " + questionaire['questionItems'][0]['questionText'] + options
-            botdict[event.mode]['line_bot_api'].push_message(
-                event.source.user_id,
-                FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("Q1) " + questionaire['questionItems'][0]['questionText'],True)))
-            print("options")
-            print(optionsAll)
-            response = util.listTextMessage(optionsAll,"アンケートを始めましょう")
-            flag = True
+            if len(questionaire['questionItems']) == 0:
+                botdict[event.mode]['line_bot_api'].push_message(
+                    event.source.user_id,
+                    FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("アンケートなし",False)))
+                print("options")
+                print(optionsAll)
+                responseOptions = ["運動","食事","姿勢","記録"]
+                response = util.listTextMessageWithText(responseOptions)
+                flag = True
+                state_dict[event.source.user_id]['state']= 'menu_select'
 
-            state_dict[event.source.user_id]['state']= 'questionaire'
+            else:
+                botdict[event.mode]['line_bot_api'].push_message(
+                    event.source.user_id,
+                    FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("Q1) " + questionaire['questionItems'][0]['questionText'],True)))
+                print("options")
+                print(optionsAll)
+                response = util.listTextMessage(optionsAll,"アンケートを始めましょう")
+                flag = True
+
+                state_dict[event.source.user_id]['state']= 'questionaire'
             # botdict[event.mode]['line_bot_api'].set_default_rich_menu(back_menu_id)
 
         elif event.message.text == '姿勢':
