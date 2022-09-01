@@ -219,6 +219,10 @@ def questionnaireWrapper(ques):
 # what to do here
 @app.route("/callback/<botid>", methods=['POST'])
 def callback(botid):
+    global botdict
+
+    if botid not in botdict.keys():
+            addAllHandlers()
     # Get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
     # botid = request.args.get("botid")
@@ -250,9 +254,6 @@ def callback(botid):
 
     # Handle webhook body
     try:
-        if botid not in botdict.keys():
-            addAllHandlers()
-        print("Work here")
         botdict[botid]["handler"].handle(body, hackerlak)
         print("Works here too")
     except InvalidSignatureError:
