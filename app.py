@@ -427,7 +427,7 @@ def followhandle(event):
             profile = botdict[event.mode]['line_bot_api'].get_profile(event.source.user_id)
         
         
-            r = client.post(apiurl+'/followevent', data= json.dumps({"user_id": event.source.user_id,"bot_id": event.mode,"user_username": profile.displayName}), headers=authheaders())
+            r = client.post(apiurl+'/followevent', data= json.dumps({"user_id": event.source.user_id,"bot_id": event.mode,"user_username": profile.display_name}), headers=authheaders())
             print(r)
             if(r != None and r.status_code == 200):
                 print("ff")
