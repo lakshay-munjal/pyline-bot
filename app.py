@@ -127,10 +127,10 @@ def addAllHandlers():
     print("all handlers") 
     print(allHandlersData)
 
-    botdict["HhgIEQXfBgn8f1M3V2uU"] = {
-            'handler': WebhookHandler('fb93092bbba827e36296a2cfdbdde14d'),
-            'line_bot_api':  LineBotApi('lnoN3pNo/DUuie5L3OT9exNM+/WZzquIkqGIZdVFcOTHOAhdkNe8IXDilhrKQNrFLQViNJv0MVcZtIzaU7sFKoOkc9s657sq5xb64EtiVqbCoDPEwqt0xwZgkuFriqVOVKVQrP7sXhjR4dNQm5Gk1QdB04t89/1O/w1cDnyilFU=')
-        }
+    # botdict["HhgIEQXfBgn8f1M3V2uU"] = {
+    #         'handler': WebhookHandler('fb93092bbba827e36296a2cfdbdde14d'),
+    #         'line_bot_api':  LineBotApi('lnoN3pNo/DUuie5L3OT9exNM+/WZzquIkqGIZdVFcOTHOAhdkNe8IXDilhrKQNrFLQViNJv0MVcZtIzaU7sFKoOkc9s657sq5xb64EtiVqbCoDPEwqt0xwZgkuFriqVOVKVQrP7sXhjR4dNQm5Gk1QdB04t89/1O/w1cDnyilFU=')
+    #     }
 
     
     for handlerBot in allHandlersData:
