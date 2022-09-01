@@ -215,16 +215,12 @@ def questionnaireWrapper(ques):
 # what to do here
 @app.route("/callback/<botid>", methods=['POST'])
 def callback(botid):
-    print("WTFFFFFFFFF")
-    print(botid)
     # Get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
     # botid = request.args.get("botid")
 
     # Get request body as text
     body = request.get_data(as_text=True)
-    print(type(body))
-    print("Request body init: " + body)
 
     jsonBody = json.loads(body)
 
@@ -232,7 +228,6 @@ def callback(botid):
         event['botid'] = botid
 
     body = json.dumps(jsonBody,ensure_ascii=False,separators=(',', ':'))
-    print(type(body))
 
     print("Request body: " + body)
 
@@ -244,6 +239,7 @@ def callback(botid):
         botdict[botid]["handler"].handle(body, signature)
         print("Works here too")
     except InvalidSignatureError:
+        print("callback::InvalidSignatureError")
         abort(422)
 
     return 'OK'
