@@ -250,7 +250,7 @@ def callback(botid):
     hackerlak = base64.b64encode(hackerlak)
 
     print("Request body: " + body)
-    print("Botdict :" + botdict)
+    print(botdict)
 
     # Handle webhook body
     try:
