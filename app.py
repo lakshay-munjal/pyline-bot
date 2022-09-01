@@ -434,15 +434,33 @@ def followhandle(event):
                 #print(event)
                 print("gaygan")
 
-                state_dict[event.source.user_id]= {"state": "init", "cq":1}
-                return "ユーザーが正常に登録されました。"
-            else:
+            re = client.post(apiurl+'/greeting', data= json.dumps({"user_id": event.source.user_id,"bot_id": event.mode}), headers=authheaders())
+            
+            # if(re != None and re.status_code == 200):
+            #     botdict[event.mode]['line_bot_api'].push_message(
+            #         event.source.user_id,
+            #         TextSendMessage(text=re["greet"])) 
+            if(re != None and re.status_code == 200):
+                re = re.json()
+                botdict[event.mode]['line_bot_api'].push_message(
+                    event.source.user_id,
+                    FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage(re["greet"]))) 
 
-                print("Follow Failed")
-                # state_dict[event.source.user_id]= {"state": "start", "cq":1}
-                return 'Follow Failed'
+                    
+            else:
+                botdict[event.mode]['line_bot_api'].push_message(
+                    event.source.user_id,
+                    TextSendMessage(text="Hey there!!")) 
+            # response = "正常にログインしました。 \n\n 選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+            responseOptions = ["運動","食事","姿勢","記録"]
+            response = util.listTextMessageWithText(responseOptions)
+            flag = True
+            state_dict[event.source.user_id]['state'] = "menu_select"
+
+            return response, flag
         except LineBotApiError as e:
             print("Error in line bot api")
+            return "Error in Connecting", False
 
 def imstatehandle(event):
     pos="standing"
@@ -531,8 +549,8 @@ def statehandle(event):
     # false -> text, true -> flex 
 
     if event.source.user_id not in state_dict.keys(): 
-        respNew = followhandle(event)
-        return respNew,True
+        respNew, flag = followhandle(event)
+        return respNew,flag
         
     ###########debugging################
  
