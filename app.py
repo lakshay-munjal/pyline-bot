@@ -242,7 +242,7 @@ def callback(botid):
 
 
     hackerlak = hmac.new(
-        botdict[botid]["channelSecret"],
+        botdict[botid]["channelSecret"].encode('utf-8'),
         body.encode('utf-8'),
         hashlib.sha256
     ).digest()
