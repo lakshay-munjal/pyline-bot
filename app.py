@@ -242,12 +242,12 @@ def callback(botid):
 
 
     hackerlak = hmac.new(
-        botdict[botid]["channelSecret"].decode('utf-8'),
+        botdict[botid]["channelSecret"].encode('utf-8'),
         body.encode('utf-8'),
         hashlib.sha256
     ).digest()
 
-    hackerlak = base64.b64encode(hackerlak)
+    hackerlak = base64.b64encode(hackerlak).decode('utf-8')
 
     print("Request body: " + body)
     print(botdict)
