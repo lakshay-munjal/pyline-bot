@@ -221,6 +221,7 @@ def callback(botid):
 
     # Get request body as text
     body = request.get_data(as_text=True)
+    print("Request body init: " + body)
 
     jsonBody = json.loads(body)
 
