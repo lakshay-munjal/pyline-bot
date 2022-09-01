@@ -123,6 +123,7 @@ app = Flask(__name__)
 # handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
 
 def addAllHandlers():
+    global botdict
 
     allHandlersData = apicall(None,"/allhandlers",None)
 
@@ -245,6 +246,7 @@ def callback(botid):
     hackerlak = base64.b64encode(hackerlak)
 
     print("Request body: " + body)
+    print("Botdict :" + botdict)
 
     # Handle webhook body
     try:
