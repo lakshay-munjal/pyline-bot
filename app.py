@@ -224,7 +224,7 @@ def callback(botid):
     # Get request body as text
     body = request.get_data(as_text=True)
     print(type(body))
-    app.logger.info("Request body init: " + body)
+    print("Request body init: " + body)
 
     jsonBody = json.loads(body)
 
@@ -234,7 +234,7 @@ def callback(botid):
     body = json.dumps(jsonBody)
     print(type(body))
 
-    app.logger.info("Request body: " + body)
+    print("Request body: " + body)
 
     # Handle webhook body
     try:
