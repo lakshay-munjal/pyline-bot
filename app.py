@@ -225,8 +225,8 @@ def callback(botid):
 
     jsonBody = json.loads(body)
 
-    # for event in jsonBody['events']:
-    #     event['botid'] = botid
+    for event in jsonBody['events']:
+        event['mode'] = botid
 
     body = json.dumps(jsonBody,ensure_ascii=False,separators=(',', ':'))
 
@@ -330,7 +330,7 @@ def handle_follow(event):
     #print(event)
     
     # print("jugaad working")
-    botdict[event['botid']]['line_bot_api'].reply_message(
+    botdict[event['mode']]['line_bot_api'].reply_message(
         event.reply_token,
         TextSendMessage(text=resp))
 
@@ -405,10 +405,10 @@ def followhandle(event):
     print("followhandle")
     if(event.source.type == "user"):
         try:
-            profile = botdict[event['botid']]['line_bot_api'].get_profile(event.source.user_id)
+            profile = botdict[event['mode']]['line_bot_api'].get_profile(event.source.user_id)
         
         
-            r = client.post(apiurl+'/followevent', data= json.dumps({"user_id": event.source.user_id,"bot_id": event["botid"],"user_username": profile["displayName"]}), headers=authheaders())
+            r = client.post(apiurl+'/followevent', data= json.dumps({"user_id": event.source.user_id,"bot_id": event["mode"],"user_username": profile["displayName"]}), headers=authheaders())
             print(r)
             if(r != None and r.status_code == 200):
                 print("ff")
