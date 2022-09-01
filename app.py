@@ -656,20 +656,21 @@ def statehandle(event):
             else: return "api failed"
             print("qqq")
             print(questionaire)
-            optionsAll = makeoptions(questionaire['questionItems'][0]['choiceItems'])
+            
             # response = "アンケートを始めましょう: \n Q1) " + questionaire['questionItems'][0]['questionText'] + options
             if len(questionaire['questionItems']) == 0:
                 botdict[event.mode]['line_bot_api'].push_message(
                     event.source.user_id,
                     FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("アンケートなし",False)))
-                print("options")
-                print(optionsAll)
+                # print("options")
+                # print(optionsAll)
                 responseOptions = ["運動","食事","姿勢","記録"]
                 response = util.listTextMessageWithText(responseOptions)
                 flag = True
                 state_dict[event.source.user_id]['state']= 'menu_select'
 
             else:
+                optionsAll = makeoptions(questionaire['questionItems'][0]['choiceItems'])
                 botdict[event.mode]['line_bot_api'].push_message(
                     event.source.user_id,
                     FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("Q1) " + questionaire['questionItems'][0]['questionText'],True)))
