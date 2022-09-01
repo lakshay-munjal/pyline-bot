@@ -435,7 +435,7 @@ def followhandle(event):
                 print("gaygan")
 
                 state_dict[event.source.user_id]= {"state": "init", "cq":1}
-                return "ユーザー名を入力してください："
+                return "ユーザーが正常に登録されました。"
             else:
 
                 print("Follow Failed")
