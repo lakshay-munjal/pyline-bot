@@ -231,7 +231,7 @@ def callback(botid):
     for event in jsonBody['events']:
         event['botid'] = botid
 
-    body = json.dumps(jsonBody,ensure_ascii=False,separators=(',', ':'))
+    body = json.dumps(jsonBody,ensure_ascii=False)
     print(type(body))
 
     print("Request body: " + body)
