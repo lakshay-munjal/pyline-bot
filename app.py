@@ -434,33 +434,38 @@ def followhandle(event):
                 #print(event)
                 print("gaygan")
 
-            re = client.post(apiurl+'/greeting', data= json.dumps({"user_id": event.source.user_id,"bot_id": event.mode}), headers=authheaders())
-            
-            # if(re != None and re.status_code == 200):
-            #     botdict[event.mode]['line_bot_api'].push_message(
-            #         event.source.user_id,
-            #         TextSendMessage(text=re["greet"])) 
-            if(re != None and re.status_code == 200):
-                re = re.json()
-                botdict[event.mode]['line_bot_api'].push_message(
-                    event.source.user_id,
-                    FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage(re["greet"]))) 
+                re = client.post(apiurl+'/greeting', data= json.dumps({"user_id": event.source.user_id,"bot_id": event.mode}), headers=authheaders())
+                
+                # if(re != None and re.status_code == 200):
+                #     botdict[event.mode]['line_bot_api'].push_message(
+                #         event.source.user_id,
+                #         TextSendMessage(text=re["greet"])) 
+                if(re != None and re.status_code == 200):
+                    re = re.json()
+                    botdict[event.mode]['line_bot_api'].push_message(
+                        event.source.user_id,
+                        FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage(re["greet"]))) 
 
-                    
+                        
+                else:
+                    botdict[event.mode]['line_bot_api'].push_message(
+                        event.source.user_id,
+                        TextSendMessage(text="Hey there!!")) 
+                # response = "正常にログインしました。 \n\n 選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
+                responseOptions = ["運動","食事","姿勢","記録"]
+                response = util.listTextMessageWithText(responseOptions)
+                flag = True
+                state_dict[event.source.user_id]['state'] = "menu_select"
+
+                return "Follow Successful"
             else:
-                botdict[event.mode]['line_bot_api'].push_message(
-                    event.source.user_id,
-                    TextSendMessage(text="Hey there!!")) 
-            # response = "正常にログインしました。 \n\n 選択肢一つを選択してください。\n 1. 運動 \n 2. 食事  \n 3. 姿勢 \n 4. 記録"
-            responseOptions = ["運動","食事","姿勢","記録"]
-            response = util.listTextMessageWithText(responseOptions)
-            flag = True
-            state_dict[event.source.user_id]['state'] = "menu_select"
 
-            return response, flag
+                print("Follow Failed")
+                # state_dict[event.source.user_id]= {"state": "start", "cq":1}
+                return 'Follow Failed'
         except LineBotApiError as e:
             print("Error in line bot api")
-            return "Error in Connecting", False
+            return 'error in fetching profile'
 
 def imstatehandle(event):
     pos="standing"
@@ -549,8 +554,8 @@ def statehandle(event):
     # false -> text, true -> flex 
 
     if event.source.user_id not in state_dict.keys(): 
-        respNew, flag = followhandle(event)
-        return respNew,flag
+        respNew = followhandle(event)
+        return respNew,True
         
     ###########debugging################
  
