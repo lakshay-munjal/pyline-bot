@@ -422,6 +422,8 @@ def followhandle(event):
     print("followhandle")
     if(event.source.type == "user"):
         try:
+            print("follow handle event")
+            print(event)
             profile = botdict[event['botid']]['line_bot_api'].get_profile(event.source.user_id)
         
         
