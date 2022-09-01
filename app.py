@@ -225,8 +225,8 @@ def callback(botid):
 
     jsonBody = json.loads(body)
 
-    for event in jsonBody['events']:
-        event['botid'] = botid
+    # for event in jsonBody['events']:
+    #     event['botid'] = botid
 
     body = json.dumps(jsonBody,ensure_ascii=False,separators=(',', ':'))
 
