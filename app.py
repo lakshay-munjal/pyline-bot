@@ -347,7 +347,7 @@ def handle_follow(event):
     #print(event)
     
     # print("jugaad working")
-    botdict[event['mode']]['line_bot_api'].reply_message(
+    botdict[event.mode]['line_bot_api'].reply_message(
         event.reply_token,
         TextSendMessage(text=resp))
 
@@ -424,7 +424,7 @@ def followhandle(event):
         try:
             print("follow handle event")
             print(event)
-            profile = botdict[event['mode']]['line_bot_api'].get_profile(event.source.user_id)
+            profile = botdict[event.mode]['line_bot_api'].get_profile(event.source.user_id)
         
         
             r = client.post(apiurl+'/followevent', data= json.dumps({"user_id": event.source.user_id,"bot_id": event.mode,"user_username": profile["displayName"]}), headers=authheaders())
