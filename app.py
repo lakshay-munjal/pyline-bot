@@ -122,6 +122,28 @@ app = Flask(__name__)
 # botdict[event.mode]['line_bot_api'] = LineBotApi('lnoN3pNo/DUuie5L3OT9exNM+/WZzquIkqGIZdVFcOTHOAhdkNe8IXDilhrKQNrFLQViNJv0MVcZtIzaU7sFKoOkc9s657sq5xb64EtiVqbCoDPEwqt0xwZgkuFriqVOVKVQrP7sXhjR4dNQm5Gk1QdB04t89/1O/w1cDnyilFU=')
 # handler = WebhookHandler('fb93092bbba827e36296a2cfdbdde14d')
 
+rich_menu_to_create = RichMenu(
+size=RichMenuSize(width=2500, height=1686),
+selected=False,
+name="Bot Menu",
+chat_bar_text="Tap here",
+areas=[RichMenuArea(
+    bounds=RichMenuBounds(x=0, y=0, width=1250, height=693),
+    action=MessageAction(label='text1', text='text1')),
+    RichMenuArea(
+    bounds=RichMenuBounds(x=1250, y=0, width=1250, height=693),
+    action=MessageAction(label='text1', text='text2')),
+    RichMenuArea(
+    bounds=RichMenuBounds(x=0, y=693, width=1250, height=693),
+    action=MessageAction(label='text1', text='text3')),
+    RichMenuArea(
+    bounds=RichMenuBounds(x=1250, y=693, width=1250, height=693),
+    action=MessageAction(label='text1', text='text4')),
+    RichMenuArea(
+    bounds=RichMenuBounds(x=0, y=1386, width=2500, height=300),
+    action=MessageAction(label='text1', text='text5'))]
+)
+
 def addAllHandlers():
     global botdict
 
@@ -129,7 +151,8 @@ def addAllHandlers():
 
     print("all handlers") 
     print(allHandlersData)
-
+    if allHandlersData == None:
+        allHandlersData = []
     # botdict["HhgIEQXfBgn8f1M3V2uU"] = {
     #         'handler': WebhookHandler('fb93092bbba827e36296a2cfdbdde14d'),
     #         'line_bot_api':  LineBotApi('lnoN3pNo/DUuie5L3OT9exNM+/WZzquIkqGIZdVFcOTHOAhdkNe8IXDilhrKQNrFLQViNJv0MVcZtIzaU7sFKoOkc9s657sq5xb64EtiVqbCoDPEwqt0xwZgkuFriqVOVKVQrP7sXhjR4dNQm5Gk1QdB04t89/1O/w1cDnyilFU=')
@@ -147,6 +170,8 @@ def addAllHandlers():
         newHandler.add(MessageEvent, message=ImageMessage)(handle_imagemessage)
 
         new_bot_api = LineBotApi(channelAccessToken)
+        rich_menu_id = new_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
+        new_bot_api.set_default_rich_menu(rich_menu_id)
 
         botdict[handlerbotid] = {
             'handler': newHandler,
@@ -280,6 +305,10 @@ def addNewHandler():
     newHandler.add(MessageEvent, message=ImageMessage)(handle_imagemessage)
 
     new_bot_api = LineBotApi(channelAccessToken)
+
+
+    rich_menu_id = new_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
+    new_bot_api.set_default_rich_menu(rich_menu_id)
 
     botdict[handlerbotid] = {
         'handler': newHandler,
