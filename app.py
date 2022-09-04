@@ -171,6 +171,8 @@ def addAllHandlers():
 
         new_bot_api = LineBotApi(channelAccessToken)
         rich_menu_id = new_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
+        with open('./resources/PUI9T2n.jpg', 'rb') as f:
+            new_bot_api.set_rich_menu_image(rich_menu_id, 'image/jpeg', f)
         new_bot_api.set_default_rich_menu(rich_menu_id)
 
         botdict[handlerbotid] = {
@@ -308,6 +310,8 @@ def addNewHandler():
 
 
     rich_menu_id = new_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
+    with open('./resources/PUI9T2n.jpg', 'rb') as f:
+        new_bot_api.set_rich_menu_image(rich_menu_id, 'image/jpeg', f)
     new_bot_api.set_default_rich_menu(rich_menu_id)
 
     botdict[handlerbotid] = {
