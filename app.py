@@ -129,19 +129,19 @@ name="Bot Menu",
 chat_bar_text="Tap here",
 areas=[RichMenuArea(
     bounds=RichMenuBounds(x=0, y=0, width=1250, height=693),
-    action=MessageAction(label='text1', text='text1')),
+    action=MessageAction(label='text1', text='運動')),
     RichMenuArea(
     bounds=RichMenuBounds(x=1250, y=0, width=1250, height=693),
-    action=MessageAction(label='text1', text='text2')),
+    action=MessageAction(label='text1', text='食事')),
     RichMenuArea(
     bounds=RichMenuBounds(x=0, y=693, width=1250, height=693),
-    action=MessageAction(label='text1', text='text3')),
+    action=MessageAction(label='text1', text='姿勢')),
     RichMenuArea(
     bounds=RichMenuBounds(x=1250, y=693, width=1250, height=693),
-    action=MessageAction(label='text1', text='text4')),
+    action=MessageAction(label='text1', text='記録')),
     RichMenuArea(
     bounds=RichMenuBounds(x=0, y=1386, width=2500, height=300),
-    action=MessageAction(label='text1', text='text5'))]
+    action=MessageAction(label='text1', text='リセット'))]
 )
 
 def addAllHandlers():
