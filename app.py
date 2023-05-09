@@ -115,7 +115,7 @@ indtxt = [
 
 
 # 333333333 = "lkMI2xb0HpBdCpeOZpvM"
-apiurl = 'https://linewebbackend.herokuapp.com/api/bot' 
+apiurl = 'https://lineweb.e-posture.jp/api/bot' 
 client = requests.session()
 app = Flask(__name__)
 
