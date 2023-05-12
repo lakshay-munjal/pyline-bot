@@ -115,7 +115,7 @@ indtxt = [
 
 
 # 333333333 = "lkMI2xb0HpBdCpeOZpvM"
-apiurl = 'https://linewebbackend.herokuapp.com/api/bot' 
+apiurl = 'https://lineweb.e-posture.jp/api/bot' 
 client = requests.session()
 app = Flask(__name__)
 
@@ -455,7 +455,10 @@ def handle_follow(event):
 
 def followhandle(event):
     print("followhandle")
+    if event.source.user_id not in state_dict:
+        state_dict[event.source.user_id] = {"state": "start", "cq":1}
     if(event.source.type == "user"):
+        
         try:
             print("follow handle event")
             print(event)
@@ -468,7 +471,7 @@ def followhandle(event):
                 print("ff")
                 #print(event)
                 print("gaygan")
-
+        
                 re = client.post(apiurl+'/greeting', data= json.dumps({"user_id": event.source.user_id,"bot_id": event.mode}), headers=authheaders())
                 
                 # if(re != None and re.status_code == 200):
@@ -593,7 +596,8 @@ def statehandle(event):
         return respNew,True
         
     ###########debugging################
- 
+    if event.source.user_id not in state_dict:
+        state_dict[event.source.user_id] = {"state": "start", "cq":1}
     if event.message.text == 'リセット' :
         state_dict[event.source.user_id]['state'] = "start"
         state_dict[event.source.user_id]['cq'] = 1
