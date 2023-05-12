@@ -525,7 +525,7 @@ def imstatehandle(event):
         pos="sitting"
         dir="right"
     else:
-        return "Not a valid input"
+        return "Not a valid input", False
     message_content = botdict[event.mode]['line_bot_api'].get_message_content(event.message.id)
     # file_path = "./iter_cont.txt"
     # with open(file_path, 'wb') as fd:
@@ -541,7 +541,7 @@ def imstatehandle(event):
         orurl = resp["orurl"]
         angles = resp["angles"]
         angnames= resp["angnames"]
-    else: return "api failed"
+    else: return "api failed", False
 
     print("gaygaygyaygaygyagyaygaygay")
 
@@ -562,7 +562,7 @@ def imstatehandle(event):
         eva = resp["eval"]
         typ = resp["type"]
         responsetexts = resp["resp"]
-    else: return "api failed"     
+    else: return "api failed", False     
     botdict[event.mode]['line_bot_api'].push_message(
         event.source.user_id,
         FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("Evaluation: "+eva+", Type: "+typ , weight=True)))
