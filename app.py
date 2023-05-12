@@ -453,8 +453,7 @@ def handle_follow(event):
 
 def followhandle(event):
     print("followhandle")
-    if event.source.user_id not in state_dict:
-        state_dict[event.source.user_id] = {"state": "start", "cq":1}
+
     if(event.source.type == "user"):
         
         try:
@@ -491,6 +490,8 @@ def followhandle(event):
                 responseOptions = ["運動","食事","姿勢","記録"]
                 response = util.listTextMessageWithText(responseOptions)
                 flag = True
+                if event.source.user_id not in state_dict:
+                    state_dict[event.source.user_id] = {"state": "start", "cq":1}                
                 state_dict[event.source.user_id]['state'] = "menu_select"
 
                 return "Follow Successful"
@@ -594,8 +595,6 @@ def statehandle(event):
         return respNew,True
         
     ###########debugging################
-    if event.source.user_id not in state_dict:
-        state_dict[event.source.user_id] = {"state": "start", "cq":1}
     if event.message.text == 'リセット' :
         state_dict[event.source.user_id]['state'] = "start"
         state_dict[event.source.user_id]['cq'] = 1
