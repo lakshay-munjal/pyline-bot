@@ -168,7 +168,7 @@ def addAllHandlers():
         newHandler.add(MessageEvent,message=TextMessage)(handle_message)
         newHandler.add(FollowEvent)(handle_follow)
         newHandler.add(MessageEvent, message=ImageMessage)(handle_imagemessage)
-
+        print(os.getcwd())
         new_bot_api = LineBotApi(channelAccessToken)
         rich_menu_id = new_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
         with open('./resources/PUI9T2n.jpg', 'rb') as f:
@@ -242,7 +242,9 @@ def questionnaireWrapper(ques):
     
     return question
 
-
+@app.route("/helloworld")
+def helloworld():
+    return "<h1>Hello World</h1>"
 # what to do here
 @app.route("/callback/<botid>", methods=['POST'])
 def callback(botid):

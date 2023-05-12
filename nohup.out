@@ -1,0 +1,21 @@
+./app.py: 1: from: not found
+./app.py: 2: import: not found
+./app.py: 3: import: not found
+./app.py: 5: from: not found
+./app.py: 6: import: not found
+./app.py: 7: import: not found
+./app.py: 8: from: not found
+./app.py: 9: import: not found
+./app.py: 10: import: not found
+./app.py: 12: import: not found
+./app.py: 13: import: not found
+./app.py: 14: import: not found
+./app.py: 17: firebaseConfig: not found
+./app.py: 18: apiKey:: not found
+./app.py: 19: authDomain:: not found
+./app.py: 20: projectId:: not found
+./app.py: 21: storageBucket:: not found
+./app.py: 22: messagingSenderId:: not found
+./app.py: 23: appId:: not found
+./app.py: 24: databaseURL:: not found
+./app.py: 25: Syntax error: "}" unexpected
