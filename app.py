@@ -151,6 +151,7 @@ def addAllHandlers():
 
     print("all handlers") 
     print(allHandlersData)
+    print("all handlers Data end")
     if allHandlersData == None:
         allHandlersData = []
     # botdict["HhgIEQXfBgn8f1M3V2uU"] = {
@@ -163,6 +164,11 @@ def addAllHandlers():
         handlerbotid = handlerBot["botID"]
         channelSecret = handlerBot["channelSecret"]
         channelAccessToken =handlerBot["channelAccessToken"] 
+        print("all handler values .. ")
+        print(handlerbotid)
+        print(channelSecret)
+        print(channelAccessToken)
+        
 
         newHandler = WebhookHandler(channelSecret)
         newHandler.add(MessageEvent,message=TextMessage)(handle_message)
