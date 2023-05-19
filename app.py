@@ -161,31 +161,34 @@ def addAllHandlers():
 
     
     for handlerBot in allHandlersData:
-        handlerbotid = handlerBot["botID"]
-        channelSecret = handlerBot["channelSecret"]
-        channelAccessToken =handlerBot["channelAccessToken"] 
-        print("all handler values .. ")
-        print(handlerbotid)
-        print(channelSecret)
-        print(channelAccessToken)
-        
+        try:
+            handlerbotid = handlerBot["botID"]
+            channelSecret = handlerBot["channelSecret"]
+            channelAccessToken =handlerBot["channelAccessToken"] 
+            print("all handler values .. ")
+            print(handlerbotid)
+            print(channelSecret)
+            print(channelAccessToken)
 
-        newHandler = WebhookHandler(channelSecret)
-        newHandler.add(MessageEvent,message=TextMessage)(handle_message)
-        newHandler.add(FollowEvent)(handle_follow)
-        newHandler.add(MessageEvent, message=ImageMessage)(handle_imagemessage)
-        print(os.getcwd())
-        new_bot_api = LineBotApi(channelAccessToken)
-        rich_menu_id = new_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
-        with open('./resources/PUI9T2n.jpg', 'rb') as f:
-            new_bot_api.set_rich_menu_image(rich_menu_id, 'image/jpeg', f)
-        new_bot_api.set_default_rich_menu(rich_menu_id)
 
-        botdict[handlerbotid] = {
-            'handler': newHandler,
-            'line_bot_api': new_bot_api,
-            'channelSecret': channelSecret
-        }
+            newHandler = WebhookHandler(channelSecret)
+            newHandler.add(MessageEvent,message=TextMessage)(handle_message)
+            newHandler.add(FollowEvent)(handle_follow)
+            newHandler.add(MessageEvent, message=ImageMessage)(handle_imagemessage)
+            print(os.getcwd())
+            new_bot_api = LineBotApi(channelAccessToken)
+            rich_menu_id = new_bot_api.create_rich_menu(rich_menu=rich_menu_to_create)
+            with open('./resources/PUI9T2n.jpg', 'rb') as f:
+                new_bot_api.set_rich_menu_image(rich_menu_id, 'image/jpeg', f)
+            new_bot_api.set_default_rich_menu(rich_menu_id)
+
+            botdict[handlerbotid] = {
+                'handler': newHandler,
+                'line_bot_api': new_bot_api,
+                'channelSecret': channelSecret
+            }
+        except:
+            print("oh no, anyways")
     
     print("all handlers 2") 
     print(allHandlersData)
