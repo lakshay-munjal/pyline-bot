@@ -538,6 +538,8 @@ def imstatehandle(event):
         dir="right"
     else:
         return "Not a valid input", False
+    if event.mode not in botdict.keys():
+        addAllHandlers()
     message_content = botdict[event.mode]['line_bot_api'].get_message_content(event.message.id)
     # file_path = "./iter_cont.txt"
     # with open(file_path, 'wb') as fd:
