@@ -578,7 +578,10 @@ def imstatehandle(event):
     botdict[event.mode]['line_bot_api'].push_message(
         event.source.user_id,
         FlexSendMessage(alt_text="yo",contents=util.simpleTextMessage("Evaluation: "+eva+", Type: "+typ , weight=True)))
-
+    
+    if responsetexts is None:
+        responsetexts = []
+    
     for responsetext in responsetexts:
         botdict[event.mode]['line_bot_api'].push_message(
             event.source.user_id,
