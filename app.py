@@ -684,7 +684,7 @@ def statehandle(event):
                 motionopt = resp["motionopt"]["items"]
                 responsehist = resp["responsehist"]
             else: 
-                return "api failed"
+                return "api failed", False
             print("qqq3")
             # print(questionaire)
 
@@ -710,7 +710,7 @@ def statehandle(event):
             # f =  open('./resources/quesaire.json', encoding='utf8')
             # questionaire = json.load(f)
             if(resp): questionaire = resp["questionaire"]
-            else: return "api failed"
+            else: return "api failed", False
             print("qqq")
             print(questionaire)
             
@@ -770,7 +770,7 @@ def statehandle(event):
             resp = apicall(event, '/getrecords', {"bot_id": event.mode})
             if(resp): 
                 recs = resp
-            else: return "api failed"
+            else: return "api failed", False
             # response = "何を録音したいですか？ \n 1) 身長 \n 2) 体重 \n 3) 脂肪率 \n 4) 筋量 \n 5) 血圧 \n 6) 筋力 \n 7) 柔軟性 \n 8) 血液検査" #update this line
             response = util.listTextMessage(recs,"何を録音したいですか？")
             flag = True
@@ -790,7 +790,7 @@ def statehandle(event):
         if(resp): 
             motionopt = resp["motionopt"]["items"]
             responsehist = resp["responsehist"]
-        else: return "api failed"
+        else: return "api failed", False
         # print(questionaire)
 
 
@@ -834,7 +834,7 @@ def statehandle(event):
         if(resp): 
             motionopt = resp["motionopt"]["items"]
             responsehist = resp["responsehist"]
-        else: return "api failed"
+        else: return "api failed", False
         print("qqq5")
         # print(questionaire)
 
@@ -885,7 +885,7 @@ def statehandle(event):
         if(resp): 
             motionopt = resp["motionopt"]["items"]
             responsehist = resp["responsehist"]
-        else: return "api failed"
+        else: return "api failed", False
         print("qqq6")
         # print(questionaire)
 
@@ -968,7 +968,7 @@ def statehandle(event):
         if(resp): 
             questionaire = resp["questionaire"]
             responsehist = resp["responsehist"]
-        else: return "api failed"
+        else: return "api failed", False
         print("qqq2")
         # print(questionaire)
         choiceselected = int(event.message.text)-1
@@ -1089,7 +1089,7 @@ def statehandle(event):
         resp = apicall(event, '/getrecords', {"bot_id": event.mode})
         if(resp): 
             recs = resp
-        else: return "api failed"
+        else: return "api failed", False
         ## record the value here
         if int(event.message.text) >= 1 and int(event.message.text)<= len(recs):
             state_dict[event.source.user_id]['recordselect'] = recs[int(event.message.text)-1]
