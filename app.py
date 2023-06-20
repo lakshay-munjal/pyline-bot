@@ -1052,7 +1052,7 @@ def statehandle(event):
             # response = "Upload the image"
             response = util.func()
             flag = True
-        elif event.message.text == '2':
+        elif event.message.text == '3':
             state_dict[event.source.user_id]['state'] = 'att_stand_right'
             # response = "Upload the image"
             response = util.func()
@@ -1070,7 +1070,7 @@ def statehandle(event):
             # response = "Upload the image"
             response = util.func()
             flag = True
-        elif event.message.text == '2':
+        elif event.message.text == '3':
             state_dict[event.source.user_id]['state'] = 'att_sit_right'
             # response = "Upload the image"
             response = util.func()
